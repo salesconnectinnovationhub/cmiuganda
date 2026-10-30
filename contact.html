@@ -1,0 +1,642 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Contact Us - CMI Construction Company</title>
+    <meta name="description" content="CMI Construction Company">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/odometer.css">
+    <link rel="stylesheet" href="assets/css/slick.css">
+    <link rel="stylesheet" href="assets/css/tg-cursor.css">
+    <link rel="stylesheet" href="assets/css/default.css">
+    <link rel="stylesheet" href="assets/css/jarallax.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body>
+
+    <!-- Preloader-start -->
+    <div id="preloader">
+        <div class="ta-preloader-block">
+            <div class="ta-spinner-eff">
+                <div class="ta-bar ta-bar-top"></div>
+                <div class="ta-bar ta-bar-right"></div>
+                <div class="ta-bar ta-bar-bottom"></div>
+                <div class="ta-bar ta-bar-left"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader-start-end -->
+
+    <!-- Scroll-top -->
+    <button class="scroll-top scroll-to-target" data-target="html">
+        <i class="fas fa-level-up-alt"></i>
+    </button>
+    <!-- Scroll-top-end-->
+
+    <!-- header-area -->
+    <header>
+        <div id="header-fixed-height"></div>
+        <div id="sticky-header" class="menu-area menu-area-three">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
+                        <div class="menu-wrap">
+                            <nav class="menu-nav">
+                                <div class="logo">
+                                    <a href='./'><img src="assets/img/logo/logo_02.png" alt="Logo"></a>
+                                </div>
+                                <div class="navbar-wrap main-menu d-none d-lg-flex">
+                                    <ul class="navigation">
+                                        <li><a href='./'>Home</a></li>
+                                        <li><a href='about'>About us</a></li>
+                                        <li ><a href='services'>Services</a></li>
+                                        <li><a href='property-management.html'>Property Management</a></li>
+                                        <li ><a href='project'>Projects</a></li>
+
+                                        <li ><a href='gallery'>Gallery</a></li>
+                                        <li ><a href='team'>Team</a></li>
+                                        <li ><a href='payments'>Pay</a></li>
+                                        <li class="active"><a href='contact'>Contact</a></li>
+                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
+                                    </ul>
+                                </div>
+                            
+                            </nav>
+                        </div>
+
+                        <!-- Mobile Menu  -->
+                        <div class="mobile-menu">
+                            <nav class="menu-box">
+                                <div class="close-btn"><i class="fas fa-times"></i></div>
+                                <div class="nav-logo">
+                                    <a href='./'><img src="assets/img/logo/logo_02.png" alt="Logo"></a>
+                                </div>
+                                <div class="menu-outer">
+                                    <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="menu-backdrop"></div>
+                        <!-- End Mobile Menu -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- header-area-end -->
+
+
+    <!-- mian-area -->
+    <main>
+
+
+        <!-- contact-area -->
+        <section class="contact-area pt-120 pb-120">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-10">
+                        <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
+                            <h2 class="title">Contact Us</h2>
+                            <p>Send us a message and we' ll respond as soon as possible</p>
+                            <form id="contact-form" action="/api/contact" class="contact-form" method="post">
+                                <div aria-hidden="true" style="position:absolute;left:-10000px">
+                                    <label for="contact-website">Leave this field empty</label>
+                                    <input id="contact-website" name="website" type="text" tabindex="-1"
+                                        autocomplete="off">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <input id="firstName" required name="firstName" type="text"
+                                                placeholder="First Name*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <input id="lastName" required name="lastName" type="text"
+                                                placeholder="Last Name*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <input id="email" required name="email" type="email"
+                                                placeholder="Email Address*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <input id="phone" required name="phone" type="text"
+                                                placeholder="Phone Number*">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-grp">
+                                    <textarea id="message" required name="message" maxlength="5000"
+                                        placeholder="Your Message here"></textarea>
+                                    <small id="message-help">You can edit the prefilled estimate details. Maximum 5,000 characters.</small>
+                                    <p id="estimate-prefill-status" role="status" aria-live="polite"></p>
+                                </div>
+                                <button class="btn" type="submit">Send Message</button>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-10">
+                        <div class="contact-info-wrap">
+                            <h2 class="title">Need Any Help?</h2>
+                            <p>Call us or message and we' ll respond as soon as possible</p>
+                            <ul class="list-wrap">
+                                <li>
+                                    <div class="contact-info-item">
+                                        <div class="icon">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </div>
+                                        <div class="content">
+                                            <a href="tel:+256789612187">+(256) 789 612 187</a>
+                                            <a href="tel:+256754433022">+(256) 754 433 022</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="contact-info-item">
+                                        <div class="icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="content">
+                                            <a href="mailto:cmi.groupuganda@gmail.com">cmi.groupuganda@gmail.com</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="contact-info-item">
+                                        <div class="icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div class="content">
+                                            <p>Fort portal</p>
+                                            <p>Rukiidi 3 street, Daj plaza, <br> Fort Portal, Uganda</p>
+                                        </div>
+                                        <div class="content">
+                                            <p>Kampala</p>
+                                            <p>Amizon House, Ground floor <br> opposite Mutungo parish catholic church, <br>Nakawa Division Kampala, Uganda</p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- contact-area-end -->
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.5584839240105!2d30.271926174174023!3d0.6539031634191622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1763db004c8842c5%3A0x36adbf7cad40d1fa!2sCMI%20GROUP%20CO%20(U)%20LTD!5e0!3m2!1sen!2sug!4v1709732488437!5m2!1sen!2sug" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <!-- contact-area -->
+        <section class="contact-area pt-120 pb-120">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9 col-lg-9">
+                        <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
+                            <h2 class="title">Expression of interests</h2>
+                            <p>Express Your interests about our services</p>
+                            <form action="/api/interest" class="interestForm" method="post">
+                                <div aria-hidden="true" style="position:absolute;left:-10000px">
+                                    <label for="interest-website">Leave this field empty</label>
+                                    <input id="interest-website" name="website" type="text" tabindex="-1"
+                                        autocomplete="off">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="fullname" name="fullname" required type="text"
+                                                placeholder="Full name*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="email" name="email" required type="email"
+                                                placeholder="Email Address*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="phone" name="phone" required type="text"
+                                                placeholder="Phone Number*">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="currentAddress" name="currentAddress" required type="text"
+                                                placeholder="Current Address">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="countryCode" name="countryCode" required type="text"
+                                                placeholder="Country Code">
+                                        </div>
+                                    </div>
+                                    <!-- Additional Contacts Fields -->
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="whatsappNo" name="whatsappNo" required type="text"
+                                                placeholder="Whatsapp No">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="mobilePhone" name="mobilePhone" required type="text"
+                                                placeholder="Mobile Phone (add code)">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="homePhone" name="homePhone" required type="text"
+                                                placeholder="Home Phone">
+                                        </div>
+                                    </div>
+                                    <!-- Additional Home Country Address and Contacts Fields -->
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="homeCountry" name="homeCountry" required type="text"
+                                                placeholder="Home Country">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="homeDistrict" name="homeDistrict" required type="text"
+                                                placeholder="Home District/City">
+                                        </div>
+                                    </div>
+                                    <!-- Additional Fields for Proposed Project Location -->
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="projectCountry" name="projectCountry" required type="text"
+                                                placeholder="Project Country">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="projectDistrict" name="projectDistrict" type="text"
+                                                placeholder="Project District/City">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <input id="anotherService" name="anotherService" type="text"
+                                                placeholder="Another service(s) I want">
+                                        </div>
+                                    </div>
+                                    <h2 style="font-size: 20px; margin: 20px 0px;">Select Products and services</h2>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="buildResidentialHouse">Build a residential house</label>
+                                            <input id="buildResidentialHouse" name="buildResidentialHouse"
+                                                type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="buildCommercialHouse">Build a commercial house</label>
+                                            <input id="buildCommercialHouse" name="buildCommercialHouse"
+                                                type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="roofing">Roofing</label>
+                                            <input id="roofing" name="roofing" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="flooring">Flooring</label>
+                                            <input id="flooring" name="flooring" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="tiling">Tiling</label>
+                                            <input id="tiling" name="tiling" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="terrazzo">Terrazzo</label>
+                                            <input id="terrazzo" name="terrazzo" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="furnitureFittings">Furniture fittings and kitchen cabins</label>
+                                            <input id="furnitureFittings" name="furnitureFittings" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="buyingLand">Buying Land</label>
+                                            <input id="buyingLand" name="buyingLand" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="landSurveying">Land Surveying</label>
+                                            <input id="landSurveying" name="landSurveying" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="landPlotting">Land Plotting (stones placing)</label>
+                                            <input id="landPlotting" name="landPlotting" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="landTitle">Land Title</label>
+                                            <input id="landTitle" name="landTitle" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="buildingPlans">Building Plans</label>
+                                            <input id="buildingPlans" name="buildingPlans" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="architectureDrawings">Architecture Drawings</label>
+                                            <input id="architectureDrawings" name="architectureDrawings"
+                                                type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="billsOfQuantities">Bills of Quantities</label>
+                                            <input id="billsOfQuantities" name="billsOfQuantities" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="supplyBuildingMaterials">Supply of Building Materials</label>
+                                            <input id="supplyBuildingMaterials" name="supplyBuildingMaterials"
+                                                type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="securityAlarms">Security Alarms</label>
+                                            <input id="securityAlarms" name="securityAlarms" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="homeCameras">Home Cameras</label>
+                                            <input id="homeCameras" name="homeCameras" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="airConditions">Air Conditions</label>
+                                            <input id="airConditions" name="airConditions" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="compoundDesigning">Compound Designing</label>
+                                            <input id="compoundDesigning" name="compoundDesigning" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="interiorDesigning">Interior Designing</label>
+                                            <input id="interiorDesigning" name="interiorDesigning" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="wallPainting">Wall Painting</label>
+                                            <input id="wallPainting" name="wallPainting" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="secureSafeBoxBuilding">Secure Safe Box Building</label>
+                                            <input id="secureSafeBoxBuilding" name="secureSafeBoxBuilding"
+                                                type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="warehouseBuilding">Warehouse Building</label>
+                                            <input id="warehouseBuilding" name="warehouseBuilding" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="washingBay">Washing Bay</label>
+                                            <input id="washingBay" name="washingBay" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-grp">
+                                            <label for="openBarDesigning">Open Bar Designing</label>
+                                            <input id="openBarDesigning" name="openBarDesigning" type="checkbox">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-center">
+                                        <div class="form-grp flex-grow-1">
+                                            <label for="parkingLot">Parking Lot</label>
+                                            <input id="parkingLot" name="parkingLot" type="checkbox" class="mr-2">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <button class="btn" type="submit">Submit interest</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- contact-area-end -->
+
+    </main>
+    <!-- mian-area-end -->
+
+    <!-- footer-area -->
+    <footer>
+        <div class="footer-area footer-bg" data-background="assets/img/bg/footer_bg.jpg">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-4 col-md-7">
+                            <div class="logo">
+                                <a href='./'><img src="assets/img/logo/w_logo.png" alt=""><br><br></a>
+                            </div>
+                            <div class="footer-widget">
+                                <div class="footer-content">
+                                    <p>Our current focus is on delivering high-quality construction and property
+                                        management services tailored to meet the unique needs and preferences of the
+                                        diaspora community.
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
+                            <div class="footer-widget">
+                                <h2 class="fw-title">Contact us</h2>
+                                <div class="footer-link">
+                                    <ul class="list-wrap">
+                                        <li><a href="#"><i class="fas fa-angle-double-right"></i> Rukiidi 3 street, Daj plaza, <br> Fort Portal, Uganda</a></li>
+                                        <li><a href="#"><i class="fas fa-angle-double-right"></i>Amizon House, Ground floor <br> opposite Mutungo parish catholic church, <br>Nakawa Division Kampala, Uganda</a></li>
+                                        <li><a href="mailto:cmi.groupuganda@gmail.com"><i
+                                                    class="fas fa-angle-double-right"></i>cmi.groupuganda@gmail.com</a>
+                                        </li>
+                                        <li><a href="tel:+256789612187"><i class="fas fa-angle-double-right"></i>+256 789612187</a></li>
+                                        <li><a href="tel:+256754433022"><i class="fas fa-angle-double-right"></i>+256 754 433 022
+                                            </a></li>
+                                            
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+                            <div class="footer-widget">
+                                <h2 class="fw-title">Quick Links</h2>
+                                <div class="footer-link">
+                                    <ul class="list-wrap">
+                                        <li><a href='contact'><i class="fas fa-angle-double-right"></i>Contact
+                                                Us</a></li>
+                                        <li><a href='./'><i class="fas fa-angle-double-right"></i>Home</a></li>
+                                        <li><a href='about'><i class="fas fa-angle-double-right"></i>About Us</a>
+                                        </li>
+                                        <li><a href='services'><i
+                                                    class="fas fa-angle-double-right"></i>Services</a></li>
+                                        <li><a href='project'><i class="fas fa-angle-double-right"></i>Our
+                                                Projects</a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-5 col-md-6">
+                            <div class="footer-widget">
+                                <h2 class="fw-title">Gallery</h2>
+                                <div class="footer-instagram">
+                                    <ul class="list-wrap">
+                                        <li>
+                                            <a href="#"><img src="images/gallery.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/gallery_2.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/gallery_3.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/gallery_4.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/gallery_5.jpg" alt=""></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="images/gallery_6.jpg" alt=""></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer-logo-area">
+                            <div class="row align-items-center">
+                                <div class="col-xl-5 col-lg-5 col-md-6">
+                                    <div class="footer-social">
+                                        <h2 class="title">Follow Us:</h2>
+                                        <ul class="list-wrap">
+                                            <li><a href="https://wa.me/message/DYT6JQFKYJNLF1"><i class="fab fa-whatsapp"></i></a></li>
+                                            <li><a href="https://tiktok.com/@user6920442540067"><i class="fab fa-tiktok"></i></a></li>
+                                            <li><a href="https://www.linkedin.com/in/cmi-group-co-u-ltd-a5bb67117?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin-in"></i></a></li>
+                                            <li><a href="https://www.facebook.com/profile.php?id=100094563980516"><i class="fab fa-facebook-f"></i></a></li>
+                                                <li><a href="https://instagram.com/groupcmi?igshid=OGQ5ZDc2ODk2ZA=="><i class="fab fa-instagram"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-xl-5 col-lg-5 col-md-6">
+                                    <div class="footer-social">
+                                        <h2 class="title">Opening hours: </h2>
+                                        <ul class="list-wrap"><br>
+                                            <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="copyright-text">
+                                <p>CMI Construction © Copyright
+                                    <script>document.write(new Date().getFullYear())</script>. All Right Reserved
+                                </p>
+                                <p>Powered By <a href="https://tseisalesconnect.online/">Tsei Sales Connect Co. Ltd</a>
+                                </p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer-area-end -->
+
+    <!-- JS here -->
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.odometer.min.js"></script>
+    <script src="assets/js/jquery.appear.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/slick-animation.min.js"></script>
+    <script src="assets/js/ajax-form.js"></script>
+    <script src="assets/js/jarallax.min.js"></script>
+    <script src="assets/js/parallax.min.js"></script>
+    <script src="assets/js/gsap.js"></script>
+    <script src="assets/js/ScrollTrigger.js"></script>
+    <script src="assets/js/SplitText.js"></script>
+    <script src="assets/js/gsap-animation.js"></script>
+    <script src="assets/js/tg-cursor.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/contact-estimate-prefill.js"></script>
+    <script src="assets/js/cms-public.js" defer></script>
+</body>
+
+<!-- cmiconstruction.netlify.app/contact by , Tue, 09 Jan 2024 08:59:41 GMT -->
+
+</html>

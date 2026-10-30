@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>CMI Group CMS</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        body { background: #f5f6f8; }
+        .cms-shell { max-width: 1180px; }
+        .cms-item { cursor: pointer; }
+        .cms-item[aria-current="true"] { border-color: #fe5d14; }
+        .cms-status { min-height: 1.5rem; }
+        .cms-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+        .cms-help { color: #555; }
+    </style>
+</head>
+<body>
+    <main class="container cms-shell py-5">
+        <header class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+            <div>
+                <p class="text-uppercase mb-1">CMI Group</p>
+                <h1 class="mb-1">Content management</h1>
+                <p class="cms-help mb-0">Manage drafts and published content. Public changes appear after saving.</p>
+            </div>
+            <a class="btn btn-outline-secondary mt-3 mt-md-0" href="../">View website</a>
+        </header>
+
+        <div id="cms-status" class="alert alert-info cms-status" role="status" aria-live="polite">
+            Checking Cloudflare Access and CMS storage...
+        </div>
+
+        <div id="cms-app" hidden>
+            <div class="row">
+                <section class="col-lg-4 mb-4" aria-labelledby="content-list-title">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 id="content-list-title" class="h4">Content</h2>
+                            <label class="form-label" for="content-type">Content type</label>
+                            <select class="form-control mb-3" id="content-type"></select>
+                            <button class="btn btn-primary btn-block mb-3" id="new-item" type="button">Create new</button>
+                            <div id="content-list" class="list-group"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="col-lg-8 mb-4" aria-labelledby="editor-title">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 id="editor-title" class="h4">Edit content</h2>
+                            <p id="editor-help" class="cms-help">Choose a content type, then create or select an item.</p>
+                            <form id="content-form" hidden>
+                                <div id="editor-fields"></div>
+                                <div class="cms-actions mt-4">
+                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                    <button class="btn btn-outline-secondary" id="reset-form" type="button">Clear</button>
+                                    <button class="btn btn-outline-danger" id="archive-item" type="button" hidden>Archive</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script src="cms.js" defer></script>
+</body>
+</html>

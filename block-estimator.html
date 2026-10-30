@@ -1,0 +1,177 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Block and Brick Estimator - CMI Group</title>
+    <meta name="description" content="Estimate block or brick quantities for measured wall sections using metric dimensions.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/default.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/block-estimator.css">
+</head>
+
+<body>
+    <button class="scroll-top scroll-to-target" data-target="html" aria-label="Scroll to top">
+        <i class="fas fa-level-up-alt" aria-hidden="true"></i>
+    </button>
+    <header>
+        <div id="header-fixed-height"></div>
+        <div id="sticky-header" class="menu-area menu-area-three">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
+                        <div class="menu-wrap">
+                            <nav class="menu-nav" aria-label="Main navigation">
+                                <div class="logo">
+                                    <a href="./"><img src="assets/img/logo/logo_02.png" alt="CMI Group home"></a>
+                                </div>
+                                <div class="navbar-wrap main-menu d-none d-lg-flex">
+                                    <ul class="navigation">
+                                        <li><a href="./">Home</a></li>
+                                        <li><a href="services">Services</a></li>
+                                        <li class="active"><a href="block-estimator.html" aria-current="page">Block estimator</a></li>
+                                        <li><a href="contact">Contact</a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="mobile-menu">
+                            <nav class="menu-box" aria-label="Mobile navigation">
+                                <div class="close-btn"><i class="fas fa-times"></i></div>
+                                <div class="nav-logo"><a href="./"><img src="assets/img/logo/logo_02.png" alt="CMI Group home"></a></div>
+                                <div class="menu-outer"></div>
+                            </nav>
+                        </div>
+                        <div class="menu-backdrop"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="inner-project-area pt-115 pb-90">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="section-title text-center mb-4">
+                            <span class="sub-title">Planning tool</span>
+                            <h1 class="title">Block and brick estimator</h1>
+                            <p>Estimate the quantity needed for measured wall sections. Enter all dimensions in metres or millimetres as labelled.</p>
+                        </div>
+
+                        <form id="block-estimator-form" class="estimator-card" novalidate>
+                            <fieldset class="estimator-settings">
+                                <legend>Unit and allowance</legend>
+                                <div class="row">
+                                    <div class="col-md-4 form-group">
+                                        <label for="unit-type">Unit type</label>
+                                        <select id="unit-type" class="form-control">
+                                            <option value="blocks">Concrete blocks</option>
+                                            <option value="bricks">Bricks</option>
+                                            <option value="units">Other masonry units</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="unit-length">Unit length (mm)</label>
+                                        <input id="unit-length" class="form-control" type="number" min="1" step="1" value="400" required>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="unit-height">Unit height (mm)</label>
+                                        <input id="unit-height" class="form-control" type="number" min="1" step="1" value="200" required>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="joint-width">Mortar joint width (mm)</label>
+                                        <input id="joint-width" class="form-control" type="number" min="0" step="1" value="10" required>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label for="waste">Waste allowance (%)</label>
+                                        <input id="waste" class="form-control" type="number" min="0" max="25" step="0.5" value="5" required>
+                                        <small>Enter a value from 0% to 25%.</small>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="estimator-wall-heading">
+                                <div>
+                                    <h2>Wall sections</h2>
+                                    <p>Add each wall separately, then deduct its doors, windows, or other openings.</p>
+                                </div>
+                                <button id="add-wall" class="btn btn-outline-secondary" type="button">Add wall section</button>
+                            </div>
+                            <div id="wall-sections"></div>
+                            <p id="estimator-error" class="estimator-error" role="alert"></p>
+                            <button class="btn" type="submit">Calculate quantity</button>
+                        </form>
+
+                        <section id="estimator-results" class="estimator-results" aria-live="polite" aria-atomic="true" hidden>
+                            <h2>Estimated wall quantity</h2>
+                            <p id="result-units" class="result-units"></p>
+                            <dl class="row">
+                                <dt class="col-sm-8">Net wall area after openings</dt>
+                                <dd id="result-area" class="col-sm-4"></dd>
+                                <dt class="col-sm-8">Base unit quantity (before waste, unrounded)</dt>
+                                <dd id="result-base-quantity" class="col-sm-4"></dd>
+                                <dt class="col-sm-8">Waste allowance added (before rounding)</dt>
+                                <dd id="result-waste-quantity" class="col-sm-4"></dd>
+                                <dt class="col-sm-8">Waste allowance applied</dt>
+                                <dd id="result-waste" class="col-sm-4"></dd>
+                            </dl>
+                            <section class="estimator-breakdown" aria-labelledby="breakdown-title">
+                                <h3 id="breakdown-title">Inputs and calculation assumptions</h3>
+                                <dl id="result-assumptions" class="row"></dl>
+                                <h4>Wall measurements and openings</h4>
+                                <ul id="result-walls" class="result-walls"></ul>
+                                <p id="result-formula" class="estimator-formula"></p>
+                            </section>
+                            <p class="estimator-disclaimer">This result is an approximate masonry-unit quantity only. Cement, sand, mortar quantities, and prices are not included. It is not a quotation or a full bill of quantities and excludes foundations, structural design, site-specific requirements, and cuts beyond the selected waste allowance. Confirm quantities with a qualified construction professional before ordering.</p>
+                            <a id="quote-request-link" class="btn" href="contact.html#contact-form">Request a quote based on this estimate</a>
+                            <p id="quote-request-status" class="estimator-quote-status" role="status" aria-live="polite"></p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-area footer-bg" data-background="assets/img/bg/footer_bg.jpg">
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="copyright-text">
+                        <p>CMI Construction &copy; Copyright <span id="copyright-year"></span>. All Right Reserved</p>
+                        <p><a href="./">Return to CMI Group home</a> · <a href="services">Our services</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/imagesloaded.pkgd.min.js"></script>
+    <script src="assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="assets/js/jquery.odometer.min.js"></script>
+    <script src="assets/js/jquery.appear.js"></script>
+    <script src="assets/js/slick.min.js"></script>
+    <script src="assets/js/slick-animation.min.js"></script>
+    <script src="assets/js/ajax-form.js"></script>
+    <script src="assets/js/jarallax.min.js"></script>
+    <script src="assets/js/parallax.min.js"></script>
+    <script src="assets/js/gsap.js"></script>
+    <script src="assets/js/ScrollTrigger.js"></script>
+    <script src="assets/js/SplitText.js"></script>
+    <script src="assets/js/gsap-animation.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/block-estimator.js"></script>
+</body>
+
+</html>
