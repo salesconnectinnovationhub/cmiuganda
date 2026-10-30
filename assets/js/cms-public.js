@@ -1,9 +1,92 @@
 const cmsContentCache = new Map();
 
+loadBusinessContactSettings();
 if (document.querySelector("#cms-team-status")) loadManagedTeam();
 if (document.querySelector("#cms-partners")) loadManagedPartners();
 if (document.querySelector("#cms-services")) loadManagedServices();
 loadActivePromotion();
+
+async function loadBusinessContactSettings() {
+    try {
+        const records = await loadCmsItems("settings");
+        const settings = records.find((item) => item.slug === "business-contact");
+        if (!settings) return;
+        updateContactLinks(settings);
+    } catch (error) {
+        console.warn("Business contact settings are temporarily unavailable.", error);
+    }
+}
+
+function updateContactLinks(settings) {
+    const oldEmail = "cmi.groupuganda@gmail.com";
+    if (typeof settings.publicEmail === "string" && settings.publicEmail) {
+        document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+            const [address, query = ""] = link.getAttribute("href").slice(7).split("?", 2);
+            if (address.toLowerCase() !== oldEmail) return;
+            link.href = `mailto:${settings.publicEmail}${query ? `?${query}` : ""}`;
+            replaceText(link, oldEmail, settings.publicEmail);
+        });
+    }
+
+    const defaultPhones = ["256789612187", "256754433022"];
+    const newPhones = [settings.mainPhone, settings.alternatePhone];
+    document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+        const original = link.getAttribute("href").slice(4).replace(/\D/g, "");
+        const index = defaultPhones.indexOf(original);
+        if (index < 0 || typeof newPhones[index] !== "string" || !newPhones[index]) return;
+        const digits = newPhones[index].replace(/\D/g, "");
+        const international = digits.startsWith("0") ? `+256${digits.slice(1)}` : `+${digits}`;
+        link.href = `tel:${international}`;
+        replacePhoneText(link, original, international);
+    });
+
+    if (Object.hasOwn(settings, "whatsappUrl")) {
+        document.querySelectorAll('a[href="https://wa.me/message/DYT6JQFKYJNLF1"]').forEach((link) => {
+            if (settings.whatsappUrl) link.href = settings.whatsappUrl;
+            else link.hidden = true;
+        });
+    }
+
+    const officeAddresses = [
+        { match: /rukiidi 3 street|daj plaza/i, field: "fortPortalAddress" },
+        { match: /amizon house|nakawa division/i, field: "kampalaAddress" },
+    ];
+    document.querySelectorAll('a[href="#"]').forEach((link) => {
+        const replacement = officeAddresses.find((office) => Object.hasOwn(settings, office.field) && office.match.test(link.textContent));
+        if (!replacement) return;
+        if (!settings[replacement.field]) {
+            const listItem = link.closest("li");
+            if (listItem) listItem.hidden = true;
+            else link.hidden = true;
+            return;
+        }
+        const icon = link.querySelector("i");
+        link.replaceChildren(...(icon ? [icon, document.createTextNode(settings[replacement.field])] : [document.createTextNode(settings[replacement.field])]));
+    });
+}
+
+function replaceText(element, oldValue, newValue) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+        node.nodeValue = node.nodeValue.replace(new RegExp(escapeRegExp(oldValue), "gi"), newValue);
+    }
+}
+
+function replacePhoneText(element, oldDigits, newPhone) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+        const match = node.nodeValue.match(/(?:\+?\s*\(?\s*256\s*\)?|0)?[\s()-]*[0-9][0-9\s()-]{6,}/);
+        if (match && match[0].replace(/\D/g, "").includes(oldDigits)) {
+            node.nodeValue = node.nodeValue.replace(match[0], newPhone);
+        }
+    }
+}
+
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function loadCmsItems(type) {
     if (!cmsContentCache.has(type)) {
@@ -39,7 +122,7 @@ async function loadManagedTeam() {
             card.className = "team-member";
             if (member.image && isApprovedImage(member.image)) {
                 const image = document.createElement("img");
-                image.src = member.image;
+                image.src = cmsImageUrl(member.image);
                 image.alt = member.imageAlt || member.title;
                 image.loading = "lazy";
                 image.decoding = "async";
@@ -99,7 +182,7 @@ async function loadManagedPartners() {
             link.setAttribute("aria-label", `Visit ${partner.title} website (opens in a new tab)`);
             const image = document.createElement("img");
             image.className = "img-fluid";
-            image.src = partner.logo;
+            image.src = cmsImageUrl(partner.logo);
             image.alt = partner.imageAlt || `${partner.title} logo`;
             image.loading = "lazy";
             image.decoding = "async";
@@ -131,7 +214,7 @@ async function loadManagedServices() {
             if (service.image && isApprovedImage(service.image)) {
                 const image = document.createElement("img");
                 image.className = "img-fluid mb-3";
-                image.src = service.image;
+                image.src = cmsImageUrl(service.image);
                 image.alt = service.imageAlt || service.title;
                 image.loading = "lazy";
                 image.decoding = "async";
@@ -249,7 +332,7 @@ function showPromotion(promotion) {
 
     if (promotion.image && isApprovedImage(promotion.image)) {
         const image = document.createElement("img");
-        image.src = promotion.image;
+        image.src = cmsImageUrl(promotion.image);
         image.alt = promotion.imageAlt || promotion.title;
         image.className = "img-fluid mb-3";
         image.loading = "lazy";
@@ -311,7 +394,15 @@ function showPromotion(promotion) {
 }
 
 function isApprovedImage(path) {
-    return typeof path === "string" && /^(images|img|teamimages|propertyimages)\//.test(path);
+    return typeof path === "string"
+        && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(path) && !path.split("/").includes("..")
+            || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
+}
+
+function cmsImageUrl(path) {
+    return path.startsWith("cms-media/")
+        ? `/api/cms-media?key=${encodeURIComponent(path)}`
+        : path;
 }
 
 function isHttpsUrl(value) {

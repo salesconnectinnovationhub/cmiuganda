@@ -50,8 +50,20 @@ function isPublishedListing(listing) {
         && Array.isArray(listing.features)
         && listing.features.every((feature) => typeof feature === "string")
         && Array.isArray(listing.images)
-        && listing.images.every((image) => typeof image === "string" && /^(images|img|propertyimages)\//.test(image))
+        && listing.images.every(isApprovedImage)
         && typeof listing.updatedAt === "string";
+}
+
+function isApprovedImage(path) {
+    return typeof path === "string"
+        && (/^(images|img|propertyimages)\/[A-Za-z0-9_./-]+$/.test(path) && !path.split("/").includes("..")
+            || /^cms-media\/property\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
+}
+
+function propertyImageUrl(path) {
+    return path.startsWith("cms-media/")
+        ? `/api/cms-media?key=${encodeURIComponent(path)}`
+        : path;
 }
 
 function createListingCard(listing) {
@@ -64,7 +76,7 @@ function createListingCard(listing) {
     if (imagePath) {
         const image = document.createElement("img");
         image.className = "card-img-top";
-        image.src = imagePath;
+        image.src = propertyImageUrl(imagePath);
         image.alt = listing.imageAlt || listing.title;
         image.loading = "lazy";
         image.decoding = "async";

@@ -1,6 +1,6 @@
-import { isAuthorizedReviewAdmin } from "../_shared/review-auth.js";
+import { getVerifiedAccessEmail } from "../_shared/review-auth.js";
 
-const TYPES = new Set(["property", "team", "partner", "promotion", "service"]);
+const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings"]);
 const STATUSES = new Set(["draft", "published", "archived"]);
 const MAX_BODY_BYTES = 30_000;
 
@@ -10,6 +10,7 @@ const fields = {
   partner: ["url", "logo", "imageAlt", "sortOrder"],
   promotion: ["body", "image", "imageAlt", "startAt", "endAt", "frequencyDays", "buttonText", "buttonUrl"],
   service: ["summary", "image", "imageAlt", "sortOrder"],
+  settings: ["publicEmail", "mainPhone", "alternatePhone", "whatsappUrl", "fortPortalAddress", "kampalaAddress"],
 };
 
 function jsonResponse(data, status = 200) {
@@ -42,6 +43,13 @@ function validSlug(value) {
   return typeof value === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) && value.length <= 100;
 }
 
+function validImageReference(value) {
+  return typeof value === "string"
+    && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(value)
+      || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(value))
+    && !value.split("/").includes("..");
+}
+
 function isValidCalendarDate(value) {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T00:00:00.000Z`);
@@ -57,13 +65,18 @@ function validateItem(type, item) {
   const payload = {};
   for (const field of fields[type]) {
     const value = item[field];
-    if (value === undefined || value === null || value === "") continue;
+    if (value === undefined || value === null) continue;
+    if (value === "" && type === "settings" && ["whatsappUrl", "fortPortalAddress", "kampalaAddress"].includes(field)) {
+      payload[field] = "";
+      continue;
+    }
+    if (value === "") continue;
     if (field === "features" || field === "images") {
       if (!Array.isArray(value) || value.length > 20 || !value.every((entry) => typeof entry === "string" && entry.trim().length <= 300)) {
         return `${field} must be a list of up to 20 text values.`;
       }
-      if (field === "images" && !value.every((entry) => /^(images|img|teamimages|propertyimages)\//.test(entry.trim()))) {
-        return "Images must use approved site-relative paths under images/, img/, teamimages/, or propertyimages/.";
+      if (field === "images" && !value.every((entry) => validImageReference(entry.trim()))) {
+        return "Images must be selected from approved site images or uploaded through the CMS.";
       }
       payload[field] = value.map((entry) => entry.trim());
       continue;
@@ -85,7 +98,7 @@ function validateItem(type, item) {
     const text = normalizeText(value, field === "bio" || field === "body" || field === "summary" ? 3000 : 500);
     if (!text) return `${field} must be text of the allowed length.`;
     if (field === "image" || field === "logo") {
-      if (!/^(images|img|teamimages|propertyimages)\//.test(text)) return "Images must use an approved site-relative path.";
+      if (!validImageReference(text)) return "Choose an approved site image or upload an image through the CMS.";
     }
     if (field === "url" || field === "buttonUrl") {
       let url;
@@ -117,6 +130,19 @@ function validateItem(type, item) {
     }
   }
   if (type === "service" && !normalizeText(payload.summary, 3000)) return "Services require a summary.";
+  if (type === "settings") {
+    if (item.slug !== "business-contact") return "Use the Business contact details record.";
+    for (const field of ["publicEmail", "mainPhone", "alternatePhone"]) {
+      if (!normalizeText(payload[field], 254)) return `Business contact settings require ${field}.`;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.publicEmail)) return "Enter a valid public contact email address.";
+    for (const field of ["mainPhone", "alternatePhone"]) {
+      if (!/^\+?[0-9][0-9 ()-]{6,24}$/.test(payload[field])) return `Enter a valid phone number for ${field}.`;
+    }
+    if (payload.whatsappUrl && (!payload.whatsappUrl.startsWith("https://wa.me/") && !payload.whatsappUrl.startsWith("https://api.whatsapp.com/"))) {
+      return "WhatsApp link must use wa.me or api.whatsapp.com over HTTPS.";
+    }
+  }
   return { slug: item.slug, title: item.title.trim(), publicationStatus: item.publicationStatus, payload };
 }
 
@@ -133,8 +159,15 @@ function mapRow(row) {
   };
 }
 
-async function adminEmail(request, env) {
-  return await isAuthorizedReviewAdmin(request, env, "CF_ACCESS_CMS_AUD") ? "cmigroupuganda@gmail.com" : null;
+function configuredEmails(value) {
+  return String(value || "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean);
+}
+
+function cmsRole(email, env) {
+  if (!email) return null;
+  if (configuredEmails(env.CMS_APPROVER_EMAILS).includes(email)) return "approver";
+  if (configuredEmails(env.CMS_EDITOR_EMAILS).includes(email)) return "editor";
+  return null;
 }
 
 async function readJson(request) {
@@ -151,19 +184,27 @@ function storageUnavailable() {
   return jsonResponse({ error: "CMS storage is not configured. Bind a Cloudflare D1 database as DB and apply functions/cms-schema.sql." }, 503);
 }
 
+function revisionStatement({ itemId, type, slug, title, payload, status, action, actor }) {
+  return {
+    statement: "INSERT INTO cms_revisions (item_id, content_type, slug, title, payload_json, status, action, actor_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    values: [itemId, type, slug, title, JSON.stringify(payload), status, action, actor],
+  };
+}
+
 export async function onRequestGet({ request, env }) {
   if (!env.DB) return storageUnavailable();
   const type = new URL(request.url).searchParams.get("type");
   if (!TYPES.has(type)) return jsonResponse({ error: "Choose a valid content type." }, 400);
-  const actor = await adminEmail(request, env);
-  const isAdmin = actor !== null;
+  const identity = await getVerifiedAccessEmail(request, env, "CF_ACCESS_CMS_AUD");
+  const role = cmsRole(identity, env);
+  const isAdmin = role !== null;
 
   try {
     const query = isAdmin
       ? "SELECT * FROM cms_items WHERE content_type = ? ORDER BY updated_at DESC LIMIT 500"
       : "SELECT * FROM cms_items WHERE content_type = ? AND status = 'published' ORDER BY updated_at DESC LIMIT 500";
     const { results } = await env.DB.prepare(query).bind(type).all();
-    return jsonResponse({ items: results.map(mapRow), isAdmin });
+    return jsonResponse({ items: results.map(mapRow), isAdmin, role });
   } catch (error) {
     console.error("Could not read CMS content.", error);
     return jsonResponse({ error: "CMS content could not be loaded." }, 500);
@@ -180,8 +221,9 @@ export async function onRequestPut({ request, env }) {
 
 async function saveItem({ request, env, isUpdate }) {
   if (!validOrigin(request)) return jsonResponse({ error: "Submit CMS changes from the CMI Group admin site." }, 403);
-  const actor = await adminEmail(request, env);
-  if (!actor) return jsonResponse({ error: "Sign in with the authorized CMI Group admin account." }, 403);
+  const identity = await getVerifiedAccessEmail(request, env, "CF_ACCESS_CMS_AUD");
+  const role = cmsRole(identity, env);
+  if (!role) return jsonResponse({ error: "Sign in with an authorized CMI Group CMS account." }, 403);
   if (!env.DB) return storageUnavailable();
 
   const body = await readJson(request);
@@ -191,7 +233,6 @@ async function saveItem({ request, env, isUpdate }) {
   if (isUpdate && (typeof id !== "string" || id.length > 100)) return jsonResponse({ error: "Content item not found." }, 400);
   const validated = validateItem(type, item);
   if (typeof validated === "string") return jsonResponse({ error: validated }, 400);
-
   const itemId = isUpdate ? id : crypto.randomUUID();
   try {
     let previousStatus = null;
@@ -199,6 +240,15 @@ async function saveItem({ request, env, isUpdate }) {
       const previous = await env.DB.prepare("SELECT status FROM cms_items WHERE id = ?").bind(itemId).first();
       if (!previous) return jsonResponse({ error: "Content item not found." }, 404);
       previousStatus = previous.status;
+      if (role !== "approver" && previousStatus !== "draft") {
+        return jsonResponse({ error: "Only an approver can change content that is already live or archived." }, 403);
+      }
+    }
+    if (validated.publicationStatus === "published" && role !== "approver") {
+      return jsonResponse({ error: "This draft is ready for review. An approver must publish it." }, 403);
+    }
+    if (role !== "approver" && validated.publicationStatus !== "draft") {
+      return jsonResponse({ error: "Editors can save drafts only. An approver must publish or archive content." }, 403);
     }
 
     const action = !isUpdate
@@ -212,19 +262,33 @@ async function saveItem({ request, env, isUpdate }) {
       ? env.DB.prepare(
         `UPDATE cms_items SET content_type = ?, slug = ?, title = ?, payload_json = ?, status = ?,
          updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE id = ?`,
-      ).bind(type, validated.slug, validated.title, JSON.stringify(validated.payload), validated.publicationStatus, actor, itemId)
+      ).bind(type, validated.slug, validated.title, JSON.stringify(validated.payload), validated.publicationStatus, identity, itemId)
       : env.DB.prepare(
         `INSERT INTO cms_items (id, content_type, slug, title, payload_json, status, updated_by)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      ).bind(itemId, type, validated.slug, validated.title, JSON.stringify(validated.payload), validated.publicationStatus, actor);
+      ).bind(itemId, type, validated.slug, validated.title, JSON.stringify(validated.payload), validated.publicationStatus, identity);
     const auditStatement = env.DB.prepare(
       "INSERT INTO cms_audit_log (item_id, content_type, action, actor_email) VALUES (?, ?, ?, ?)",
-    ).bind(itemId, type, action, actor);
-    await env.DB.batch([statement, auditStatement]);
+    ).bind(itemId, type, action, identity);
+    const revision = revisionStatement({
+      itemId,
+      type,
+      slug: validated.slug,
+      title: validated.title,
+      payload: validated.payload,
+      status: validated.publicationStatus,
+      action: !isUpdate ? "create" : action,
+      actor: identity,
+    });
+    const revisionStatementPrepared = env.DB.prepare(revision.statement).bind(...revision.values);
+    await env.DB.batch([statement, auditStatement, revisionStatementPrepared]);
     return jsonResponse({ ok: true, id: itemId }, isUpdate ? 200 : 201);
   } catch (error) {
     console.error("Could not save CMS content.", error);
     if (String(error.message || "").includes("UNIQUE")) {
+      if (type === "settings") {
+        return jsonResponse({ error: "Business contact details already exist. Edit the existing record instead." }, 409);
+      }
       return jsonResponse({ error: "That slug is already in use for this content type." }, 409);
     }
     return jsonResponse({ error: "Content could not be saved." }, 500);
@@ -233,8 +297,9 @@ async function saveItem({ request, env, isUpdate }) {
 
 export async function onRequestDelete({ request, env }) {
   if (!validOrigin(request)) return jsonResponse({ error: "Submit CMS changes from the CMI Group admin site." }, 403);
-  const actor = await adminEmail(request, env);
-  if (!actor) return jsonResponse({ error: "Sign in with the authorized CMI Group admin account." }, 403);
+  const identity = await getVerifiedAccessEmail(request, env, "CF_ACCESS_CMS_AUD");
+  const role = cmsRole(identity, env);
+  if (role !== "approver") return jsonResponse({ error: "Only a CMI Group approver can archive content." }, 403);
   if (!env.DB) return storageUnavailable();
 
   const body = await readJson(request);
@@ -243,13 +308,26 @@ export async function onRequestDelete({ request, env }) {
   if (typeof id !== "string" || id.length > 100) return jsonResponse({ error: "Content item not found." }, 400);
 
   try {
+    const existing = await env.DB.prepare(
+      "SELECT id, content_type, slug, title, payload_json, status FROM cms_items WHERE id = ?",
+    ).bind(id).first();
+    if (!existing) return jsonResponse({ error: "Content item not found." }, 404);
+    if (existing.content_type === "settings") {
+      return jsonResponse({ error: "Business contact settings cannot be archived. Update the contact details instead." }, 400);
+    }
+    if (existing.status === "archived") {
+      return jsonResponse({ error: "This content is already archived. Restore an earlier version from its history." }, 409);
+    }
     const updateStatement = env.DB.prepare(
       "UPDATE cms_items SET status = 'archived', updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE id = ?",
-    ).bind(actor, id);
+    ).bind(identity, id);
     const auditStatement = env.DB.prepare(
       "INSERT INTO cms_audit_log (item_id, content_type, action, actor_email) SELECT id, content_type, 'archive', ? FROM cms_items WHERE id = ?",
-    ).bind(actor, id);
-    const results = await env.DB.batch([updateStatement, auditStatement]);
+    ).bind(identity, id);
+    const revision = env.DB.prepare(
+      "INSERT INTO cms_revisions (item_id, content_type, slug, title, payload_json, status, action, actor_email) VALUES (?, ?, ?, ?, ?, 'archived', 'archive', ?)",
+    ).bind(existing.id, existing.content_type, existing.slug, existing.title, existing.payload_json, identity);
+    const results = await env.DB.batch([updateStatement, auditStatement, revision]);
     if (results[0].meta.changes === 0) return jsonResponse({ error: "Content item not found." }, 404);
     return jsonResponse({ ok: true });
   } catch (error) {

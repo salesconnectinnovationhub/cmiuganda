@@ -1,4 +1,4 @@
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
+﻿const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
 export const RECIPIENT = "cmigroupuganda@gmail.com";
 

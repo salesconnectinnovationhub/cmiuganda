@@ -44,12 +44,12 @@ async function getAccessKeys(issuer) {
   return cachedKeys;
 }
 
-export async function isAuthorizedReviewAdmin(request, env, audienceVariable = "CF_ACCESS_AUD") {
+export async function getVerifiedAccessEmail(request, env, audienceVariable = "CF_ACCESS_AUD") {
   const teamDomain = String(env.CF_ACCESS_TEAM_DOMAIN || "").trim().replace(/^https?:\/\//i, "").replace(/\/+$/, "");
   const audience = String(env[audienceVariable] || "").trim();
   if (!teamDomain || !audience) {
-    console.error("Cloudflare Access is not configured for review administration.");
-    return false;
+    console.error(`Cloudflare Access is not configured for ${audienceVariable}.`);
+    return null;
   }
 
   try {
@@ -88,9 +88,14 @@ export async function isAuthorizedReviewAdmin(request, env, audienceVariable = "
     if (!signatureIsValid) return false;
 
     const email = String(payload.email || "").toLowerCase();
-    return email === ACCESS_EMAIL;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : null;
   } catch (error) {
-    console.error("Could not verify Cloudflare Access identity for review administration.", error);
-    return false;
+    console.error(`Could not verify Cloudflare Access identity for ${audienceVariable}.`, error);
+    return null;
   }
+}
+
+export async function isAuthorizedReviewAdmin(request, env, audienceVariable = "CF_ACCESS_AUD") {
+  const email = await getVerifiedAccessEmail(request, env, audienceVariable);
+  return email === ACCESS_EMAIL;
 }
