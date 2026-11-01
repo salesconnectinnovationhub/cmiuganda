@@ -55,9 +55,10 @@ export async function onRequestGet({ request, env }) {
   const itemId = new URL(request.url).searchParams.get("id");
   if (!itemId || itemId.length > 100) return jsonResponse({ error: "Content item not found." }, 400);
   try {
+    const revisionStatusFilter = actor.role === "approver" ? "" : "AND status = 'draft'";
     const { results } = await env.DB.prepare(
       `SELECT revision_id, item_id, content_type, slug, title, payload_json, status, action, actor_email, created_at
-       FROM cms_revisions WHERE item_id = ? ORDER BY revision_id DESC LIMIT 100`,
+       FROM cms_revisions WHERE item_id = ? ${revisionStatusFilter} ORDER BY revision_id DESC LIMIT 100`,
     ).bind(itemId).all();
     return jsonResponse({
       revisions: results.map((revision) => ({

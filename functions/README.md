@@ -93,6 +93,8 @@ authorized staff restore an earlier draft or published version. Restoring a
 published revision makes it live; restoring an archived snapshot does not
 publish it. Archive keeps the item and its history, so an approver can restore
 an earlier published revision to recover an archived listing.
+Editors can view and restore draft revisions only; approvers can view the full
+revision history.
 The singleton business-contact settings record cannot be archived; update its
 values or restore a revision instead.
 

@@ -96,6 +96,7 @@ let selectedId = null;
 let currentType = "";
 let isDirty = false;
 let cmsRole = null;
+let editorBusyControls = null;
 
 for (const [type, collection] of Object.entries(collections)) {
     const option = document.createElement("option");
@@ -141,8 +142,16 @@ async function apiRequest(url, options = {}) {
             ...options.headers,
         },
     });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || `CMS request failed (${response.status}).`);
+    let result;
+    try {
+        result = await response.json();
+    } catch {
+        throw new Error(`CMS returned an invalid response (${response.status}). Check the Cloudflare Access session and Pages Functions deployment.`);
+    }
+    if (!response.ok) {
+        const message = typeof result?.error === "string" ? result.error : `CMS request failed (${response.status}).`;
+        throw new Error(message);
+    }
     return result;
 }
 
@@ -347,7 +356,7 @@ async function saveItem(event) {
     item.publicationStatus = publicationStatus;
     status.className = "alert alert-info cms-status";
     status.textContent = publicationStatus === "published" ? "Publishing content..." : "Saving draft...";
-    setSaveButtonsDisabled(true);
+    setEditorBusy(true);
 
     try {
         const saved = await apiRequest("/api/cms", {
@@ -369,7 +378,7 @@ async function saveItem(event) {
             ? `Could not save—please check these fields. ${error.message}`
             : "Could not save—please check these fields.";
     } finally {
-        setSaveButtonsDisabled(false);
+        setEditorBusy(false);
     }
 }
 
@@ -495,10 +504,23 @@ function publicationLabel(publicationStatus) {
     })[publicationStatus] || "Unknown status";
 }
 
-function setSaveButtonsDisabled(disabled) {
-    form.querySelectorAll('button[type="submit"]').forEach((button) => {
-        button.disabled = disabled;
-    });
+function setEditorBusy(busy) {
+    if (busy) {
+        editorBusyControls = [
+            typeSelect,
+            document.querySelector("#new-item"),
+            ...contentList.querySelectorAll("button"),
+            ...form.querySelectorAll("input, textarea, select, button"),
+            ...historyPanel.querySelectorAll("button"),
+        ].map((control) => [control, control.disabled]);
+        for (const [control] of editorBusyControls) control.disabled = true;
+        return;
+    }
+
+    for (const [control, wasDisabled] of editorBusyControls || []) {
+        if (control.isConnected) control.disabled = wasDisabled;
+    }
+    editorBusyControls = null;
 }
 
 function renderPreview(type) {
@@ -621,11 +643,20 @@ async function uploadSelectedImages(name, input, picker) {
     picker.value = "";
     if (!files.length) return;
 
-    picker.disabled = true;
+    if (name === "images") {
+        const currentCount = input.value.split(/\r?\n/).map((path) => path.trim()).filter(Boolean).length;
+        if (currentCount + files.length > 20) {
+            status.className = "alert alert-danger cms-status";
+            status.textContent = "A listing can have no more than 20 photos. Remove a photo or choose a smaller batch.";
+            return;
+        }
+    }
+
+    const uploaded = [];
+    setEditorBusy(true);
     status.className = "alert alert-info cms-status";
     status.textContent = files.length === 1 ? "Uploading image..." : `Uploading ${files.length} images...`;
     try {
-        const uploaded = [];
         for (const file of files) {
             const body = new FormData();
             body.append("collection", typeSelect.value);
@@ -656,7 +687,7 @@ async function uploadSelectedImages(name, input, picker) {
             ? `${uploaded.length} image${uploaded.length === 1 ? "" : "s"} uploaded; another upload failed. ${error.message || "Please retry."}`
             : error.message || "Image upload failed. Please try again.";
     } finally {
-        picker.disabled = false;
+        setEditorBusy(false);
     }
 }
 
