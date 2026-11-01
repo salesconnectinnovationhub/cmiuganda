@@ -126,8 +126,9 @@ The public pages consume CMS content as follows:
    `npx wrangler d1 execute <database-name> --remote --file=functions/cms-settings-migration.sql`
    to update the existing `cms_items` content-type constraint while preserving
    its records.
-3. Create an R2 bucket for CMS images and bind it to the Pages project using
-   the binding name `CMS_MEDIA_BUCKET`. The CMS serves images through
+3. Create an R2 bucket for CMS uploads and bind it to the Pages project using
+   the binding name `CMS_MEDIA_BUCKET`. The CMS serves images and published
+   downloadable resources through
    `GET /api/cms-media?key=...`; the bucket itself does not need a public
    bucket URL.
 4. Configure a Cloudflare Access application for
@@ -146,10 +147,15 @@ The public pages consume CMS content as follows:
    upload a valid image, save a draft, and verify an editor cannot publish or
    change live content. Then sign in as an approver, review the draft, publish
    it, and confirm the public page renders the uploaded image. Also verify that
-   an invalid image type and an image larger than 5 MB are rejected.
+   an invalid image type and a file larger than 10 MB are rejected.
 7. Add records only after the business has approved the text, photos, and
-   partner destinations. The CMS accepts JPEG, PNG, and WebP uploads up to
-   5 MB; uploaded objects use generated keys and are not overwritten.
+   partner destinations. The CMS accepts JPEG, PNG, and WebP images up to
+   10 MB. Larger images are resized and compressed in the browser before
+   upload. The Support resources collection accepts PDF and Microsoft Word,
+   Excel, and PowerPoint documents up to 10 MB. Oversized documents are
+   rejected with guidance to optimize them; they are not converted, to avoid
+   changing document contents or layout. Uploaded objects use generated keys
+   and are not overwritten.
 8. In the Business contact details collection, review the prefilled public
    contact details, save a draft, and have an approver publish them. Verify
    phone, email, WhatsApp, and office links across the public pages. This
@@ -163,9 +169,17 @@ Until D1 is bound and both schemas are applied, CMS and review API calls return
 explicit configuration errors. Existing hard-coded team/partner/service
 content remains visible until at least one approved CMS record of that type is
 published. Existing third-party review history is not migrated automatically.
-Without the `CMS_MEDIA_BUCKET` binding, image upload and image delivery return
+Without the `CMS_MEDIA_BUCKET` binding, image/resource upload and delivery return
 an explicit unavailable response. Keep the bucket private and serve public
-images only through the CMS media endpoint.
+images and published documents only through the CMS media endpoint.
+
+If CMS is already deployed with the earlier content-type constraint, back up
+the D1 database and run
+`npx wrangler d1 execute <database-name> --remote --file=functions/cms-resource-migration.sql`
+to add the `resource` content type while preserving existing CMS records.
+For a database created before the settings migration, follow the settings
+migration above first; its current version also includes the resource type.
+For a fresh database, apply the current `cms-schema.sql` instead.
 
 ### Content fields
 

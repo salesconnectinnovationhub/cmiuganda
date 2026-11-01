@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS cms_items (
   id TEXT PRIMARY KEY,
-  content_type TEXT NOT NULL CHECK (content_type IN ('property', 'team', 'partner', 'promotion', 'service', 'settings', 'page')),
+  content_type TEXT NOT NULL CHECK (content_type IN ('property', 'team', 'partner', 'promotion', 'service', 'settings', 'resource', 'page')),
   slug TEXT NOT NULL,
   title TEXT NOT NULL CHECK (length(title) BETWEEN 1 AND 160),
   payload_json TEXT NOT NULL CHECK (json_valid(payload_json)),

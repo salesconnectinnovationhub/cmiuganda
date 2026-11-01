@@ -1,6 +1,6 @@
 import { getVerifiedAccessEmail } from "../_shared/review-auth.js";
 
-const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings"]);
+const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings", "resource"]);
 const STATUSES = new Set(["draft", "published", "archived"]);
 const MAX_BODY_BYTES = 30_000;
 
@@ -11,6 +11,7 @@ const fields = {
   promotion: ["body", "image", "imageAlt", "startAt", "endAt", "frequencyDays", "buttonText", "buttonUrl"],
   service: ["summary", "image", "imageAlt", "sortOrder"],
   settings: ["publicEmail", "mainPhone", "alternatePhone", "whatsappUrl", "fortPortalAddress", "kampalaAddress"],
+  resource: ["summary", "file", "fileName"],
 };
 
 function jsonResponse(data, status = 200) {
@@ -48,6 +49,11 @@ function validImageReference(value) {
     && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(value)
       || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(value))
     && !value.split("/").includes("..");
+}
+
+function validResourceReference(value) {
+  return typeof value === "string"
+    && /^cms-media\/resource\/[0-9a-f-]{36}\.(pdf|doc|docx|xls|xlsx|ppt|pptx)$/.test(value);
 }
 
 function isValidCalendarDate(value) {
@@ -100,6 +106,10 @@ function validateItem(type, item) {
     if (field === "image" || field === "logo") {
       if (!validImageReference(text)) return "Choose an approved site image or upload an image through the CMS.";
     }
+    if (field === "file" && !validResourceReference(text)) {
+      return "Upload a PDF or supported Office document through the CMS.";
+    }
+    if (field === "fileName" && /[\\/]/.test(text)) return "The resource filename is invalid.";
     if (field === "url" || field === "buttonUrl") {
       let url;
       try {
@@ -130,6 +140,12 @@ function validateItem(type, item) {
     }
   }
   if (type === "service" && !normalizeText(payload.summary, 3000)) return "Services require a summary.";
+  if (type === "resource" && (!payload.file || !payload.fileName)) {
+    return "Resources require an uploaded file.";
+  }
+  if (type === "resource" && payload.fileName.split(".").pop().toLowerCase() !== payload.file.split(".").pop().toLowerCase()) {
+    return "The resource filename must match the uploaded file type.";
+  }
   if (type === "settings") {
     if (item.slug !== "business-contact") return "Use the Business contact details record.";
     for (const field of ["publicEmail", "mainPhone", "alternatePhone"]) {

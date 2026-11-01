@@ -4,6 +4,7 @@ loadBusinessContactSettings();
 if (document.querySelector("#cms-team-status")) loadManagedTeam();
 if (document.querySelector("#cms-partners")) loadManagedPartners();
 if (document.querySelector("#cms-services")) loadManagedServices();
+if (document.querySelector("#cms-resources")) loadManagedResources();
 loadActivePromotion();
 
 async function loadBusinessContactSettings() {
@@ -236,6 +237,51 @@ async function loadManagedServices() {
         message.className = "text-center";
         message.textContent = error.message || "Services are temporarily unavailable.";
         container.replaceChildren(message);
+    }
+}
+
+async function loadManagedResources() {
+    const container = document.querySelector("#cms-resources");
+    if (!container) return;
+    try {
+        const resources = await loadCmsItems("resource");
+        if (!resources.length) return;
+        const fragment = document.createDocumentFragment();
+        for (const resource of resources) {
+            if (!resource.file || !/^cms-media\/resource\/[0-9a-f-]{36}\.(pdf|doc|docx|xls|xlsx|ppt|pptx)$/.test(resource.file)) continue;
+            const column = document.createElement("div");
+            column.className = "col-md-6 mb-4";
+            const card = document.createElement("article");
+            card.className = "card h-100";
+            const icon = document.createElement("i");
+            icon.className = "fas fa-file-alt card-img-top text-center";
+            icon.style.cssText = "font-size:4rem;padding:20px";
+            icon.setAttribute("aria-hidden", "true");
+            const body = document.createElement("div");
+            body.className = "card-body text-center";
+            const title = document.createElement("h3");
+            title.className = "card-title h5";
+            title.textContent = resource.title;
+            body.append(title);
+            if (resource.summary) {
+                const description = document.createElement("p");
+                description.className = "card-text";
+                description.textContent = resource.summary;
+                body.append(description);
+            }
+            const link = document.createElement("a");
+            link.href = cmsImageUrl(resource.file);
+            link.className = "btn btn-primary";
+            link.textContent = "Download";
+            link.setAttribute("aria-label", `Download ${resource.title}`);
+            body.append(link);
+            card.append(icon, body);
+            column.append(card);
+            fragment.append(column);
+        }
+        if (fragment.childElementCount) container.replaceChildren(fragment);
+    } catch (error) {
+        console.error("Could not load support resources.", error);
     }
 }
 

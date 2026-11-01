@@ -1,3 +1,6 @@
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+const RESOURCE_ACCEPT = ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx";
+
 const collections = {
     property: {
         label: "Property listings",
@@ -10,7 +13,7 @@ const collections = {
             ["status", "Availability", "select", true, "Choose the current availability.", ["Available", "Reserved", "Sold", "Rented"]],
             ["summary", "Summary", "textarea", true, "Describe the property in 1–3 sentences. Example: A serviced residential plot near the main road, with water and power nearby."],
             ["features", "Features (one per line)", "textarea", false, "Add one short feature per line, such as \"Road access\" or \"Water connection nearby\"."],
-            ["images", "Property photos", "imageList", false, "Upload JPEG, PNG, or WebP images up to 5 MB each. The first photo is the listing thumbnail."],
+            ["images", "Property photos", "imageList", false, "Upload JPEG, PNG, or WebP images up to 10 MB each. Larger images are resized and compressed automatically. The first photo is the listing thumbnail."],
             ["imageAlt", "Main image description", "text", false, "Describe what is visible, e.g. \"Front view of the house and garden\". Leave blank to use the listing title."],
         ],
     },
@@ -21,7 +24,7 @@ const collections = {
             ["slug", "URL-safe slug", "text", true, "Created automatically from the name; used internally to identify this profile."],
             ["role", "Role or title", "text", true, "Example: Managing Director or Quantity Surveyor."],
             ["bio", "Biography", "textarea", false, "Add a short, approved biography. Keep it relevant to the person's CMI Group role."],
-            ["image", "Team photo", "imagePicker", false, "Upload a JPEG, PNG, or WebP photo up to 5 MB."],
+            ["image", "Team photo", "imagePicker", false, "Upload a JPEG, PNG, or WebP photo up to 10 MB. Larger images are resized and compressed automatically."],
             ["imageAlt", "Photo description", "text", false, "Describe the person in the photo, e.g. \"Portrait of the Managing Director\"."],
             ["sortOrder", "Display order (number)", "number", false, "Use 1 for the first profile, 2 for the second, and so on."],
         ],
@@ -32,7 +35,7 @@ const collections = {
             ["title", "Partner name", "text", true, "Enter the partner name as it should appear publicly."],
             ["slug", "URL-safe slug", "text", true, "Created automatically from the name."],
             ["url", "Partner website (HTTPS)", "url", true, "Example: https://example.com"],
-            ["logo", "Partner logo", "imagePicker", true, "Upload a JPEG, PNG, or WebP logo up to 5 MB."],
+            ["logo", "Partner logo", "imagePicker", true, "Upload a JPEG, PNG, or WebP logo up to 10 MB. Larger images are resized and compressed automatically."],
             ["imageAlt", "Logo description", "text", false, "Example: \"ABC Ltd logo\"."],
             ["sortOrder", "Display order (number)", "number", false, "Use 1 for the first partner, 2 for the second, and so on."],
         ],
@@ -43,7 +46,7 @@ const collections = {
             ["title", "Service title", "text", true, "Use a concise service name visitors will understand."],
             ["slug", "URL-safe slug", "text", true, "Created automatically from the title."],
             ["summary", "Description", "textarea", true, "Explain what the service includes in a few clear sentences."],
-            ["image", "Service image", "imagePicker", false, "Upload a JPEG, PNG, or WebP image up to 5 MB."],
+            ["image", "Service image", "imagePicker", false, "Upload a JPEG, PNG, or WebP image up to 10 MB. Larger images are resized and compressed automatically."],
             ["imageAlt", "Image description", "text", false, "Describe the image for visitors using screen readers."],
             ["sortOrder", "Display order (number)", "number", false, "Use 1 for the first service, 2 for the second, and so on."],
         ],
@@ -54,7 +57,7 @@ const collections = {
             ["title", "Promotion title", "text", true, "Example: End-of-year building offer."],
             ["slug", "URL-safe slug", "text", true, "Created automatically from the title."],
             ["body", "Announcement text", "textarea", true, "Describe the offer, who it is for, and any important conditions."],
-            ["image", "Promotion image", "imagePicker", false, "Upload a JPEG, PNG, or WebP image up to 5 MB."],
+            ["image", "Promotion image", "imagePicker", false, "Upload a JPEG, PNG, or WebP image up to 10 MB. Larger images are resized and compressed automatically."],
             ["imageAlt", "Image description", "text", false, "Describe the image for visitors using screen readers."],
             ["startAt", "Start date", "date", true, "The promotion starts on this date in Uganda time."],
             ["endAt", "End date", "date", true, "The promotion remains active through this date in Uganda time."],
@@ -74,6 +77,16 @@ const collections = {
             ["whatsappUrl", "WhatsApp link", "url", false, "Use a secure wa.me or api.whatsapp.com link."],
             ["fortPortalAddress", "Fort Portal address", "textarea", false, "Enter the approved address shown on the contact page."],
             ["kampalaAddress", "Kampala address", "textarea", false, "Enter the approved address shown on the contact page."],
+        ],
+    },
+    resource: {
+        label: "Support resources",
+        fields: [
+            ["title", "Resource title", "text", true, "Enter the name visitors should see."],
+            ["slug", "URL-safe slug", "text", true, "Created automatically from the title."],
+            ["summary", "Description", "textarea", false, "Explain what this document is for."],
+            ["fileName", "Current file", "text", false, "Upload a PDF or Microsoft Word, Excel, or PowerPoint file up to 10 MB."],
+            ["file", "Resource file", "resourcePicker", false, "Files over 10 MB must be optimized before upload."],
         ],
     },
 };
@@ -242,15 +255,17 @@ function editItem(item) {
         fieldLabel.htmlFor = id;
         fieldLabel.textContent = label;
         const isImagePicker = inputType === "imagePicker" || inputType === "imageList";
+        const isResourcePicker = inputType === "resourcePicker";
         const input = inputType === "textarea" || inputType === "imageList"
             ? document.createElement("textarea")
             : document.createElement(inputType === "select" ? "select" : "input");
         input.className = "form-control";
         input.id = id;
         input.name = name;
-        if (inputType !== "textarea" && inputType !== "select") input.type = inputType === "imagePicker" ? "hidden" : inputType;
+        if (inputType !== "textarea" && inputType !== "select") input.type = inputType === "imagePicker" || isResourcePicker ? "hidden" : inputType;
         if (inputType === "imageList") input.hidden = true;
-        input.required = isImagePicker ? false : required;
+        input.required = isImagePicker || isResourcePicker ? false : required;
+        if (type === "resource" && name === "fileName") input.readOnly = true;
         input.maxLength = name === "bio" || name === "body" || name === "summary" ? 3000 : 500;
         if (name === "frequencyDays") {
             input.min = "1";
@@ -310,6 +325,20 @@ function editItem(item) {
             imageList.dataset.imageField = name;
             wrapper.append(imageList);
             renderImagePicker(name, input, imageList);
+        }
+        if (isResourcePicker) {
+            const picker = document.createElement("input");
+            picker.type = "file";
+            picker.accept = RESOURCE_ACCEPT;
+            picker.className = "form-control-file mt-2";
+            picker.setAttribute("aria-label", "Upload a support resource");
+            picker.addEventListener("change", () => uploadSelectedResource(input, picker));
+            wrapper.append(picker);
+            const filePreview = document.createElement("div");
+            filePreview.className = "mt-2";
+            filePreview.dataset.resourceField = name;
+            wrapper.append(filePreview);
+            renderResourceFile(input, filePreview);
         }
         if (helpText) {
             const help = document.createElement("small");
@@ -531,7 +560,9 @@ function renderPreview(type) {
     const title = document.createElement("h4");
     title.className = "card-title";
     title.textContent = value("title") || "Content title";
-    const imagePath = type === "property"
+    const imagePath = type === "resource"
+        ? ""
+        : type === "property"
         ? value("images").split(/\r?\n/).map((path) => path.trim()).find(Boolean)
         : value(type === "partner" ? "logo" : "image");
     if (imagePath && isApprovedImage(imagePath)) {
@@ -549,7 +580,7 @@ function renderPreview(type) {
         preview.replaceChildren(image, cardBody);
     } else {
         preview.replaceChildren(cardBody);
-        if (type !== "partner" && type !== "settings") {
+        if (type !== "partner" && type !== "settings" && type !== "resource") {
             const placeholder = document.createElement("div");
             placeholder.className = "cms-preview-empty";
             placeholder.textContent = "Image preview will appear here when an approved image path is added.";
@@ -570,6 +601,15 @@ function renderPreview(type) {
             detail.textContent = `${label}: ${value(name) || "Not set"}`;
             cardBody.append(detail);
         }
+        return;
+    }
+
+    if (type === "resource") {
+        const description = document.createElement("p");
+        description.textContent = value("summary") || "Resource description";
+        const file = document.createElement("p");
+        file.textContent = value("fileName") || "No document uploaded";
+        cardBody.append(title, description, file);
         return;
     }
 
@@ -655,12 +695,13 @@ async function uploadSelectedImages(name, input, picker) {
     const uploaded = [];
     setEditorBusy(true);
     status.className = "alert alert-info cms-status";
-    status.textContent = files.length === 1 ? "Uploading image..." : `Uploading ${files.length} images...`;
+    status.textContent = files.length === 1 ? "Preparing and uploading image..." : `Preparing and uploading ${files.length} images...`;
     try {
         for (const file of files) {
+            const uploadFile = file.size > MAX_UPLOAD_BYTES ? await compressImageToLimit(file) : file;
             const body = new FormData();
             body.append("collection", typeSelect.value);
-            body.append("image", file);
+            body.append("image", uploadFile);
             const result = await apiRequest("/api/cms-media", { method: "POST", body });
             uploaded.push(result.key);
             if (name === "images") {
@@ -670,7 +711,6 @@ async function uploadSelectedImages(name, input, picker) {
                 input.value = result.key;
             }
         }
-
         isDirty = true;
         renderImagePicker(name, input, editorFields.querySelector(`[data-image-field="${name}"]`));
         renderPreview(typeSelect.value);
@@ -689,6 +729,99 @@ async function uploadSelectedImages(name, input, picker) {
     } finally {
         setEditorBusy(false);
     }
+}
+
+async function compressImageToLimit(file) {
+    if (typeof createImageBitmap !== "function") {
+        throw new Error("This browser cannot resize large images. Please use a modern browser or resize the image before uploading.");
+    }
+    let bitmap;
+    try {
+        bitmap = await createImageBitmap(file);
+        const canvas = document.createElement("canvas");
+        const initialScale = Math.min(1, 4096 / Math.max(bitmap.width, bitmap.height));
+        let scale = initialScale;
+        for (let attempt = 0; attempt < 8; attempt += 1) {
+            canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+            canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+            const context = canvas.getContext("2d");
+            if (!context) throw new Error("Image resizing is not available in this browser.");
+            context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+            for (const quality of [0.9, 0.82, 0.74, 0.66]) {
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", quality));
+                if (!blob) throw new Error("The selected image could not be resized.");
+                if (blob.size <= MAX_UPLOAD_BYTES) {
+                    const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
+                    return new File([blob], `${baseName}.webp`, { type: "image/webp", lastModified: file.lastModified });
+                }
+            }
+            scale *= 0.8;
+        }
+        throw new Error("This image could not be reduced below 10 MB. Resize it manually and try again.");
+    } finally {
+        bitmap?.close();
+    }
+}
+
+async function uploadSelectedResource(input, picker) {
+    const file = picker.files?.[0];
+    picker.value = "";
+    if (!file) return;
+    if (file.size > MAX_UPLOAD_BYTES) {
+        status.className = "alert alert-danger cms-status";
+        status.textContent = "This document exceeds 10 MB. Optimize the file before uploading; documents are not automatically converted.";
+        return;
+    }
+
+    setEditorBusy(true);
+    status.className = "alert alert-info cms-status";
+    status.textContent = "Uploading resource...";
+    try {
+        const body = new FormData();
+        body.append("collection", "resource");
+        body.append("file", file);
+        const result = await apiRequest("/api/cms-media", { method: "POST", body });
+        input.value = result.key;
+        form.elements.namedItem("fileName").value = result.fileName;
+        isDirty = true;
+        renderResourceFile(input, editorFields.querySelector("[data-resource-field='file']"));
+        renderPreview(typeSelect.value);
+        status.className = "alert alert-success cms-status";
+        status.textContent = "Resource uploaded. Save the draft to retain it, then have an approver publish it.";
+    } catch (error) {
+        status.className = "alert alert-danger cms-status";
+        status.textContent = error.message || "Resource upload failed. Please try again.";
+    } finally {
+        setEditorBusy(false);
+    }
+}
+
+function renderResourceFile(input, container) {
+    if (!container) return;
+    container.replaceChildren();
+    if (!input.value) {
+        const empty = document.createElement("p");
+        empty.className = "form-text text-muted";
+        empty.textContent = "No resource uploaded.";
+        container.append(empty);
+        return;
+    }
+    const filename = form.elements.namedItem("fileName").value || "Uploaded resource";
+    const label = document.createElement("span");
+    label.className = "mr-2";
+    label.textContent = filename;
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "btn btn-sm btn-outline-danger";
+    remove.textContent = "Remove file";
+    remove.addEventListener("click", () => {
+        input.value = "";
+        form.elements.namedItem("fileName").value = "";
+        isDirty = true;
+        renderResourceFile(input, container);
+        renderPreview(typeSelect.value);
+    });
+    container.append(label, remove);
 }
 
 function renderImagePicker(name, input, container) {
