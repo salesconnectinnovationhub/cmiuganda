@@ -126,40 +126,36 @@
                         // Reference to the container where the cards will be added
                         var projectsContainer = document.getElementById("projects-container");
 
-                        // Loop through filenames from "gallery_1" to "gallery_20"
+                        var fieldPhotos = [
+                            ["IMG-20261031-WA0005.jpg", "Community gathering beside a water tank"],
+                            ["IMG-20261031-WA0007.jpg", "School and community compound with construction activity"],
+                            ["IMG-20261031-WA0009.jpg", "Brick boundary-wall construction"],
+                            ["IMG-20261031-WA0012.jpg", "School exterior with a worker completing exterior work"],
+                            ["IMG-20261031-WA0016.jpg", "Team members inspecting an open project site"],
+                            ["IMG-20261031-WA0020.jpg", "Unfinished brick building"],
+                            ["IMG-20261031-WA0022.jpg", "Ground preparation and early construction work"],
+                            ["IMG-20261031-WA0024.jpg", "Circular water-tank foundation under construction"],
+                            ["IMG-20261031-WA0030.jpg", "Foundation and site preparation"],
+                            ["IMG-20261031-WA0035.jpg", "Building frame and columns during construction"],
+                            ["IMG-20261031-WA0039.jpg", "Exterior view of a completed community building"],
+                            ["IMG-20261031-WA0041.jpg", "Dedication plaque at a community water project"],
+                            ["IMG-20261031-WA0045.jpg", "Exterior view of a completed school building"],
+                            ["IMG-20261031-WA0048.jpg", "Community members gathered at a water point"]
+                        ];
+
                         for (var i = 1; i <= 28; i++) {
-                            // Create elements for the card structure
-                            var cardColumn = document.createElement("div");
-                            cardColumn.className = "col-lg-4 col-md-6 col-sm-10";
-
-                            var projectItem = document.createElement("div");
-                            projectItem.className = "project-item-two";
-
-                            var projectThumb = document.createElement("div");
-                            projectThumb.className = "project-thumb-two";
-
-                            var projectLink = document.createElement("a");
-                            var imageUrl = "galleryimages/gallery_" + i + ".jpg";
-                            projectLink.href = imageUrl;
-                            projectLink.className = "popup-image";
-                            projectLink.title = "CMI Group project photo " + i;
-                            projectLink.setAttribute("aria-label", "View full-size CMI Group project photo " + i);
-
-                            var projectImage = document.createElement("img");
-                            projectImage.src = imageUrl;
-                            projectImage.alt = "CMI Group project photo " + i;
-                            projectImage.loading = "lazy";
-                            projectImage.decoding = "async";
-
-                            // Append elements to build the card structure
-                            projectLink.appendChild(projectImage);
-                            projectThumb.appendChild(projectLink);
-                            projectItem.appendChild(projectThumb);
-                            cardColumn.appendChild(projectItem);
-
-                            // Append the card to the container
-                            projectsContainer.appendChild(cardColumn);
+                            addGalleryCard(
+                                projectsContainer,
+                                "galleryimages/gallery_" + i + ".jpg",
+                                "CMI Group project photo " + i,
+                                "CMI Group project photo " + i
+                            );
                         }
+
+                        fieldPhotos.forEach(function (photo) {
+                            var imageUrl = "images/enhanced-new/" + photo[0];
+                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[1]);
+                        });
 
                         if (window.jQuery && jQuery.fn.magnificPopup) {
                             jQuery(projectsContainer).magnificPopup({
@@ -169,6 +165,31 @@
                                 image: { titleSrc: "title" }
                             });
                         }
+                    }
+
+                    function addGalleryCard(container, imageUrl, description, title) {
+                        var cardColumn = document.createElement("div");
+                        cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
+                        var projectItem = document.createElement("div");
+                        projectItem.className = "project-item-two";
+                        var projectThumb = document.createElement("div");
+                        projectThumb.className = "project-thumb-two";
+                        var projectLink = document.createElement("a");
+                        projectLink.href = imageUrl;
+                        projectLink.className = "popup-image";
+                        projectLink.title = title;
+                        projectLink.setAttribute("aria-label", "View full-size photo: " + description);
+                        var projectImage = document.createElement("img");
+                        projectImage.className = "field-photo";
+                        projectImage.src = imageUrl;
+                        projectImage.alt = description;
+                        projectImage.loading = "lazy";
+                        projectImage.decoding = "async";
+                        projectLink.appendChild(projectImage);
+                        projectThumb.appendChild(projectLink);
+                        projectItem.appendChild(projectThumb);
+                        cardColumn.appendChild(projectItem);
+                        container.appendChild(cardColumn);
                     }
                 </script>
 
@@ -221,7 +242,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6">
+                        <div class="col-xl-6 col-lg-4 col-md-6 col-sm-6">
                             <div class="footer-widget">
                                 <h2 class="fw-title">Quick Links</h2>
                                 <div class="footer-link">
@@ -240,33 +261,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-5 col-md-6">
-                            <div class="footer-widget">
-                                <h2 class="fw-title">Gallery</h2>
-                                <div class="footer-instagram">
-                                    <ul class="list-wrap">
-                                        <li>
-                                            <a href="#"><img src="images/gallery.jpg" alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/gallery_2.jpg" alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/gallery_3.jpg" alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/gallery_4.jpg" alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/gallery_5.jpg" alt=""></a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><img src="images/gallery_6.jpg" alt=""></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="footer-logo-area">
                         <div class="row align-items-center">

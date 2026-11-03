@@ -2722,6 +2722,12 @@ border-radius: 10px;
 .project-thumb-two img {
 	width: 100%;
 }
+.field-photo {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	border-radius: 8px;
+}
 .cmi-video-player {
 	display: block;
 	width: 100%;
