@@ -4,7 +4,11 @@ const listingTypes = new Set(["Land", "Residential", "Commercial", "Rental"]);
 const listingStatuses = new Set(["Available", "Reserved", "Sold", "Rented"]);
 
 if (listingsContainer && listingsStatus) {
-    loadPropertyListings();
+    if (window.location.protocol === "file:") {
+        listingsStatus.textContent = "Property listings require a Cloudflare Pages preview.";
+    } else {
+        loadPropertyListings();
+    }
 }
 
 async function loadPropertyListings() {

@@ -3252,6 +3252,14 @@ border-radius: 10px;
     max-width: 100%;
 }
 
+.team-member .team-portrait {
+    width: min(343px, 100%);
+    height: auto;
+    aspect-ratio: 343 / 350;
+    object-fit: cover;
+    object-position: center 25%;
+}
+
 .member-details {
     margin-top: 15px;
 }

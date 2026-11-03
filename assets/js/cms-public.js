@@ -1,11 +1,13 @@
 const cmsContentCache = new Map();
 
-loadBusinessContactSettings();
-if (document.querySelector("#cms-team-status")) loadManagedTeam();
-if (document.querySelector("#cms-partners")) loadManagedPartners();
-if (document.querySelector("#cms-services")) loadManagedServices();
-if (document.querySelector("#cms-resources")) loadManagedResources();
-loadActivePromotion();
+if (window.location.protocol !== "file:") {
+    loadBusinessContactSettings();
+    if (document.querySelector("#cms-team-status")) loadManagedTeam();
+    if (document.querySelector("#cms-partners")) loadManagedPartners();
+    if (document.querySelector("#cms-services")) loadManagedServices();
+    if (document.querySelector("#cms-resources")) loadManagedResources();
+    loadActivePromotion();
+}
 
 async function loadBusinessContactSettings() {
     try {

@@ -196,6 +196,10 @@ Then open:
 http://localhost:8000
 ```
 
+Do not open pages directly with `file://`. The public CMS uses `/api/cms`
+endpoints, which are unavailable when serving static files with Python; run
+the Cloudflare Pages preview below to test CMS-backed content locally.
+
 2. For Cloudflare Functions, preview the site using Wrangler or deploy to Cloudflare Pages.
 
 Example:

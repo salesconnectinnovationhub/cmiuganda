@@ -6,24 +6,30 @@ const ratingInput = document.querySelector("#userRating");
 const adminAccess = document.querySelector("#review-admin-access");
 
 if (reviewForm && reviewsContainer && responseMessage && ratingInput) {
-    reviewForm.addEventListener("submit", submitReview);
-    reviewsContainer.addEventListener("submit", submitAdminReply);
-    reviewsContainer.addEventListener("click", handleReviewAction);
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") loadReviews();
-    });
-
-    document.querySelectorAll(".rating-star").forEach((button) => {
-        button.addEventListener("click", () => selectRating(button.dataset.rating));
-    });
-
-    if (adminAccess) {
-        adminAccess.addEventListener("click", () => {
-            window.setTimeout(loadReviews, 1000);
+    if (window.location.protocol === "file:") {
+        reviewsContainer.textContent = "Reviews require a Cloudflare Pages preview.";
+        reviewForm.querySelector('button[type="submit"]').disabled = true;
+        if (adminAccess) adminAccess.hidden = true;
+    } else {
+        reviewForm.addEventListener("submit", submitReview);
+        reviewsContainer.addEventListener("submit", submitAdminReply);
+        reviewsContainer.addEventListener("click", handleReviewAction);
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") loadReviews();
         });
-    }
 
-    loadReviews();
+        document.querySelectorAll(".rating-star").forEach((button) => {
+            button.addEventListener("click", () => selectRating(button.dataset.rating));
+        });
+
+        if (adminAccess) {
+            adminAccess.addEventListener("click", () => {
+                window.setTimeout(loadReviews, 1000);
+            });
+        }
+
+        loadReviews();
+    }
 }
 
 function selectRating(value) {
