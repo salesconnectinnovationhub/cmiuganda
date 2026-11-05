@@ -840,6 +840,9 @@ label {
 	color: var(--tg-white);
 	margin-right: 30px;
 	top: 15px;
+	padding: 0;
+	border: 0;
+	background: transparent;
 }
 .nav-logo img {
 	width: 150px;
@@ -931,6 +934,9 @@ label {
     color: var(--tg-primary-color);
     cursor: pointer;
     z-index: 10;
+	padding: 0;
+	border: 0;
+	background: transparent;
     -webkit-transition: all 0.9s ease;
     -o-transition: all 0.9s ease;
     transition: all 0.9s ease;
@@ -1085,6 +1091,14 @@ label {
 	color: var(--tg-primary-color);
 	display: none;
 	margin-top: 7px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+.mobile-nav-toggler:focus-visible,
+.mobile-menu .close-btn:focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 4px;
 }
 
 /*=============================

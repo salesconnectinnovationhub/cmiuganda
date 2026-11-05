@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 const publishedProperty = {
     id: "property-1",
@@ -142,3 +143,95 @@ test("homepage CMS preview renders text as content rather than markup", async ({
     await expect(page.locator("#preview-dialog")).toBeVisible();
     await expect(page.locator("#preview-dialog-content h2")).toHaveText("<img src=x onerror=alert(1)>");
 });
+
+test("mobile navigation supports keyboard open, escape, and focus return", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const openButton = page.getByRole("button", { name: "Open navigation" });
+    await openButton.click();
+    await expect(openButton).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByRole("button", { name: "Close navigation" })).toBeFocused();
+
+    await page.keyboard.press("Tab");
+    await expect(page.locator("#mobile-menu")).toContainText("Services");
+    await page.keyboard.press("Escape");
+    await expect(openButton).toHaveAttribute("aria-expanded", "false");
+    await expect(openButton).toBeFocused();
+});
+
+test("mobile contact flow switches forms and submits a valid enquiry", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.route("**/api/contact", async (route) => {
+        await route.fulfill({ status: 200, contentType: "text/plain", body: "Message accepted." });
+    });
+    await page.route("**/api/analytics", async (route) => route.fulfill({ status: 204, body: "" }));
+    await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
+    await page.getByRole("button", { name: "Expression of interest" }).click();
+    await expect(page.locator("#interest-form-panel")).toBeVisible();
+    await page.getByRole("button", { name: "General enquiry" }).click();
+    await expect(page.locator("#contact-form-panel")).toBeVisible();
+    await expect(page.getByLabel("Project or question")).toBeVisible();
+
+    await page.locator("#contact-first-name").fill("Mobile");
+    await page.locator("#contact-last-name").fill("Visitor");
+    await page.locator("#contact-email").fill("visitor@example.com");
+    await page.locator("#contact-phone").fill("+256700000000");
+    await page.locator("#contact-message").fill("I would like to discuss a project.");
+    await page.getByRole("button", { name: "Send message" }).click();
+    await expect(page.locator("#contact-form .form-submit-status")).toHaveText("Message accepted.");
+});
+
+test("mobile payment form labels fields and begins PesaPal checkout", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__openedCheckoutUrl = url;
+            return null;
+        };
+    });
+    await page.route("**/api/analytics", async (route) => route.fulfill({ status: 204, body: "" }));
+    await page.goto("/payments.html", { waitUntil: "domcontentloaded" });
+    await expect(page.getByLabel("Full name")).toBeVisible();
+    await expect(page.getByLabel("Currency")).toBeVisible();
+    await expect(page.getByLabel("Payment reason")).toBeVisible();
+    await page.getByLabel("Full name").fill("Mobile Visitor");
+    await page.getByLabel("Email address").fill("visitor@example.com");
+    await page.getByLabel("Phone number").fill("+256700000000");
+    await page.getByLabel("Amount").fill("10000");
+    await page.getByLabel("Project or reference").fill("Mobile test payment");
+    await page.getByLabel("Payment reason").fill("Test checkout start");
+    await page.getByRole("button", { name: "Continue to PesaPal" }).click();
+    await expect(page.locator("#payment-status")).toContainText("Opening the secure PesaPal checkout");
+    expect(await page.evaluate(() => window.__openedCheckoutUrl)).toContain("https://www.pesapal.com/");
+});
+
+test("mobile gallery opens and closes project photos by keyboard", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/gallery.html", { waitUntil: "domcontentloaded" });
+    const firstPhoto = page.locator("#projects-container a.popup-image").first();
+    await expect(firstPhoto).toBeVisible();
+    await firstPhoto.click();
+    await expect(page.locator(".mfp-wrap")).toBeVisible();
+    await expect(page.locator(".mfp-img")).toHaveAttribute("alt", /community water project/i);
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".mfp-wrap")).toHaveCount(0);
+});
+
+for (const [pageName, pagePath] of [
+    ["homepage", "/"],
+    ["contact", "/contact.html"],
+    ["payments", "/payments.html"],
+    ["gallery", "/gallery.html"],
+]) {
+    test(`${pageName} page has no WCAG A/AA axe violations`, async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await page.goto(pagePath, { waitUntil: "domcontentloaded" });
+        const results = await new AxeBuilder({ page })
+            .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+            .analyze();
+        const violations = results.violations.map((violation) =>
+            `${violation.id}: ${violation.nodes.map((node) => node.target.join(", ")).join("; ")}`
+        );
+        expect(violations, violations.join("\n")).toEqual([]);
+    });
+}

@@ -31,6 +31,17 @@ if ($('.mobile-menu').length) {
 
 	var mobileMenuContent = $('.menu-area .main-menu').html();
 	$('.mobile-menu .menu-box .menu-outer').append(mobileMenuContent);
+	const mobileMenu = document.querySelector('.mobile-menu');
+	const mobileMenuToggler = document.querySelector('.mobile-nav-toggler');
+	const mobileMenuClose = mobileMenu.querySelector('.close-btn');
+	const mobileMenuFocusables = () => [...mobileMenu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+		.filter((element) => element.getClientRects().length > 0);
+	const setMobileMenuOpen = (isOpen, restoreFocus = true) => {
+		$('body').toggleClass('mobile-menu-visible', isOpen);
+		mobileMenuToggler.setAttribute('aria-expanded', String(isOpen));
+		if (isOpen) mobileMenuClose.focus();
+		else if (restoreFocus) mobileMenuToggler.focus();
+	};
 
 	//Dropdown Button
 	$('.mobile-menu li.menu-item-has-children .dropdown-btn').on('click', function () {
@@ -38,13 +49,34 @@ if ($('.mobile-menu').length) {
 		$(this).prev('ul').slideToggle(300);
 	});
 	//Menu Toggle Btn
-	$('.mobile-nav-toggler').on('click', function () {
-		$('body').addClass('mobile-menu-visible');
-	});
+	mobileMenuToggler.addEventListener('click', () => setMobileMenuOpen(true));
 
 	//Menu Toggle Btn
-	$('.menu-backdrop, .mobile-menu .close-btn').on('click', function () {
-		$('body').removeClass('mobile-menu-visible');
+	document.querySelector('.menu-backdrop').addEventListener('click', () => setMobileMenuOpen(false));
+	mobileMenuClose.addEventListener('click', () => setMobileMenuOpen(false));
+	document.addEventListener('keydown', (event) => {
+		if (!$('body').hasClass('mobile-menu-visible')) return;
+		if (event.key === 'Escape') {
+			event.preventDefault();
+			setMobileMenuOpen(false);
+			return;
+		}
+		if (event.key !== 'Tab') return;
+		const focusables = mobileMenuFocusables();
+		if (!focusables.length) {
+			event.preventDefault();
+			mobileMenuClose.focus();
+			return;
+		}
+		const first = focusables[0];
+		const last = focusables[focusables.length - 1];
+		if (event.shiftKey && (document.activeElement === first || !mobileMenu.contains(document.activeElement))) {
+			event.preventDefault();
+			last.focus();
+		} else if (!event.shiftKey && (document.activeElement === last || !mobileMenu.contains(document.activeElement))) {
+			event.preventDefault();
+			first.focus();
+		}
 	});
 }
 
