@@ -17,6 +17,15 @@
 
     document.querySelector("#copyright-year").textContent = new Date().getFullYear();
 
+    function invalidateResults() {
+        const hasEstimate = !results.hidden || Boolean(calculatedQuoteSummary);
+        results.hidden = true;
+        calculatedQuoteSummary = "";
+        if (hasEstimate) {
+            quoteRequestStatus.textContent = "Inputs changed. Recalculate the quantity before requesting a quote.";
+        }
+    }
+
     function createInput(labelText, name, options = {}) {
         const group = document.createElement("div");
         group.className = `form-group ${options.column || "col-md-4"}`;
@@ -56,6 +65,7 @@
         remove.addEventListener("click", () => {
             row.remove();
             renumberOpenings(section);
+            invalidateResults();
         });
         heading.append(title, remove);
 
@@ -68,6 +78,7 @@
         );
         row.append(heading, fields);
         openings.append(row);
+        invalidateResults();
     }
 
     function renumberOpenings(section) {
@@ -100,6 +111,7 @@
             remove.addEventListener("click", () => {
                 section.remove();
                 renumberWalls();
+                invalidateResults();
             });
             heading.append(remove);
         }
@@ -126,6 +138,7 @@
         openings.className = "openings-list";
         section.append(heading, dimensions, openingHeading, openings);
         wallSections.append(section);
+        invalidateResults();
     }
 
     function renumberWalls() {
@@ -291,13 +304,7 @@
         }
     });
 
-    form.addEventListener("input", () => {
-        if (!results.hidden) {
-            results.hidden = true;
-            calculatedQuoteSummary = "";
-            quoteRequestStatus.textContent = "Inputs changed. Recalculate the quantity before requesting a quote.";
-        }
-    });
+    form.addEventListener("input", invalidateResults);
 
     document.querySelector("#add-wall").addEventListener("click", addWall);
     addWall();
