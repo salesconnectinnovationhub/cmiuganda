@@ -61,7 +61,7 @@ const collections = {
             ["imageAlt", "Image description", "text", false, "Describe the image for visitors using screen readers."],
             ["startAt", "Start date", "date", true, "The promotion starts on this date in Uganda time."],
             ["endAt", "End date", "date", true, "The promotion remains active through this date in Uganda time."],
-            ["frequencyDays", "Show again after dismissal (days, 1-365)", "number", true, "How long a visitor who closes the pop-up waits before seeing it again."],
+            ["frequencyDays", "Show again after dismissal (days, 1-365)", "number", true, "How long a visitor who closes the pop-up waits before seeing it again. An active published promotion replaces the default adverts."],
             ["buttonText", "Button label", "text", false, "Example: View the offer."],
             ["buttonUrl", "Button link (HTTPS)", "url", false, "Use a complete secure link, e.g. https://cmigroupuganda.com/contact.html."],
         ],

@@ -1,4 +1,30 @@
 const cmsContentCache = new Map();
+const defaultPromotions = [
+    {
+        title: "Building back home, from wherever you are",
+        body: "Get practical guidance for planning and supervising a construction project in Uganda while you are abroad.",
+        image: "img/residential.jpg",
+        imageAlt: "Residential construction project in Uganda",
+        buttonText: "Request a consultation",
+        buttonUrl: "contact.html",
+    },
+    {
+        title: "Keep your property cared for",
+        body: "Explore property management support for owners who need a local point of contact while they are away.",
+        image: "images/property.jpg",
+        imageAlt: "Property cared for by a local management team",
+        buttonText: "Explore property management",
+        buttonUrl: "property-management.html",
+    },
+    {
+        title: "Plan material needs before work starts",
+        body: "Create an early block and brick estimate to help prepare for your construction project.",
+        image: "images/installments.jpg",
+        imageAlt: "Construction installation and material planning",
+        buttonText: "Open the estimator",
+        buttonUrl: "block-estimator.html",
+    },
+];
 
 if (window.location.protocol !== "file:") {
     loadBusinessContactSettings();
@@ -208,8 +234,12 @@ async function loadManagedServices() {
     try {
         const services = await loadCmsItems("service");
         services.sort((first, second) => (first.sortOrder || 0) - (second.sortOrder || 0));
+        const staticTitles = new Set(
+            Array.from(document.querySelectorAll('[data-static-service]')).map((card) => normalizeServiceTitle(card.dataset.staticService || card.textContent || ""))
+        );
+        const uniqueServices = services.filter((service) => !staticTitles.has(normalizeServiceTitle(service.title || "")));
         const fragment = document.createDocumentFragment();
-        for (const service of services) {
+        for (const service of uniqueServices) {
             const column = document.createElement("div");
             column.className = "col-lg-4 mb-4";
             const card = document.createElement("article");
@@ -240,6 +270,10 @@ async function loadManagedServices() {
         message.textContent = error.message || "Services are temporarily unavailable.";
         container.replaceChildren(message);
     }
+}
+
+function normalizeServiceTitle(value) {
+    return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 async function loadManagedResources() {
@@ -291,18 +325,39 @@ async function loadActivePromotion() {
     try {
         const promotions = await loadCmsItems("promotion");
         const today = kampalaCalendarDate();
-        const promotion = promotions.find((item) =>
+        const activePromotions = promotions.filter((item) =>
             item.slug
             && isCalendarDate(item.startAt)
             && isCalendarDate(item.endAt)
             && item.startAt <= today
-            && item.endAt >= today
-            && !wasPromotionDismissed(item));
-        if (!promotion) return;
-        showPromotion(promotion);
+            && item.endAt >= today);
+        if (activePromotions.length) {
+            const promotion = activePromotions.find((item) => !wasPromotionDismissed(item));
+            if (promotion) schedulePromotion(promotion);
+            return;
+        }
+        showDefaultPromotion();
     } catch (error) {
         console.error("Could not load current CMI Group announcements.", error);
+        showDefaultPromotion();
     }
+}
+
+function showDefaultPromotion() {
+    const day = Math.floor(Date.now() / (24 * 60 * 60 * 1000));
+    const promotion = {
+        ...defaultPromotions[day % defaultPromotions.length],
+        slug: "default-advert-campaign",
+        frequencyDays: 7,
+        isDefault: true,
+    };
+    if (!wasPromotionDismissed(promotion)) schedulePromotion(promotion);
+}
+
+function schedulePromotion(promotion) {
+    window.setTimeout(() => {
+        if (!wasPromotionDismissed(promotion)) showPromotion(promotion);
+    }, 5000);
 }
 
 function kampalaCalendarDate() {
@@ -323,7 +378,8 @@ function isCalendarDate(value) {
 }
 
 function promotionDismissalKey(promotion) {
-    return `cmi-promotion-dismissed-${promotion.slug}`;
+    const promotionId = promotion.isDefault ? "default-advert-campaign" : promotion.slug;
+    return `cmi-promotion-dismissed-${promotionId}`;
 }
 
 function wasPromotionDismissed(promotion) {
@@ -386,7 +442,7 @@ function showPromotion(promotion) {
         image.loading = "lazy";
         dialog.insertBefore(image, body);
     }
-    if (promotion.buttonText && isHttpsUrl(promotion.buttonUrl)) {
+    if (promotion.buttonText && isPromotionUrl(promotion.buttonUrl)) {
         const action = document.createElement("a");
         action.href = promotion.buttonUrl;
         action.className = "btn mr-2";
@@ -456,6 +512,17 @@ function cmsImageUrl(path) {
 function isHttpsUrl(value) {
     try {
         return new URL(value).protocol === "https:";
+    } catch {
+        return false;
+    }
+}
+
+function isPromotionUrl(value) {
+    if (isHttpsUrl(value)) return true;
+    if (typeof value !== "string" || value.startsWith("//")) return false;
+    try {
+        const url = new URL(value, window.location.href);
+        return url.origin === window.location.origin && url.protocol === window.location.protocol;
     } catch {
         return false;
     }

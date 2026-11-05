@@ -63,16 +63,18 @@
                                     <ul class="navigation">
                                         <li><a href='index.html'>Home</a></li>
                                         <li><a href='about.html'>About us</a></li>
-                                        <li class="active"><a href='services.html'>Services</a>
-                                        </li>
+                                        <li class="active"><a href='services.html'>Services</a></li>
                                         <li><a href='property-management.html'>Property Management</a></li>
-                                        <li ><a href='gallery.html'>Gallery</a></li>
-                                        <li ><a href='team.html'>Team</a></li>
-                                        <li ><a href='payments.html'>Pay</a></li>
-                                        <li ><a href='project.html'>Projects</a></li>
+                                        <li><a href='project.html'>Projects</a></li>
+                                        <li><a href='gallery.html'>Gallery</a></li>
+                                        <li><a href='team.html'>Team</a></li>
+                                        <li><a href='payments.html'>Pay</a></li>
                                         <li><a href='contact.html'>Contact</a></li>
-                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
@@ -103,417 +105,199 @@
 
     <!-- mian-area -->
     <main>
-
         <style>
-            .area-bg-three {
-                background-size: cover;
-                background-position: center;
-                padding: 55px 0 50px;
+            .service-group {
+                margin-bottom: 40px;
             }
+            .service-group-header {
+                margin-bottom: 20px;
+            }
+            .service-group-header h3 {
+                font-size: 1.7rem;
+                margin-bottom: 8px;
+            }
+            .service-card {
+                background: #fff;
+                border: 1px solid rgba(15, 41, 60, 0.08);
+                border-radius: 18px;
+                overflow: hidden;
+                height: 100%;
+                box-shadow: 0 10px 30px rgba(15, 41, 60, 0.06);
+            }
+            .service-card img {
+                width: 100%;
+                height: 220px;
+                object-fit: cover;
+                display: block;
+            }
+            .service-card-body {
+                padding: 22px 20px 20px;
+            }
+            .service-card-body h4 {
+                font-size: 1.15rem;
+                margin-bottom: 10px;
+            }
+            .service-card-body p {
+                margin-bottom: 16px;
+                color: #4b6478;
+            }
+            .service-card-body .btn {
+                margin-top: 0;
+            }
+            .service-card[data-static-service] {
+                border-top: 3px solid var(--tg-primary-color);
+            }
+            .service-cta-bar {
+                padding: 18px 20px;
+                border-radius: 14px;
+                background: linear-gradient(135deg, rgba(10, 55, 84, 0.06), rgba(239, 122, 48, 0.08));
+                border: 1px solid rgba(10, 55, 84, 0.08);
+            }
+        </style>
 
-            .subsection-title {
-                font-size: 18px
-            }
-
-            .service-icon {
-                position: absolute;
-                top: 45px;
-                background: orangered;
-                padding: 18px;
-                border-radius: 10px;
-                color: #fff;
-                font-size: 30px;
-                right: 45px;
-            }
-        </style> <!-- services-area -->
         <section class="inner-services-area pt-115 pb-90">
             <div class="container">
                 <div class="row">
-                    <!-- Main Section -->
                     <div class="col-md-12">
                         <div class="section-title text-center mb-4">
+                            <span class="sub-title">What we do</span>
                             <h2>Our Services</h2>
-                        </div>
-                    </div>
-                    <div id="cms-services" class="row w-100" aria-live="polite"></div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/installments.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fa-solid fa-sign-posts-wrench"></i>
-                                <h3 class="subsection-title">Construction installation</h3>
-                                <p class="subsection-description">We do several installations your structure such as
-                                    electric alarms, water, sewage among others.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/swimming_pool.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fa-solid fa-water-ladder"></i>
-                                <h3 class="subsection-title">Swimming Pool Construction</h3>
-                                <p class="subsection-description">Elevate your outdoor space with our expert swimming
-                                    pool construction services. </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/biocook.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-tree fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Innovative and Affordable Green Building Technologies</h3>
-                                <p class="subsection-description">We emphasize on affordable green building technologies
-                                    such as echo sun toilets, turn your septic tank into source of power i.e biogas for
-                                    lighting and cooking.</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Subsection 1 -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/property.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-home fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Property and Assets Management</h3>
-                                <p class="subsection-description">Services related to the oversight, operation, and
-                                    control of properties and assets, ensuring they are maintained, utilized
-                                    efficiently, and generate maximum returns for the owner.</p>
-                                <a class="btn mt-3" href="property-management.html">Explore property management</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: Residential and Commercial Building Construction -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/residential.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-building fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Residential and Commercial Building Construction</h3>
-                                <p class="subsection-description">Comprehensive construction services for both
-                                    residential and commercial properties, from initial design to the completion of the
-                                    construction project.</p>
-                                <a class="btn mt-3" href="block-estimator.html">Estimate wall blocks</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 3: Building Renovations and Refurbishments -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/civil.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-wrench fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Building Renovations and Refurbishments</h3>
-                                <p class="subsection-description">Upgrading and enhancing existing structures, including
-                                    repairs, renovations, and modernization, to improve functionality.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Section 4: Civil Works and Construction -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/upgrade.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-hard-hat fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Civil Works and Construction</h3>
-                                <p class="subsection-description">Involves the construction of civil infrastructure such
-                                    as roads, bridges, dams, and other large-scale projects that contribute to public
-                                    and private development.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 5: Supply and Logistics of All Construction Materials -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/plan_4.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-truck-loading fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Supply and Logistics of All Construction Materials</h3>
-                                <p class="subsection-description">Procurement and delivery of construction materials,
-                                    ensuring a steady supply of quality resources for building projects.</p>
-                                <a class="btn mt-3" href="block-estimator.html">Estimate wall blocks</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Section 6: Development of Building Plans, Architecture, and Bills of Quantities -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/gallery_2.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-drafting-compass fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Development of Building Plans, Architecture, and Bills of
-                                    Quantities</h3>
-                                <p class="subsection-description">Services related to the design and planning of
-                                    buildings, including architectural drawings and detailed bills of quantities for
-                                    construction projects.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Section 7: Legal Assets and Property Registrations and Certifications -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/as.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-file-alt fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Legal Assets and Property Registrations and Certifications
-                                </h3>
-                                <p class="subsection-description">Facilitation of legal processes related to property,
-                                    including obtaining and managing land titles, house deeds, building plans, and maps.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/send_money.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-file-alt fa-2x service-icon"></i>
-                                <h3 class="subsection-title">Send money through us.</h3>
-                                <p class="subsection-description">Send financial support to your cherished ones effortlessly and securely by utilizing our trusted services. Rest assured that your funds will reach their destination promptly and with the utmost security, providing you with peace of mind throughout the process.</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 8: Building Trustee Management -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/trustee.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-user-tie fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Building Trustee Management</h3>
-                                <p class="subsection-description">Management of properties on behalf of a trustee,
-                                    ensuring that properties are well-maintained and managed according to the trustee's
-                                    directives.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 9: Real Estate Development and Management -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/realestatedev.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-building fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Real Estate Development and Management</h3>
-                                <p class="subsection-description">Involves the acquisition, development, and management
-                                    of real estate properties, including residential and commercial projects.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 10: Consultancy on Asset Acquisition and Development -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/Acquisition.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-handshake fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Consultancy on Asset Acquisition and Development</h3>
-                                <p class="subsection-description">Providing expert advice and guidance on acquiring
-                                    assets and developing them, considering factors such as market trends, investment
-                                    opportunities, and project feasibility.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 11: Business Development Agency -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/gallery_6.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-chart-line fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Business Development Agency</h3>
-                                <p class="subsection-description">Services focused on the growth and development of
-                                    businesses, including market research, strategy development, and implementation of
-                                    business plans.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 12: Land Surveys, Plans, and Geo Mappings -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/serveys.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-map fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Land Surveys, Plans, and Geo Mappings</h3>
-                                <p class="subsection-description">Conducting surveys, creating plans, and mapping
-                                    geographical features to provide accurate information for land development and
-                                    construction projects.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 13: Trainings and Research Development -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/bg.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-graduation-cap fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Trainings and Research Development</h3>
-                                <p class="subsection-description">Offering training programs and conducting research in
-                                    the construction and real estate industry to enhance skills and stay updated on
-                                    industry trends.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 14: Internal and External Decorations -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/decorate.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-paint-brush fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Internal and External Decorations</h3>
-                                <p class="subsection-description">Services related to the aesthetic enhancement of
-                                    interiors and exteriors, including painting, wallpapering, and other decorative
-                                    elements.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 15: Compound Designs and Perimeter Wall Building -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/peremeter_walll.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-archway fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Compound Designs and Perimeter Wall Building</h3>
-                                <p class="subsection-description">Designing and constructing the layout of compounds and
-                                    building perimeter walls to enhance security and privacy.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 16: Water Works Development -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/water.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-tint fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Water Works Development</h3>
-                                <p class="subsection-description">Planning and execution of water-related projects, such
-                                    as wells, boreholes, and water supply systems.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 17: Bio Gas Clean Energy Development -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/biogas.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-recycle fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Bio Gas Clean Energy Development</h3>
-                                <p class="subsection-description">Implementation of bio gas systems for clean and
-                                    sustainable energy production, contributing to environmental conservation.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Continue repeating the structure for the remaining sections with corresponding content -->
-
-                    <!-- Section 18: Wood Works and Furnished Kitchen Fittings -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/wood.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-tree fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Wood Works and Furnished Fittings</h3>
-                                <p class="subsection-description">Crafting and installing wooden structures and
-                                    furnishings, including cabinets.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 19: Art Crafts and Sculptures -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="images/art.jpg" alt="Your Image" class="img-fluid mb-3" />
-                                <i class="fas fa-palette fa-2x service-icon"></i>
-                                <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Art Crafts and Sculptures</h3>
-                                <p class="subsection-description">Creating and installing artistic elements, crafts, and
-                                    sculptures for aesthetic enhancement.</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Section 20: Building Tiling and Terrazzos -->
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/terazo_new.jpg" alt="Your Image"
-                                    class="img-fluid mb-3" />
-                                <i class="fas fa-th fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Building Tiling and Terrazzos</h3>
-                                <p class="subsection-description">Installation of tiles and terrazzo flooring, providing
-                                    durable and visually appealing surfaces for buildings.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/home_guard.jpg" alt="Your Image"
-                                    class="img-fluid mb-3" />
-                                <i class="fas fa-money-bill fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Homeward Guardian Services</h3>
-                                <p class="subsection-description">HomeGuard offers secure fund collection, management, and care services for your family back home. With us, ensure your family's well-being while you focus on what matters most.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mb-4">
-                        <div class="bg-white rounded-2">
-                            <div class="subsection p-4 bg-light position-relative">
-                                <img src="img/land_for_sale.jpg" alt="Your Image"
-                                    class="img-fluid mb-3" />
-                                <i class="fas fa-money-bill fa-2x service-icon"></i> <!-- Change the icon class as needed -->
-                                <h3 class="subsection-title">Land on sale with a title at 50 Million sized 100ft x 100ft in Rwengoma Fort Portal, Tourism City.</h3>
-                                <p class="subsection-description">180 X 180</p>
-                            </div>
+                            <p>Most clients start with one of the needs below. We can guide the rest from there.</p>
                         </div>
                     </div>
                 </div>
+
+                <div class="service-group">
+                    <div class="service-group-header">
+                        <h3>Most requested by diaspora homeowners</h3>
+                        <p>Choose the starting point that matches your project.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-4" data-static-service="Residential and commercial building construction">
+                            <article class="service-card">
+                                <img src="img/residential.jpg" alt="Residential and commercial building construction for diaspora homeowners" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Residential and commercial building construction</h4>
+                                    <p>Complete design-to-handover support for homes, offices, and mixed-use developments.</p>
+                                    <a class="btn" href="contact.html">Request a consultation</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Property and assets management">
+                            <article class="service-card">
+                                <img src="images/property.jpg" alt="Property and assets management services" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Property and assets management</h4>
+                                    <p>We monitor, maintain, and coordinate property operations so clients stay informed while away.</p>
+                                    <a class="btn" href="property-management.html">Explore property management</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Building plans and quantity estimates">
+                            <article class="service-card">
+                                <img src="images/gallery_2.jpg" alt="Building plans, architecture and quantity estimates" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Building plans and quantities</h4>
+                                    <p>Get architectural plans, estimates, and material take-offs before your build starts.</p>
+                                    <a class="btn" href="block-estimator.html">Estimate wall blocks</a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-group">
+                    <div class="service-group-header">
+                        <h3>Support for renovations and site delivery</h3>
+                        <p>Useful when the project is already underway or needs a clear upgrade path.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-4" data-static-service="Building renovations and refurbishments">
+                            <article class="service-card">
+                                <img src="images/civil.jpg" alt="Building renovations and refurbishments" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Building renovations and refurbishments</h4>
+                                    <p>Modernize, repair, and improve older structures without losing the original value.</p>
+                                    <a class="btn" href="contact.html">Discuss renovation needs</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Water works development">
+                            <article class="service-card">
+                                <img src="images/water.jpg" alt="Water works development services" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Water works development</h4>
+                                    <p>We plan and deliver water access systems that support homes, compounds, and community facilities.</p>
+                                    <a class="btn" href="contact.html">Ask about water works</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Compound designs and perimeter wall building">
+                            <article class="service-card">
+                                <img src="img/peremeter_walll.jpg" alt="Compound designs and perimeter wall building" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Compound designs and perimeter walls</h4>
+                                    <p>Security and boundary upgrades that make the site safer and more complete.</p>
+                                    <a class="btn" href="contact.html">Request a site review</a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-group">
+                    <div class="service-group-header">
+                        <h3>Planning, legal, and long-term value</h3>
+                        <p>Ideal for land, investment, and formal compliance decisions.</p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-4" data-static-service="Land surveys, plans, and geo mappings">
+                            <article class="service-card">
+                                <img src="images/serveys.jpg" alt="Land surveys, plans, and geo mappings" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Land surveys and geo mapping</h4>
+                                    <p>Know the site before you build so you plan correctly and avoid costly mistakes.</p>
+                                    <a class="btn" href="contact.html">Book a land review</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Legal assets and property registrations and certifications">
+                            <article class="service-card">
+                                <img src="img/as.jpg" alt="Legal assets and property registrations and certifications" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Property registration and compliance</h4>
+                                    <p>We support title, registration, and documentation steps needed for clear ownership and approvals.</p>
+                                    <a class="btn" href="contact.html">Ask about registrations</a>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="col-lg-4" data-static-service="Real estate development and management">
+                            <article class="service-card">
+                                <img src="images/realestatedev.jpg" alt="Real estate development and management" loading="lazy" />
+                                <div class="service-card-body">
+                                    <h4>Real estate development and management</h4>
+                                    <p>From planning to operations, we help investors and owners protect and improve property value.</p>
+                                    <a class="btn" href="contact.html">Plan your project</a>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="service-cta-bar mt-3">
+                    <div class="row align-items-center">
+                        <div class="col-lg-8">
+                            <h4>Need something outside these categories?</h4>
+                            <p class="mb-0">Tell us your situation and we will match you with the right service team.</p>
+                        </div>
+                        <div class="col-lg-4 text-lg-right">
+                            <a class="btn" href="contact.html">Request a consultation</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cms-services" class="row w-100 mt-5" aria-live="polite"></div>
+            </div>
         </section>
 
         <section class="pt-60 pb-60" aria-labelledby="service-fieldwork-title">
@@ -756,9 +540,9 @@
                             </div>
                             <div class="col-xl-5 col-lg-5 col-md-6">
                                 <div class="footer-social">
-                                    <h2 class="title">Opening hours: </h2>
+                                    <h2 class="title">Opening hours:</h2>
                                     <ul class="list-wrap"><br>
-                                        <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                        <li style="color: #fff;">Open 24/7 for consultations and project support</li>
                                     </ul>
                                 </div>
                             </div>

@@ -63,16 +63,18 @@
                                     <ul class="navigation">
                                         <li><a href='index.html'>Home</a></li>
                                         <li><a href='about.html'>About us</a></li>
-                                        <li ><a href='services.html'>Services</a></li>
+                                        <li><a href='services.html'>Services</a></li>
                                         <li><a href='property-management.html'>Property Management</a></li>
-                                        <li ><a href='project.html'>Projects</a></li>
-
-                                        <li ><a href='gallery.html'>Gallery</a></li>
-                                        <li ><a href='team.html'>Team</a></li>
-                                        <li ><a href='payments.html'>Pay</a></li>
+                                        <li><a href='project.html'>Projects</a></li>
+                                        <li><a href='gallery.html'>Gallery</a></li>
+                                        <li><a href='team.html'>Team</a></li>
+                                        <li><a href='payments.html'>Pay</a></li>
                                         <li class="active"><a href='contact.html'>Contact</a></li>
-                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
 
                             </nav>
@@ -109,369 +111,324 @@
         <section class="contact-area pt-120 pb-120">
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-xl-6 col-lg-10">
+                    <div class="col-xl-8 col-lg-10">
                         <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
-                            <h2 class="title">Contact Us</h2>
-                            <p>Send us a message and we' ll respond as soon as possible</p>
-                            <form id="contact-form" action="/api/contact" class="contact-form" method="post">
-                                <div aria-hidden="true" style="position:absolute;left:-10000px">
-                                    <label for="contact-website">Leave this field empty</label>
-                                    <input id="contact-website" name="website" type="text" tabindex="-1"
-                                        autocomplete="off">
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-grp">
-                                            <input id="firstName" required name="firstName" type="text"
-                                                placeholder="First Name*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-grp">
-                                            <input id="lastName" required name="lastName" type="text"
-                                                placeholder="Last Name*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-grp">
-                                            <input id="email" required name="email" type="email"
-                                                placeholder="Email Address*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-grp">
-                                            <input id="phone" required name="phone" type="text"
-                                                placeholder="Phone Number*">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-grp">
-                                    <textarea id="message" required name="message" maxlength="5000"
-                                        placeholder="Your Message here"></textarea>
-                                    <small id="message-help">You can edit the prefilled estimate details. Maximum 5,000 characters.</small>
-                                    <p id="estimate-prefill-status" role="status" aria-live="polite"></p>
-                                </div>
-                                <button class="btn" type="submit">Send Message</button>
-                            </form>
+                            <h2 class="title">How can we help?</h2>
+                            <p>Choose the type of enquiry you need so you only see the fields that matter.</p>
+                            <div class="contact-choice-group" aria-label="Contact form selector">
+                                <button class="contact-choice-btn is-active" type="button" data-form-target="contact-form-panel">General enquiry</button>
+                                <button class="contact-choice-btn" type="button" data-form-target="interest-form-panel">Expression of interest</button>
+                            </div>
 
+                            <div id="contact-form-panel" class="contact-form-panel">
+                                <form id="contact-form" action="/api/contact" class="contact-form" method="post" novalidate>
+                                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                                        <label for="contact-website">Leave this field empty</label>
+                                        <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-grp">
+                                                <label for="contact-first-name">First name</label>
+                                                <input id="contact-first-name" required name="firstName" type="text" data-label="First name" placeholder="Enter your first name">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-grp">
+                                                <label for="contact-last-name">Last name</label>
+                                                <input id="contact-last-name" required name="lastName" type="text" data-label="Last name" placeholder="Enter your last name">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-grp">
+                                                <label for="contact-email">Email address</label>
+                                                <input id="contact-email" required name="email" type="email" data-label="Email address" placeholder="name@example.com">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-grp">
+                                                <label for="contact-phone">Phone number</label>
+                                                <input id="contact-phone" required name="phone" type="tel" data-label="Phone number" placeholder="+256 700 000000">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-grp">
+                                        <label for="contact-message">Project or question</label>
+                                        <textarea id="contact-message" required name="message" maxlength="5000" data-label="Project or question" placeholder="Tell us about your build, question, or property need."></textarea>
+                                        <small id="message-help">You can edit the prefilled estimate details. Maximum 5,000 characters.</small>
+                                        <span class="field-error" aria-live="polite"></span>
+                                        <p id="estimate-prefill-status" role="status" aria-live="polite"></p>
+                                    </div>
+                                    <button class="btn" type="submit">Send message</button>
+                                </form>
+                            </div>
+
+                            <div id="interest-form-panel" class="contact-form-panel is-hidden">
+                                <form action="/api/interest" class="interestForm" method="post" novalidate>
+                                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                                        <label for="interest-website">Leave this field empty</label>
+                                        <input id="interest-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-fullname">Full name</label>
+                                                <input id="interest-fullname" name="fullname" required type="text" data-label="Full name" placeholder="Your full name">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-email">Email address</label>
+                                                <input id="interest-email" name="email" required type="email" data-label="Email address" placeholder="name@example.com">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-phone">Phone number</label>
+                                                <input id="interest-phone" name="phone" required type="tel" data-label="Phone number" placeholder="+256 700 000000">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-current-address">Current address</label>
+                                                <input id="interest-current-address" name="currentAddress" required type="text" data-label="Current address" placeholder="Current address">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-country-code">Country code</label>
+                                                <input id="interest-country-code" name="countryCode" required type="text" data-label="Country code" placeholder="Country code">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-whatsapp">WhatsApp number</label>
+                                                <input id="interest-whatsapp" name="whatsappNo" required type="text" data-label="WhatsApp number" placeholder="WhatsApp number">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-mobile-phone">Mobile phone</label>
+                                                <input id="interest-mobile-phone" name="mobilePhone" required type="text" data-label="Mobile phone" placeholder="Mobile phone (with code)">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-home-phone">Home phone</label>
+                                                <input id="interest-home-phone" name="homePhone" required type="text" data-label="Home phone" placeholder="Home phone">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-home-country">Home country</label>
+                                                <input id="interest-home-country" name="homeCountry" required type="text" data-label="Home country" placeholder="Home country">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-home-district">Home district/city</label>
+                                                <input id="interest-home-district" name="homeDistrict" required type="text" data-label="Home district/city" placeholder="Home district or city">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-project-country">Project country</label>
+                                                <input id="interest-project-country" name="projectCountry" required type="text" data-label="Project country" placeholder="Project country">
+                                                <span class="field-error" aria-live="polite"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-project-district">Project district/city</label>
+                                                <input id="interest-project-district" name="projectDistrict" type="text" data-label="Project district/city" placeholder="Project district or city">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interest-another-service">Another service wanted</label>
+                                                <input id="interest-another-service" name="anotherService" type="text" data-label="Another service wanted" placeholder="Describe another service you want">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h2 style="font-size: 20px; margin: 20px 0px;">Select products and services</h2>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="buildResidentialHouse">Build a residential house</label>
+                                                <input id="buildResidentialHouse" name="buildResidentialHouse" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="buildCommercialHouse">Build a commercial house</label>
+                                                <input id="buildCommercialHouse" name="buildCommercialHouse" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="roofing">Roofing</label>
+                                                <input id="roofing" name="roofing" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="flooring">Flooring</label>
+                                                <input id="flooring" name="flooring" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="tiling">Tiling</label>
+                                                <input id="tiling" name="tiling" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="terrazzo">Terrazzo</label>
+                                                <input id="terrazzo" name="terrazzo" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="furnitureFittings">Furniture fittings and kitchen cabins</label>
+                                                <input id="furnitureFittings" name="furnitureFittings" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="buyingLand">Buying Land</label>
+                                                <input id="buyingLand" name="buyingLand" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="landSurveying">Land Surveying</label>
+                                                <input id="landSurveying" name="landSurveying" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="landPlotting">Land Plotting (stones placing)</label>
+                                                <input id="landPlotting" name="landPlotting" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="landTitle">Land Title</label>
+                                                <input id="landTitle" name="landTitle" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="buildingPlans">Building Plans</label>
+                                                <input id="buildingPlans" name="buildingPlans" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="architectureDrawings">Architecture Drawings</label>
+                                                <input id="architectureDrawings" name="architectureDrawings" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="billsOfQuantities">Bills of Quantities</label>
+                                                <input id="billsOfQuantities" name="billsOfQuantities" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="supplyBuildingMaterials">Supply of Building Materials</label>
+                                                <input id="supplyBuildingMaterials" name="supplyBuildingMaterials" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="securityAlarms">Security Alarms</label>
+                                                <input id="securityAlarms" name="securityAlarms" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="homeCameras">Home Cameras</label>
+                                                <input id="homeCameras" name="homeCameras" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="airConditions">Air Conditions</label>
+                                                <input id="airConditions" name="airConditions" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="compoundDesigning">Compound Designing</label>
+                                                <input id="compoundDesigning" name="compoundDesigning" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="interiorDesigning">Interior Designing</label>
+                                                <input id="interiorDesigning" name="interiorDesigning" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="wallPainting">Wall Painting</label>
+                                                <input id="wallPainting" name="wallPainting" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="secureSafeBoxBuilding">Secure Safe Box Building</label>
+                                                <input id="secureSafeBoxBuilding" name="secureSafeBoxBuilding" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="warehouseBuilding">Warehouse Building</label>
+                                                <input id="warehouseBuilding" name="warehouseBuilding" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="washingBay">Washing Bay</label>
+                                                <input id="washingBay" name="washingBay" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="openBarDesigning">Open Bar Designing</label>
+                                                <input id="openBarDesigning" name="openBarDesigning" type="checkbox">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-grp">
+                                                <label for="parkingLot">Parking Lot</label>
+                                                <input id="parkingLot" name="parkingLot" type="checkbox">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn" type="submit">Submit interest</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xl-6 col-lg-10">
-                        <div class="contact-info-wrap">
-                            <h2 class="title">Need Any Help?</h2>
-                            <p>Call us or message and we' ll respond as soon as possible</p>
-                            <ul class="list-wrap">
-                                <li>
-                                    <div class="contact-info-item">
-                                        <div class="icon">
-                                            <i class="fas fa-phone-alt"></i>
-                                        </div>
-                                        <div class="content">
-                                            <a href="tel:+256789612187">+(256) 789 612 187</a>
-                                            <a href="tel:+256754433022">+(256) 754 433 022</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="contact-info-item">
-                                        <div class="icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </div>
-                                        <div class="content">
-                                            <a href="mailto:cmi.groupuganda@gmail.com">cmi.groupuganda@gmail.com</a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="contact-info-item">
-                                        <div class="icon">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </div>
-                                        <div class="content">
-                                            <p>Fort portal</p>
-                                            <p>Rukiidi 3 street, Daj plaza, <br> Fort Portal, Uganda</p>
-                                        </div>
-                                        <div class="content">
-                                            <p>Kampala</p>
-                                            <p>Amizon House, Ground floor <br> opposite Mutungo parish catholic church, <br>Nakawa Division Kampala, Uganda</p>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- contact-area-end -->
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.5584839240105!2d30.271926174174023!3d0.6539031634191622!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1763db004c8842c5%3A0x36adbf7cad40d1fa!2sCMI%20GROUP%20CO%20(U)%20LTD!5e0!3m2!1sen!2sug!4v1709732488437!5m2!1sen!2sug" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <!-- contact-area -->
-        <section class="contact-area pt-120 pb-120">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-9 col-lg-9">
-                        <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
-                            <h2 class="title">Expression of interests</h2>
-                            <p>Express Your interests about our services</p>
-                            <form action="/api/interest" class="interestForm" method="post">
-                                <div aria-hidden="true" style="position:absolute;left:-10000px">
-                                    <label for="interest-website">Leave this field empty</label>
-                                    <input id="interest-website" name="website" type="text" tabindex="-1"
-                                        autocomplete="off">
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="fullname" name="fullname" required type="text"
-                                                placeholder="Full name*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="email" name="email" required type="email"
-                                                placeholder="Email Address*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="phone" name="phone" required type="text"
-                                                placeholder="Phone Number*">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="currentAddress" name="currentAddress" required type="text"
-                                                placeholder="Current Address">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="countryCode" name="countryCode" required type="text"
-                                                placeholder="Country Code">
-                                        </div>
-                                    </div>
-                                    <!-- Additional Contacts Fields -->
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="whatsappNo" name="whatsappNo" required type="text"
-                                                placeholder="Whatsapp No">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="mobilePhone" name="mobilePhone" required type="text"
-                                                placeholder="Mobile Phone (add code)">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="homePhone" name="homePhone" required type="text"
-                                                placeholder="Home Phone">
-                                        </div>
-                                    </div>
-                                    <!-- Additional Home Country Address and Contacts Fields -->
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="homeCountry" name="homeCountry" required type="text"
-                                                placeholder="Home Country">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="homeDistrict" name="homeDistrict" required type="text"
-                                                placeholder="Home District/City">
-                                        </div>
-                                    </div>
-                                    <!-- Additional Fields for Proposed Project Location -->
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="projectCountry" name="projectCountry" required type="text"
-                                                placeholder="Project Country">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="projectDistrict" name="projectDistrict" type="text"
-                                                placeholder="Project District/City">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <input id="anotherService" name="anotherService" type="text"
-                                                placeholder="Another service(s) I want">
-                                        </div>
-                                    </div>
-                                    <h2 style="font-size: 20px; margin: 20px 0px;">Select Products and services</h2>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="buildResidentialHouse">Build a residential house</label>
-                                            <input id="buildResidentialHouse" name="buildResidentialHouse"
-                                                type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="buildCommercialHouse">Build a commercial house</label>
-                                            <input id="buildCommercialHouse" name="buildCommercialHouse"
-                                                type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="roofing">Roofing</label>
-                                            <input id="roofing" name="roofing" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="flooring">Flooring</label>
-                                            <input id="flooring" name="flooring" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="tiling">Tiling</label>
-                                            <input id="tiling" name="tiling" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="terrazzo">Terrazzo</label>
-                                            <input id="terrazzo" name="terrazzo" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="furnitureFittings">Furniture fittings and kitchen cabins</label>
-                                            <input id="furnitureFittings" name="furnitureFittings" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="buyingLand">Buying Land</label>
-                                            <input id="buyingLand" name="buyingLand" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="landSurveying">Land Surveying</label>
-                                            <input id="landSurveying" name="landSurveying" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="landPlotting">Land Plotting (stones placing)</label>
-                                            <input id="landPlotting" name="landPlotting" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="landTitle">Land Title</label>
-                                            <input id="landTitle" name="landTitle" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="buildingPlans">Building Plans</label>
-                                            <input id="buildingPlans" name="buildingPlans" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="architectureDrawings">Architecture Drawings</label>
-                                            <input id="architectureDrawings" name="architectureDrawings"
-                                                type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="billsOfQuantities">Bills of Quantities</label>
-                                            <input id="billsOfQuantities" name="billsOfQuantities" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="supplyBuildingMaterials">Supply of Building Materials</label>
-                                            <input id="supplyBuildingMaterials" name="supplyBuildingMaterials"
-                                                type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="securityAlarms">Security Alarms</label>
-                                            <input id="securityAlarms" name="securityAlarms" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="homeCameras">Home Cameras</label>
-                                            <input id="homeCameras" name="homeCameras" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="airConditions">Air Conditions</label>
-                                            <input id="airConditions" name="airConditions" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="compoundDesigning">Compound Designing</label>
-                                            <input id="compoundDesigning" name="compoundDesigning" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="interiorDesigning">Interior Designing</label>
-                                            <input id="interiorDesigning" name="interiorDesigning" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="wallPainting">Wall Painting</label>
-                                            <input id="wallPainting" name="wallPainting" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="secureSafeBoxBuilding">Secure Safe Box Building</label>
-                                            <input id="secureSafeBoxBuilding" name="secureSafeBoxBuilding"
-                                                type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="warehouseBuilding">Warehouse Building</label>
-                                            <input id="warehouseBuilding" name="warehouseBuilding" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="washingBay">Washing Bay</label>
-                                            <input id="washingBay" name="washingBay" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-grp">
-                                            <label for="openBarDesigning">Open Bar Designing</label>
-                                            <input id="openBarDesigning" name="openBarDesigning" type="checkbox">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 d-flex align-items-center">
-                                        <div class="form-grp flex-grow-1">
-                                            <label for="parkingLot">Parking Lot</label>
-                                            <input id="parkingLot" name="parkingLot" type="checkbox" class="mr-2">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <button class="btn" type="submit">Submit interest</button>
-                            </form>
-
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </section>
@@ -555,9 +512,9 @@
                                 </div>
                                 <div class="col-xl-5 col-lg-5 col-md-6">
                                     <div class="footer-social">
-                                        <h2 class="title">Opening hours: </h2>
+                                        <h2 class="title">Opening hours:</h2>
                                         <ul class="list-wrap"><br>
-                                            <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                            <li style="color: #fff;">Open 24/7 for consultations and project support</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -609,6 +566,97 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/contact-estimate-prefill.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
+    <script>
+        (function () {
+            const choiceButtons = document.querySelectorAll('.contact-choice-btn');
+            const panels = document.querySelectorAll('.contact-form-panel');
+
+            function showForm(targetId) {
+                panels.forEach((panel) => {
+                    const isMatch = panel.id === targetId;
+                    panel.classList.toggle('is-hidden', !isMatch);
+                });
+
+                choiceButtons.forEach((button) => {
+                    const isActive = button.dataset.formTarget === targetId;
+                    button.classList.toggle('is-active', isActive);
+                    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+                });
+            }
+
+            choiceButtons.forEach((button) => {
+                button.addEventListener('click', function () {
+                    showForm(this.dataset.formTarget);
+                });
+            });
+
+            function setFieldState(field, message) {
+                const group = field.closest('.form-grp');
+                const error = group.querySelector('.field-error');
+                const isValid = !message;
+
+                group.classList.toggle('has-error', !isValid);
+                error.textContent = message || '';
+                field.setAttribute('aria-invalid', isValid ? 'false' : 'true');
+            }
+
+            function validateField(field) {
+                const label = field.dataset.label || 'This field';
+                const value = field.value.trim();
+
+                if (field.required && !value) {
+                    setFieldState(field, label + ' is required.');
+                    return false;
+                }
+
+                if (field.type === 'email' && value) {
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(value)) {
+                        setFieldState(field, 'Please enter a valid email address.');
+                        return false;
+                    }
+                }
+
+                if ((field.type === 'tel' || field.name === 'phone' || field.name === 'homePhone' || field.name === 'mobilePhone' || field.name === 'whatsappNo') && value) {
+                    const digits = value.replace(/\D/g, '');
+                    if (digits.length < 7) {
+                        setFieldState(field, 'Please enter a valid phone number.');
+                        return false;
+                    }
+                }
+
+                setFieldState(field, '');
+                return true;
+            }
+
+            document.querySelectorAll('form').forEach((form) => {
+                const fields = form.querySelectorAll('input[required], textarea[required]');
+
+                fields.forEach((field) => {
+                    field.addEventListener('blur', () => validateField(field));
+                    field.addEventListener('input', () => {
+                        if (field.classList.contains('has-error')) {
+                            validateField(field);
+                        }
+                    });
+                });
+
+                form.addEventListener('submit', function (event) {
+                    let valid = true;
+
+                    fields.forEach((field) => {
+                        if (!validateField(field)) {
+                            valid = false;
+                        }
+                    });
+
+                    if (!valid) {
+                        event.preventDefault();
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 
 <!-- cmiconstruction.netlify.app/contact by , Tue, 09 Jan 2024 08:59:41 GMT -->

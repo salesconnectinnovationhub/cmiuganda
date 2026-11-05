@@ -63,17 +63,18 @@
                                     <ul class="navigation">
                                         <li><a href='index.html'>Home</a></li>
                                         <li><a href='about.html'>About us</a></li>
-                                        <li ><a href='services.html'>Services</a></li>
+                                        <li><a href='services.html'>Services</a></li>
                                         <li><a href='property-management.html'>Property Management</a></li>
-                                        <li ><a href='project.html'>Projects</a></li>
-
-                                        <li ><a href='gallery.html'>Gallery</a></li>
-                                        <li ><a href='team.html'>Team</a></li>
+                                        <li><a href='project.html'>Projects</a></li>
+                                        <li><a href='gallery.html'>Gallery</a></li>
+                                        <li><a href='team.html'>Team</a></li>
                                         <li class="active"><a href='payments.html'>Pay</a></li>
-                                        <li ><a href='contact.html'>Contact</a></li>
-                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
-
+                                        <li><a href='contact.html'>Contact</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
@@ -106,11 +107,23 @@
         <section class="contact-area pt-120 pb-120">
             <div class="container">
                 <div class="row justify-content-center mx-auto">
-                    <div class="col-xl-6 col-lg-10">
+                    <div class="col-xl-7 col-lg-10">
                         <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
-                            <h2 class="title">Pay now</h2>
-                            <p>Send financial support to your cherished ones effortlessly and securely by utilizing our trusted services. Rest assured that your funds will reach their destination promptly and with the utmost security, providing you with peace of mind throughout the process.</p>
-                            <form class="contact-form" id="paymentsForm">
+                            <h2 class="title">Pay securely with PesaPal</h2>
+                            <p>Use PesaPal to send funds to CMI Group for construction, property, or support payments. The payment is secure, the amount is confirmed before you complete the transaction, and confirmation is sent to your email or WhatsApp.</p>
+
+                            <div class="alert alert-light border mb-4" role="status" aria-live="polite">
+                                <strong>Before you pay:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>Accepted currencies:</strong> UGX and USD, depending on the merchant configuration available at checkout.</li>
+                                    <li><strong>Fees:</strong> processing fees are charged by PesaPal and may appear during checkout before confirmation.</li>
+                                    <li><strong>Recipient:</strong> CMI Group Co. Ltd. Payment purpose should match the project or support request.</li>
+                                    <li><strong>Confirmation:</strong> a payment confirmation is sent by email or WhatsApp after successful completion.</li>
+                                    <li><strong>Support:</strong> contact us at <a href="mailto:cmi.groupuganda@gmail.com">cmi.groupuganda@gmail.com</a> or <a href="tel:+256789612187">+256 789 612 187</a> if the payment does not go through.</li>
+                                </ul>
+                            </div>
+
+                            <form class="contact-form" id="paymentsForm" novalidate>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-grp">
@@ -124,19 +137,33 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
-                                            <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" title="Enter a 10-digit phone number" placeholder="Phone Number*" required>
+                                            <input id="phone" name="phone" type="tel" pattern="[0-9+\-\s]{7,20}" title="Enter a valid phone number" placeholder="Phone Number*" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
-                                            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="Amount in USD*" required>
+                                            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="Amount*" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <select id="currency" name="currency" required>
+                                                <option value="UGX">UGX</option>
+                                                <option value="USD">USD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <input id="reference" name="reference" type="text" placeholder="Project or reference" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-grp">
-                                    <textarea id="paymentReason" name="paymentReason" placeholder="Payment reason" required></textarea>
+                                    <textarea id="paymentReason" name="paymentReason" placeholder="Payment reason*" required></textarea>
                                 </div>
-                                <button class="btn" type="submit">Pay now</button>
+                                <div id="payment-status" class="mb-3" role="status" aria-live="polite"></div>
+                                <button class="btn" type="submit">Continue to PesaPal</button>
                             </form>
                         </div>
                     </div>
@@ -222,9 +249,9 @@
                                 </div>
                                 <div class="col-xl-5 col-lg-5 col-md-6">
                                     <div class="footer-social">
-                                        <h2 class="title">Opening hours: </h2>
+                                        <h2 class="title">Opening hours:</h2>
                                         <ul class="list-wrap"><br>
-                                            <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                            <li style="color: #fff;">Open 24/7 for consultations and project support</li>
                                         </ul>
                                     </div>
                                 </div>

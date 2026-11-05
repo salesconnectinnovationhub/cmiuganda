@@ -63,16 +63,18 @@
                                     <ul class="navigation">
                                         <li><a href='index.html'>Home</a></li>
                                         <li><a href='about.html'>About us</a></li>
-                                        <li ><a href='services.html'>Services</a></li>
+                                        <li><a href='services.html'>Services</a></li>
                                         <li><a href='property-management.html'>Property Management</a></li>
-                                        <li><a href='project.html'>Projects</a>
-                                        </li>
+                                        <li><a href='project.html'>Projects</a></li>
                                         <li class="active"><a href='gallery.html'>Gallery</a></li>
-                                        <li ><a href='team.html'>Team</a></li>
-                                        <li ><a href='payments.html'>Pay</a></li>
+                                        <li><a href='team.html'>Team</a></li>
+                                        <li><a href='payments.html'>Pay</a></li>
                                         <li><a href='contact.html'>Contact</a></li>
-                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
@@ -116,47 +118,176 @@
                 </div>
                 <div id="projects-container" class="row justify-content-center"></div>
 
+                <style>
+                    .project-evidence-card {
+                        border: 1px solid rgba(10, 40, 62, 0.08);
+                        border-radius: 18px;
+                        overflow: hidden;
+                        background: #fff;
+                        box-shadow: 0 12px 30px rgba(20, 41, 58, 0.06);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        height: 100%;
+                    }
+                    .project-evidence-card:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 18px 35px rgba(20, 41, 58, 0.12);
+                    }
+                    .project-evidence-card img {
+                        width: 100%;
+                        height: 260px;
+                        object-fit: cover;
+                        display: block;
+                    }
+                    .project-photo-link {
+                        position: relative;
+                        display: block;
+                    }
+                    .project-photo-label {
+                        position: absolute;
+                        left: 12px;
+                        bottom: 12px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
+                        background: rgba(15, 41, 60, 0.88);
+                        color: #fff;
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                    }
+                    .project-evidence-body {
+                        padding: 18px 18px 20px;
+                    }
+                    .project-evidence-body h3 {
+                        font-size: 1.1rem;
+                        margin-bottom: 6px;
+                    }
+                    .project-evidence-meta {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px 12px;
+                        margin-bottom: 12px;
+                        font-size: 12px;
+                        letter-spacing: 0.02em;
+                        text-transform: uppercase;
+                        color: #4b6478;
+                        font-weight: 700;
+                    }
+                    .project-evidence-body ul {
+                        margin: 0;
+                        padding-left: 18px;
+                        color: #4b6478;
+                    }
+                    .project-evidence-body li + li {
+                        margin-top: 5px;
+                    }
+                    .project-evidence-link {
+                        display: inline-flex;
+                        margin-top: 12px;
+                        font-weight: 700;
+                        color: var(--tg-primary-color);
+                    }
+                </style>
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
-                        // Call the function to generate cards when the DOM is loaded
                         generateProjectCards();
                     });
 
                     function generateProjectCards() {
-                        // Reference to the container where the cards will be added
                         var projectsContainer = document.getElementById("projects-container");
-
-                        var fieldPhotos = [
-                            ["IMG-20261031-WA0005.jpg", "Community gathering beside a water tank"],
-                            ["IMG-20261031-WA0007.jpg", "School and community compound with construction activity"],
-                            ["IMG-20261031-WA0009.jpg", "Brick boundary-wall construction"],
-                            ["IMG-20261031-WA0012.jpg", "School exterior with a worker completing exterior work"],
-                            ["IMG-20261031-WA0016.jpg", "Team members inspecting an open project site"],
-                            ["IMG-20261031-WA0020.jpg", "Unfinished brick building"],
-                            ["IMG-20261031-WA0022.jpg", "Ground preparation and early construction work"],
-                            ["IMG-20261031-WA0024.jpg", "Circular water-tank foundation under construction"],
-                            ["IMG-20261031-WA0030.jpg", "Foundation and site preparation"],
-                            ["IMG-20261031-WA0035.jpg", "Building frame and columns during construction"],
-                            ["IMG-20261031-WA0039.jpg", "Exterior view of a completed community building"],
-                            ["IMG-20261031-WA0041.jpg", "Dedication plaque at a community water project"],
-                            ["IMG-20261031-WA0045.jpg", "Exterior view of a completed school building"],
-                            ["IMG-20261031-WA0048.jpg", "Community members gathered at a water point"]
+                        var projects = [
+                            {
+                                title: "Water and community infrastructure",
+                                location: "Fort Portal, Uganda",
+                                scope: "Water point and access works",
+                                outcome: "Improved community access and safer project delivery",
+                                image: "images/enhanced-new/IMG-20261031-WA0041.jpg",
+                                alt: "Community water project plaque and completed infrastructure in Fort Portal"
+                            },
+                            {
+                                title: "School building progression",
+                                location: "Western Uganda",
+                                scope: "Exterior construction and finishing works",
+                                outcome: "Delivered a durable learning environment for the community",
+                                image: "images/enhanced-new/IMG-20261031-WA0045.jpg",
+                                alt: "Completed school building exterior finished by CMI Group"
+                            },
+                            {
+                                title: "Boundary wall masonry",
+                                location: "Uganda",
+                                scope: "Brick wall construction",
+                                outcome: "Secured the site and improved perimeter quality",
+                                image: "images/enhanced-new/IMG-20261031-WA0009.jpg",
+                                alt: "Brick boundary wall construction in progress"
+                            },
+                            {
+                                title: "Residential construction site",
+                                location: "Kampala area",
+                                scope: "Foundation and structural work",
+                                outcome: "Progressed from site prep to a strong structural frame",
+                                image: "images/enhanced-new/IMG-20261031-WA0035.jpg",
+                                alt: "Building frame and columns during active residential construction"
+                            },
+                            {
+                                title: "Project inspection and supervision",
+                                location: "On-site review",
+                                scope: "Site coordination and quality checks",
+                                outcome: "Kept construction standards visible and accountable",
+                                image: "images/enhanced-new/IMG-20261031-WA0016.jpg",
+                                alt: "CMI team members inspecting an active construction project"
+                            },
+                            {
+                                title: "Water tank and infrastructure works",
+                                location: "Community project",
+                                scope: "Tank foundation and utility installation",
+                                outcome: "Strengthened water access and project resilience",
+                                image: "images/enhanced-new/IMG-20261031-WA0024.jpg",
+                                alt: "Circular water tank foundation under construction"
+                            }
                         ];
 
-                        for (var i = 1; i <= 28; i++) {
-                            addGalleryCard(
-                                projectsContainer,
-                                "galleryimages/gallery_" + i + ".jpg",
-                                "CMI Group project photo " + i,
-                                "CMI Group project photo " + i,
-                                "galleryimages/thumbnails/gallery_" + i
-                            );
-                        }
+                        projects.forEach(function (project) {
+                            var cardColumn = document.createElement("div");
+                            cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
+                            var card = document.createElement("article");
+                            card.className = "project-evidence-card";
 
-                        fieldPhotos.forEach(function (photo) {
-                            var imageUrl = "images/enhanced-new/" + photo[0];
-                            var thumbnailPrefix = "images/gallery-thumbnails/" + photo[0].replace(/\.jpe?g$/i, "");
-                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[1], thumbnailPrefix);
+                            var link = document.createElement("a");
+                            link.href = project.image;
+                            link.className = "popup-image project-photo-link";
+                            link.setAttribute("aria-label", "View full size photo: " + project.title);
+                            link.title = project.title;
+
+                            var img = document.createElement("img");
+                            img.src = project.image;
+                            img.alt = project.alt;
+                            img.loading = "lazy";
+                            img.decoding = "async";
+                            var photoLabel = document.createElement("span");
+                            photoLabel.className = "project-photo-label";
+                            photoLabel.textContent = "Enlarge photo";
+                            link.append(img, photoLabel);
+
+                            var body = document.createElement("div");
+                            body.className = "project-evidence-body";
+                            var heading = document.createElement("h3");
+                            heading.textContent = project.title;
+                            var meta = document.createElement("div");
+                            meta.className = "project-evidence-meta";
+                            meta.innerHTML = "<span>" + project.location + "</span><span>" + project.scope + "</span>";
+                            var list = document.createElement("ul");
+                            var scopeItem = document.createElement("li");
+                            scopeItem.textContent = "Scope: " + project.scope;
+                            var outcomeItem = document.createElement("li");
+                            outcomeItem.textContent = "Outcome: " + project.outcome;
+                            list.appendChild(scopeItem);
+                            list.appendChild(outcomeItem);
+                            body.appendChild(heading);
+                            body.appendChild(meta);
+                            body.appendChild(list);
+
+                            card.appendChild(link);
+                            card.appendChild(body);
+                            cardColumn.appendChild(card);
+                            projectsContainer.appendChild(cardColumn);
                         });
 
                         if (window.jQuery && jQuery.fn.magnificPopup) {
@@ -167,40 +298,6 @@
                                 image: { titleSrc: "title" }
                             });
                         }
-                    }
-
-                    function addGalleryCard(container, imageUrl, description, title, thumbnailPrefix) {
-                        var cardColumn = document.createElement("div");
-                        cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
-                        var projectItem = document.createElement("div");
-                        projectItem.className = "project-item-two";
-                        var projectThumb = document.createElement("div");
-                        projectThumb.className = "project-thumb-two";
-                        var projectLink = document.createElement("a");
-                        projectLink.href = imageUrl;
-                        projectLink.className = "popup-image";
-                        projectLink.title = title;
-                        projectLink.setAttribute("aria-label", "View full-size photo: " + description);
-                        var thumbnailSizes = "(max-width: 575px) 90vw, (max-width: 991px) 50vw, 33vw";
-                        var picture = document.createElement("picture");
-                        var webpSource = document.createElement("source");
-                        webpSource.type = "image/webp";
-                        webpSource.srcset = thumbnailPrefix + "-360.webp 360w, " + thumbnailPrefix + "-720.webp 720w";
-                        webpSource.sizes = thumbnailSizes;
-                        var projectImage = document.createElement("img");
-                        projectImage.className = "field-photo";
-                        projectImage.src = thumbnailPrefix + "-360.jpg";
-                        projectImage.srcset = thumbnailPrefix + "-360.jpg 360w, " + thumbnailPrefix + "-720.jpg 720w";
-                        projectImage.sizes = thumbnailSizes;
-                        projectImage.alt = description;
-                        projectImage.loading = "lazy";
-                        projectImage.decoding = "async";
-                        picture.append(webpSource, projectImage);
-                        projectLink.appendChild(picture);
-                        projectThumb.appendChild(projectLink);
-                        projectItem.appendChild(projectThumb);
-                        cardColumn.appendChild(projectItem);
-                        container.appendChild(cardColumn);
                     }
                 </script>
 
@@ -296,9 +393,9 @@
                             </div>
                             <div class="col-xl-5 col-lg-5 col-md-6">
                                 <div class="footer-social">
-                                    <h2 class="title">Opening hours: </h2>
+                                    <h2 class="title">Opening hours:</h2>
                                     <ul class="list-wrap"><br>
-                                        <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                        <li style="color: #fff;">Open 24/7 for consultations and project support</li>
                                     </ul>
                                 </div>
                             </div>
