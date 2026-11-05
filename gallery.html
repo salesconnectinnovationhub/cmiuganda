@@ -148,13 +148,15 @@
                                 projectsContainer,
                                 "galleryimages/gallery_" + i + ".jpg",
                                 "CMI Group project photo " + i,
-                                "CMI Group project photo " + i
+                                "CMI Group project photo " + i,
+                                "galleryimages/thumbnails/gallery_" + i
                             );
                         }
 
                         fieldPhotos.forEach(function (photo) {
                             var imageUrl = "images/enhanced-new/" + photo[0];
-                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[1]);
+                            var thumbnailPrefix = "images/gallery-thumbnails/" + photo[0].replace(/\.jpe?g$/i, "");
+                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[1], thumbnailPrefix);
                         });
 
                         if (window.jQuery && jQuery.fn.magnificPopup) {
@@ -167,7 +169,7 @@
                         }
                     }
 
-                    function addGalleryCard(container, imageUrl, description, title) {
+                    function addGalleryCard(container, imageUrl, description, title, thumbnailPrefix) {
                         var cardColumn = document.createElement("div");
                         cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
                         var projectItem = document.createElement("div");
@@ -179,13 +181,22 @@
                         projectLink.className = "popup-image";
                         projectLink.title = title;
                         projectLink.setAttribute("aria-label", "View full-size photo: " + description);
+                        var thumbnailSizes = "(max-width: 575px) 90vw, (max-width: 991px) 50vw, 33vw";
+                        var picture = document.createElement("picture");
+                        var webpSource = document.createElement("source");
+                        webpSource.type = "image/webp";
+                        webpSource.srcset = thumbnailPrefix + "-360.webp 360w, " + thumbnailPrefix + "-720.webp 720w";
+                        webpSource.sizes = thumbnailSizes;
                         var projectImage = document.createElement("img");
                         projectImage.className = "field-photo";
-                        projectImage.src = imageUrl;
+                        projectImage.src = thumbnailPrefix + "-360.jpg";
+                        projectImage.srcset = thumbnailPrefix + "-360.jpg 360w, " + thumbnailPrefix + "-720.jpg 720w";
+                        projectImage.sizes = thumbnailSizes;
                         projectImage.alt = description;
                         projectImage.loading = "lazy";
                         projectImage.decoding = "async";
-                        projectLink.appendChild(projectImage);
+                        picture.append(webpSource, projectImage);
+                        projectLink.appendChild(picture);
                         projectThumb.appendChild(projectLink);
                         projectItem.appendChild(projectThumb);
                         cardColumn.appendChild(projectItem);

@@ -5,6 +5,30 @@ send both public contact forms to `cmigroupuganda@gmail.com` through Resend.
 They validate submitted fields on the server and return success only when the
 email provider accepts the message.
 
+## Public submission abuse controls
+
+Contact and interest submissions require a same-origin `Origin` header in
+addition to server-side field validation and the honeypot. Review submissions
+also require a same-origin header. These checks reduce cross-site form abuse,
+but they are not a substitute for edge rate limiting.
+
+Configure a Cloudflare zone rate-limiting rule for the public form endpoints in
+the Cloudflare dashboard. Use the expression
+`http.request.uri.path in {"/api/contact" "/api/interest"}`, count by source
+IP, and start with 5 requests per 60 seconds with a 60-second block. Adjust
+after observing legitimate traffic. Since Pages Functions do not currently
+expose the Workers Rate Limiting API as a Pages binding, this rule is configured
+at the zone and is not deployed by application code.
+
+If the Cloudflare plan supports method matching and a second rule, separately
+protect review writes with
+`http.request.method eq "POST" and http.request.uri.path eq "/api/reviews"`,
+count by source IP, and start with 5 requests per 60 seconds with a 60-second
+block. Do not rate-limit the review path without distinguishing `POST` if the
+plan supports it, because public review reads use the same path. Test the rule
+on staging and confirm it returns HTTP 429 only after the threshold. If review
+spam persists, consider adding Turnstile with server-side token verification.
+
 ## Cloudflare setup
 
 1. Deploy this site as a Cloudflare Pages project attached to

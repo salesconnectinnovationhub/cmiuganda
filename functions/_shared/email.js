@@ -31,14 +31,15 @@ export function sanitize(value) {
 
 export async function readFormData(request) {
   const origin = request.headers.get("Origin");
-  if (origin) {
-    try {
-      if (new URL(origin).origin !== new URL(request.url).origin) {
-        return { error: response("Please submit the form from the CMI Group website.", 403) };
-      }
-    } catch (error) {
+  if (!origin) {
+    return { error: response("Please submit the form from the CMI Group website.", 403) };
+  }
+  try {
+    if (new URL(origin).origin !== new URL(request.url).origin) {
       return { error: response("Please submit the form from the CMI Group website.", 403) };
     }
+  } catch (error) {
+    return { error: response("Please submit the form from the CMI Group website.", 403) };
   }
 
   const contentType = request.headers.get("Content-Type") || "";

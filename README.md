@@ -221,6 +221,21 @@ The function handlers under `functions/api` perform the following roles:
 
 The shared logic and validation helpers live in `functions/_shared/`.
 
+## Automated checks and release readiness
+
+Run `npm ci` followed by `npm test` to execute estimator calculation and form-
+validation tests plus Chromium browser smoke tests for the estimator quote
+handoff and CMS role controls. GitHub Actions runs the same suite for pushes to
+`main` and pull requests.
+
+When adding or replacing gallery source photos, run `npm run optimize:gallery`
+and commit the generated 360px/720px JPEG and WebP thumbnails with the originals.
+
+Browser tests stub CMS API responses to verify the admin UI by role. They do not
+prove Cloudflare Access, D1, R2, or Resend are configured correctly. Complete
+the real staging checks in [RELEASE-CHECKLIST.md](RELEASE-CHECKLIST.md) before
+production deployment.
+
 ## Important notes
 
 - This repo is not a Node.js app with a conventional build pipeline; it is a static website with serverless API routes.

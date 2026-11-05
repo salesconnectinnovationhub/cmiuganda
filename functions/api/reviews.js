@@ -12,7 +12,7 @@ function jsonResponse(data, status = 200) {
 
 function requestFromSite(request) {
   const origin = request.headers.get("Origin");
-  if (!origin) return true;
+  if (!origin) return false;
   try {
     return new URL(origin).origin === new URL(request.url).origin;
   } catch {
