@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /submit/
+
+Sitemap: https://cmigroupuganda.com/sitemap.xml

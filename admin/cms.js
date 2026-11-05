@@ -89,6 +89,34 @@ const collections = {
             ["file", "Resource file", "resourcePicker", false, "Files over 10 MB must be optimized before upload."],
         ],
     },
+    page: {
+        label: "Homepage content and project highlights",
+        fields: [
+            ["title", "Record name", "text", true, "Fixed record name for the public homepage."],
+            ["slug", "Record key", "text", true, "Fixed key used by the homepage: homepage."],
+            ["heroTitle", "Main headline", "text", true, "Use one clear sentence describing CMI Group's Uganda construction offer."],
+            ["heroDescription", "Introductory copy", "textarea", true, "Briefly explain who CMI helps and what the team does. Do not include unverified claims."],
+            ["primaryCtaText", "Primary button label", "text", true, "Example: Request a consultation."],
+            ["primaryCtaUrl", "Primary button page", "text", true, "Use a local .html page path such as contact.html or contact.html#express."],
+            ["secondaryCtaText", "Secondary button label", "text", false, "Optional supporting action."],
+            ["secondaryCtaUrl", "Secondary button page", "text", false, "Use a local .html page path such as project.html."],
+            ["project1Title", "Highlight 1 title", "text", false, "Leave all highlight fields blank to keep that static project slide."],
+            ["project1Location", "Highlight 1 location or service", "text", false, "Use a location or concise project type."],
+            ["project1Summary", "Highlight 1 summary", "textarea", false, "Brief factual project caption."],
+            ["project1Image", "Highlight 1 photo", "imagePicker", false, "Choose an approved photo or upload a JPEG, PNG, or WebP image."],
+            ["project1ImageAlt", "Highlight 1 image description", "text", false, "Describe what is visible in the photo."],
+            ["project2Title", "Highlight 2 title", "text", false, "Leave all highlight fields blank to keep that static project slide."],
+            ["project2Location", "Highlight 2 location or service", "text", false, "Use a location or concise project type."],
+            ["project2Summary", "Highlight 2 summary", "textarea", false, "Brief factual project caption."],
+            ["project2Image", "Highlight 2 photo", "imagePicker", false, "Choose an approved photo or upload a JPEG, PNG, or WebP image."],
+            ["project2ImageAlt", "Highlight 2 image description", "text", false, "Describe what is visible in the photo."],
+            ["project3Title", "Highlight 3 title", "text", false, "Leave all highlight fields blank to keep that static project slide."],
+            ["project3Location", "Highlight 3 location or service", "text", false, "Use a location or concise project type."],
+            ["project3Summary", "Highlight 3 summary", "textarea", false, "Brief factual project caption."],
+            ["project3Image", "Highlight 3 photo", "imagePicker", false, "Choose an approved photo or upload a JPEG, PNG, or WebP image."],
+            ["project3ImageAlt", "Highlight 3 image description", "text", false, "Describe what is visible in the photo."],
+        ],
+    },
 };
 
 const status = document.querySelector("#cms-status");
@@ -266,7 +294,7 @@ function editItem(item) {
         if (inputType === "imageList") input.hidden = true;
         input.required = isImagePicker || isResourcePicker ? false : required;
         if (type === "resource" && name === "fileName") input.readOnly = true;
-        input.maxLength = name === "bio" || name === "body" || name === "summary" ? 3000 : 500;
+        input.maxLength = name === "bio" || name === "body" || name === "summary" || name === "heroDescription" || /^project\d+Summary$/.test(name) ? 3000 : 500;
         if (name === "frequencyDays") {
             input.min = "1";
             input.max = "365";
@@ -297,13 +325,15 @@ function editItem(item) {
         else if (type === "settings" && name === "whatsappUrl") input.value = "https://wa.me/message/DYT6JQFKYJNLF1";
         else if (type === "settings" && name === "fortPortalAddress") input.value = "Rukiidi 3 street, Daj plaza, Fort Portal, Uganda";
         else if (type === "settings" && name === "kampalaAddress") input.value = "Amizon House, Ground floor, opposite Mutungo parish catholic church, Nakawa Division Kampala, Uganda";
-        if (name === "slug" && type === "settings") {
+        else if (type === "page" && name === "title") input.value = "Homepage content";
+        else if (type === "page" && name === "slug") input.value = "homepage";
+        if (name === "slug" && (type === "settings" || type === "page")) {
             input.readOnly = true;
-            input.value = "business-contact";
-        } else if (name === "title" && type === "settings") {
+            input.value = type === "settings" ? "business-contact" : "homepage";
+        } else if (name === "title" && (type === "settings" || type === "page")) {
             input.readOnly = true;
-            input.value = "Business contact details";
-        } else if (name === "slug" && !selectedId) {
+            input.value = type === "settings" ? "Business contact details" : "Homepage content";
+        } else if (name === "slug" && !selectedId && type !== "page") {
             const titleInput = editorFields.querySelector('[name="title"]');
             input.readOnly = true;
             titleInput?.addEventListener("input", () => {
@@ -555,6 +585,59 @@ function setEditorBusy(busy) {
 function renderPreview(type) {
     if (!preview || !form) return;
     const value = (name) => String(form.elements.namedItem(name)?.value || "").trim();
+    if (type === "page") {
+        const container = document.createElement("div");
+        container.className = "card-body cms-homepage-preview";
+        const heading = document.createElement("h2");
+        heading.textContent = value("heroTitle") || "Homepage headline";
+        const description = document.createElement("p");
+        description.textContent = value("heroDescription") || "Homepage introduction";
+        const actions = document.createElement("p");
+        for (const [label, name] of [["primaryCtaText", "primaryCtaUrl"], ["secondaryCtaText", "secondaryCtaUrl"]]) {
+            if (!value(label)) continue;
+            const button = document.createElement("span");
+            button.className = "btn btn-sm btn-outline-primary mr-2 mb-2";
+            button.textContent = value(label);
+            button.title = value(name);
+            actions.append(button);
+        }
+        container.append(heading, description, actions);
+        const projects = document.createElement("div");
+        projects.className = "row";
+        for (let index = 1; index <= 3; index += 1) {
+            const titleText = value(`project${index}Title`);
+            const imagePath = value(`project${index}Image`);
+            const summaryText = value(`project${index}Summary`);
+            if (!titleText && !imagePath && !summaryText) continue;
+            const column = document.createElement("div");
+            column.className = "col-md-4 mb-3";
+            const card = document.createElement("article");
+            card.className = "border rounded p-2 h-100";
+            if (imagePath && isApprovedImage(imagePath)) {
+                const image = document.createElement("img");
+                image.className = "img-fluid mb-2";
+                image.src = cmsImageUrl(imagePath);
+                image.alt = value(`project${index}ImageAlt`) || titleText;
+                image.loading = "lazy";
+                card.append(image);
+            }
+            const projectTitle = document.createElement("h3");
+            projectTitle.className = "h6";
+            projectTitle.textContent = titleText || `Project highlight ${index}`;
+            const location = document.createElement("p");
+            location.className = "small text-muted mb-1";
+            location.textContent = value(`project${index}Location`);
+            const summary = document.createElement("p");
+            summary.className = "small mb-0";
+            summary.textContent = summaryText;
+            card.append(projectTitle, location, summary);
+            column.append(card);
+            projects.append(column);
+        }
+        container.append(projects);
+        preview.replaceChildren(container);
+        return;
+    }
     const cardBody = document.createElement("div");
     cardBody.className = "card-body";
     const title = document.createElement("h4");
@@ -669,7 +752,7 @@ function renderPreview(type) {
 function isApprovedImage(path) {
     return typeof path === "string"
         && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(path) && !path.split("/").includes("..")
-            || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
+            || /^cms-media\/(property|team|partner|service|promotion|page)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
 }
 
 function cmsImageUrl(path) {

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Conversion analytics - CMI Group</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <style>
+        body { background: #f4f6f7; color: #183143; }
+        .analytics-shell { max-width: 1050px; }
+        .analytics-header { display: flex; align-items: end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .analytics-header h1 { font-size: 1.8rem; margin: 0; }
+        .analytics-note { max-width: 760px; color: #526775; }
+        .analytics-table-wrap { overflow-x: auto; }
+        #analytics-status { min-height: 48px; }
+        @media (max-width: 575px) { .analytics-header h1 { font-size: 1.45rem; } }
+    </style>
+</head>
+<body>
+    <main class="container analytics-shell py-5">
+        <header class="analytics-header mb-4">
+            <div>
+                <p class="text-uppercase mb-1">CMI Group · Admin</p>
+                <h1>Conversion analytics</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-primary" href="index.html">Content management</a>
+                <a class="btn btn-outline-secondary" href="../">View website</a>
+            </div>
+        </header>
+        <p class="analytics-note">Counts are aggregated by day, event, and page. No visitor IDs, cookies, form contents, or query strings are stored. Visitors who enable Do Not Track or Global Privacy Control are excluded. Payment returns are not verified payment confirmations.</p>
+        <div class="form-inline mb-3">
+            <label for="analytics-days" class="mr-2">Reporting period</label>
+            <select id="analytics-days" class="form-control">
+                <option value="7">Last 7 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last 90 days</option>
+            </select>
+        </div>
+        <div id="analytics-status" class="alert alert-info" role="status" aria-live="polite">Loading conversion data...</div>
+        <div class="card">
+            <div class="card-body analytics-table-wrap">
+                <table class="table table-striped mb-0">
+                    <caption>Aggregate conversion events by event type and source page</caption>
+                    <thead><tr><th scope="col">Event</th><th scope="col">Page</th><th scope="col">Count</th></tr></thead>
+                    <tbody id="analytics-results"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="analytics.js" defer></script>
+</body>
+</html>

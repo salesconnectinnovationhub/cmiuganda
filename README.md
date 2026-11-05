@@ -63,6 +63,7 @@ The admin dashboard in `admin/` lets authorized staff manage website content wit
 
 Managed content types include:
 
+- homepage headline, introductory copy, calls to action, and project highlights
 - property listings
 - team members
 - partner logos and links
@@ -75,6 +76,11 @@ uploads, previews, and per-item revision history with restore. Public endpoints
 return only published content, while admin actions require verified identity
 checks. A structured contact-settings record updates public phone, email,
 WhatsApp, and office links without exposing arbitrary page HTML to editors.
+
+The authorized admin dashboard also includes a privacy-conscious conversion
+report. It stores daily aggregate counts by event and public page path, without
+visitor IDs, cookies, query strings, form content, or IP addresses. Apply
+`functions/analytics-schema.sql` to the bound D1 database before enabling it.
 
 ### 5. Property management and listings
 The property-management page provides a public-facing property and asset oversight experience. Listing content can be managed through the admin CMS and stored in D1, with fields such as:
@@ -223,10 +229,10 @@ The shared logic and validation helpers live in `functions/_shared/`.
 
 ## Automated checks and release readiness
 
-Run `npm ci` followed by `npm test` to execute estimator calculation and form-
-validation tests plus Chromium browser smoke tests for the estimator quote
-handoff and CMS role controls. GitHub Actions runs the same suite for pushes to
-`main` and pull requests.
+Run `npm ci` followed by `npm test` to execute estimator, Pages Function,
+analytics, and CMS validation tests plus Chromium browser tests for estimator
+handoffs, CMS controls, homepage content, and contact conversions. GitHub
+Actions runs the same suite for pushes to `main` and pull requests.
 
 When adding or replacing gallery source photos, run `npm run optimize:gallery`
 and commit the generated 360px/720px JPEG and WebP thumbnails with the originals.

@@ -163,6 +163,7 @@
                                         <span class="field-error" aria-live="polite"></span>
                                         <p id="estimate-prefill-status" role="status" aria-live="polite"></p>
                                     </div>
+                                    <p class="form-submit-status" role="status" aria-live="polite"></p>
                                     <button class="btn" type="submit">Send message</button>
                                 </form>
                             </div>
@@ -424,6 +425,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <p class="form-submit-status" role="status" aria-live="polite"></p>
                                     <button class="btn" type="submit">Submit interest</button>
                                 </form>
                             </div>
@@ -630,7 +632,7 @@
             }
 
             document.querySelectorAll('form').forEach((form) => {
-                const fields = form.querySelectorAll('input[required], textarea[required]');
+                const fields = form.querySelectorAll('input[required], textarea[required], select[required]');
 
                 fields.forEach((field) => {
                     field.addEventListener('blur', () => validateField(field));
@@ -652,7 +654,33 @@
 
                     if (!valid) {
                         event.preventDefault();
+                        return;
                     }
+
+                    event.preventDefault();
+                    const submitButton = form.querySelector('[type="submit"]');
+                    const submitStatus = form.querySelector('.form-submit-status');
+                    const isInterest = form.classList.contains('interestForm');
+                    if (submitButton) submitButton.disabled = true;
+                    submitStatus.textContent = 'Sending your message...';
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                            'Accept': 'text/plain',
+                        },
+                        body: new URLSearchParams(new FormData(form)).toString(),
+                    }).then(async (response) => {
+                        const message = await response.text();
+                        if (!response.ok) throw new Error(message || 'Your message could not be sent. Please try again.');
+                        submitStatus.textContent = message;
+                        form.reset();
+                        window.cmiTrackConversion?.(isInterest ? 'interest_submit' : 'contact_submit');
+                    }).catch((error) => {
+                        submitStatus.textContent = error.message || 'Your message could not be sent. Please try again.';
+                    }).finally(() => {
+                        if (submitButton) submitButton.disabled = false;
+                    });
                 });
             });
         })();

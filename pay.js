@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutUrl.searchParams.set('phone', phone);
     checkoutUrl.searchParams.set('note', `${fullname} | ${email} | ${reason}`);
 
+    window.cmiTrackConversion?.('payment_start');
     window.open(checkoutUrl.toString(), '_blank', 'noopener,noreferrer');
   });
 });

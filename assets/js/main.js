@@ -522,6 +522,36 @@ $('.project-active').slick({
 });
 
 
+$('.home-project-slider').slick({
+	infinite: true,
+	autoplay: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+	autoplaySpeed: 5500,
+	speed: 650,
+	pauseOnHover: true,
+	pauseOnFocus: true,
+	dots: true,
+	arrows: true,
+	prevArrow: '<button type="button" class="home-project-arrow home-project-prev" aria-label="Previous project"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>',
+	nextArrow: '<button type="button" class="home-project-arrow home-project-next" aria-label="Next project"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>',
+	slidesToShow: 1,
+	slidesToScroll: 1,
+});
+
+const homeVideoLaunch = document.querySelector('.home-video-launch');
+homeVideoLaunch?.addEventListener('click', () => {
+	const iframe = document.createElement('iframe');
+	iframe.className = 'cmi-video-player';
+	iframe.title = 'CMI Group project videos';
+	iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(homeVideoLaunch.dataset.playlist)}&autoplay=1&playsinline=1`;
+	iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+	iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+	iframe.allowFullscreen = true;
+	iframe.loading = 'lazy';
+	homeVideoLaunch.replaceWith(iframe);
+	iframe.focus();
+}, { once: true });
+
+
 /*=============================================
 	=    		Project Active		      =
 =============================================*/
@@ -744,5 +774,43 @@ function wowAnimation() {
 	wow.init();
 }
 
+
+const conversionEventNames = new Set([
+	'consultation_click', 'contact_submit', 'interest_submit', 'estimator_handoff',
+	'phone_click', 'whatsapp_click', 'chat_click', 'payment_start', 'payment_return',
+]);
+
+window.cmiTrackConversion = function (eventName) {
+	if (!conversionEventNames.has(eventName)
+		|| navigator.doNotTrack === '1'
+		|| window.doNotTrack === '1'
+		|| navigator.globalPrivacyControl === true) return;
+
+	const body = JSON.stringify({ event: eventName, path: window.location.pathname || '/' });
+	fetch('/api/analytics', {
+		method: 'POST',
+		credentials: 'same-origin',
+		headers: { 'content-type': 'application/json' },
+		body,
+		keepalive: true,
+	}).catch(() => {});
+};
+
+document.addEventListener('click', (event) => {
+	if (!(event.target instanceof Element)) return;
+	const link = event.target.closest('a[href]');
+	if (!link) return;
+	const href = link.getAttribute('href') || '';
+	let eventName = link.dataset.analyticsEvent;
+	if (!eventName && href.startsWith('tel:')) eventName = 'phone_click';
+	if (!eventName && /(?:wa\.me|api\.whatsapp\.com)/i.test(href)) eventName = 'whatsapp_click';
+	if (!eventName && /chat\.cmigroupuganda\.com/i.test(href)) eventName = 'chat_click';
+	if (!eventName && link.textContent.trim().toLowerCase().includes('request a consultation')) eventName = 'consultation_click';
+	if (eventName) window.cmiTrackConversion(eventName);
+});
+
+if (window.location.pathname === '/success.html') {
+	window.cmiTrackConversion('payment_return');
+}
 
 })(jQuery);

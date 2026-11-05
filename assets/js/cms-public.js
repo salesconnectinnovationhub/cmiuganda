@@ -32,6 +32,7 @@ if (window.location.protocol !== "file:") {
     if (document.querySelector("#cms-partners")) loadManagedPartners();
     if (document.querySelector("#cms-services")) loadManagedServices();
     if (document.querySelector("#cms-resources")) loadManagedResources();
+    if (document.querySelector("#home-hero-title")) loadManagedHomepage();
     loadActivePromotion();
 }
 
@@ -272,6 +273,61 @@ async function loadManagedServices() {
     }
 }
 
+async function loadManagedHomepage() {
+    try {
+        const pages = await loadCmsItems("page");
+        const homepage = pages.find((item) => item.slug === "homepage");
+        if (!homepage) return;
+
+        const heroTitle = document.querySelector("#home-hero-title");
+        const heroDescription = document.querySelector("#home-hero-description");
+        if (heroTitle && homepage.heroTitle) heroTitle.textContent = homepage.heroTitle;
+        if (heroDescription && homepage.heroDescription) heroDescription.textContent = homepage.heroDescription;
+
+        for (const [id, labelField, urlField] of [
+            ["home-primary-cta", "primaryCtaText", "primaryCtaUrl"],
+            ["home-secondary-cta", "secondaryCtaText", "secondaryCtaUrl"],
+        ]) {
+            const link = document.getElementById(id);
+            if (!link || !homepage[labelField] || !isHomepageLink(homepage[urlField])) continue;
+            link.textContent = homepage[labelField];
+            link.href = homepage[urlField];
+        }
+
+        const slider = document.querySelector(".home-project-slider");
+        if (!slider) return;
+        slider.querySelectorAll(".home-project-slide").forEach((slide, slidePosition) => {
+            const rawIndex = Number(slide.dataset.slickIndex);
+            const index = Number.isInteger(rawIndex) ? ((rawIndex % 3) + 3) % 3 : slidePosition % 3;
+            const projectNumber = index + 1;
+            const title = homepage[`project${projectNumber}Title`];
+            const summary = homepage[`project${projectNumber}Summary`];
+            const imagePath = homepage[`project${projectNumber}Image`];
+            if (!title && !summary && !imagePath) return;
+
+            const image = slide.querySelector("img");
+            const location = slide.querySelector(".home-project-caption span");
+            const heading = slide.querySelector(".home-project-caption h3");
+            const description = slide.querySelector(".home-project-caption p");
+            if (image && imagePath && isApprovedImage(imagePath)) {
+                image.src = cmsImageUrl(imagePath);
+                image.alt = homepage[`project${projectNumber}ImageAlt`] || title || "CMI Group project highlight";
+            }
+            if (location && homepage[`project${projectNumber}Location`]) {
+                location.textContent = homepage[`project${projectNumber}Location`];
+            }
+            if (heading && title) heading.textContent = title;
+            if (description && summary) description.textContent = summary;
+        });
+    } catch (error) {
+        console.warn("Homepage content is temporarily unavailable; static content remains visible.", error);
+    }
+}
+
+function isHomepageLink(value) {
+    return typeof value === "string" && /^[A-Za-z0-9_-]+\.html(?:#[A-Za-z0-9_-]+)?$/.test(value);
+}
+
 function normalizeServiceTitle(value) {
     return String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
@@ -500,7 +556,7 @@ function showPromotion(promotion) {
 function isApprovedImage(path) {
     return typeof path === "string"
         && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(path) && !path.split("/").includes("..")
-            || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
+            || /^cms-media\/(property|team|partner|service|promotion|page)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path));
 }
 
 function cmsImageUrl(path) {

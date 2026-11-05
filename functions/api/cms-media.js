@@ -1,6 +1,6 @@
 import { getVerifiedAccessEmail } from "../_shared/review-auth.js";
 
-const IMAGE_COLLECTIONS = new Set(["property", "team", "partner", "service", "promotion"]);
+const IMAGE_COLLECTIONS = new Set(["property", "team", "partner", "service", "promotion", "page"]);
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 const CONTENT_TYPES = new Map([
   ["image/jpeg", { extension: "jpg", signature: [0xff, 0xd8, 0xff] }],
@@ -50,7 +50,7 @@ function cmsRole(email, env) {
 
 function validMediaKey(key) {
   return typeof key === "string"
-    && (/^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(key)
+    && (/^cms-media\/(property|team|partner|service|promotion|page)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(key)
       || /^cms-media\/resource\/[0-9a-f-]{36}\.(pdf|doc|docx|xls|xlsx|ppt|pptx)$/.test(key));
 }
 

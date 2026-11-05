@@ -184,6 +184,12 @@ The public pages consume CMS content as follows:
    contact details, save a draft, and have an approver publish them. Verify
    phone, email, WhatsApp, and office links across the public pages. This
    collection does not alter the form-delivery inbox.
+
+   The fixed `homepage` page record edits the public homepage headline, introductory
+   copy, primary and secondary local-page links, and up to three project highlights
+   with approved images, alt text, location, and summary. Drafts remain private;
+   approvers can preview and publish the record. If it is absent or unavailable,
+   the existing static homepage content remains visible.
 9. After publishing and archiving a test item, verify its revision history and
    restore a previous version. Confirm a restored published version is public
    and that archived content remains private until a published revision is
@@ -224,12 +230,44 @@ For a fresh database, apply the current `cms-schema.sql` instead.
 - **Services:** title, summary, optional uploaded or approved photo, and order.
 - **Business contact details:** one `business-contact` record containing the
   public email address, two phone numbers, WhatsApp link, and office addresses.
+- **Homepage content:** one `homepage` record containing hero copy, safe local
+   CTA links, and three structured project highlight slots.
 - The dashboard history view shows the latest 100 revisions per item; restore
   actions are themselves recorded. D1 backups remain the recovery mechanism
   for database-wide loss or accidental deletion.
-- Individual service copy, profiles, property cards, partner logos, and
-  promotions are CMS-managed. Existing long-form page layouts/headlines remain
-  in HTML until their copy is explicitly migrated into structured content.
+- Individual service copy, profiles, property cards, partner logos, promotions,
+   and the homepage hero/highlights are CMS-managed. Other long-form page
+   layouts/headlines remain in HTML until explicitly migrated.
+
+## Privacy-conscious conversion analytics
+
+The public site sends an allowlisted conversion event to `POST /api/analytics`
+for consultation CTA clicks, accepted contact/interest forms, estimator
+handoffs, phone/WhatsApp/chat clicks, payment starts, and visits to the payment
+return page. Contact and interest submissions are counted only after the form
+API returns success. The current PesaPal page has no verified transaction
+callback, so `payment_return` means only that the return page loaded; it is not
+proof of a completed or settled payment.
+
+Events are stored in D1 as daily counts grouped by event and public page path.
+No cookies, visitor identifiers, IP addresses, query strings, form contents, or
+payment details are stored. Do Not Track and Global Privacy Control opt-outs
+are honored by the browser tracker. Data is grouped by UTC calendar day. The
+`/admin/analytics.html` report requires an authorized CMS approver identity and
+shows totals for 7, 30, or 90 days.
+
+Before enabling analytics in a Cloudflare environment, apply the schema to the
+same D1 database bound as `DB`:
+
+```bash
+npx wrangler d1 execute <database-name> --remote --file=functions/analytics-schema.sql
+```
+
+The zone should also rate-limit `POST /api/analytics` to protect D1 write
+capacity. Review aggregate counts weekly or monthly. To report verified payment
+completions, first implement and validate PesaPal's server-to-server IPN/webhook
+and reconcile its transaction status before emitting a separate confirmed
+payment event; do not infer payment success from a browser redirect.
 
 Continue using YouTube embeds for hosted videos. Back up D1, export/import
 existing reviews if they must be retained, and verify the deployment and
