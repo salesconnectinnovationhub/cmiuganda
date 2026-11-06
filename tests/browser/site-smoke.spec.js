@@ -103,6 +103,18 @@ test("published homepage CMS content updates hero and project highlights", async
     await expect(firstSlide.locator("h3")).toHaveText("CMS project highlight");
 });
 
+test("homepage embeds the CMI Group project video feed without a click", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const video = page.locator("#youtube-videos iframe");
+    await expect(video).toHaveAttribute("title", "CMI Group project videos");
+    await expect(video).toHaveAttribute("src", /youtube-nocookie\.com\/embed\/videoseries\?list=/);
+    await expect(page.getByRole("link", { name: "Explore Project Management" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Meet Our Engineers" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "See Our Quality Standards" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Learn About CMI Group" })).toBeVisible();
+});
+
 test("contact conversion is recorded only after the API accepts the form", async ({ page }) => {
     const analyticsEvents = [];
     await page.route("**/api/contact", async (route) => {

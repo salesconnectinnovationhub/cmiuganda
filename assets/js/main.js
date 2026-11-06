@@ -569,21 +569,6 @@ $('.home-project-slider').slick({
 	slidesToScroll: 1,
 });
 
-const homeVideoLaunch = document.querySelector('.home-video-launch');
-homeVideoLaunch?.addEventListener('click', () => {
-	const iframe = document.createElement('iframe');
-	iframe.className = 'cmi-video-player';
-	iframe.title = 'CMI Group project videos';
-	iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(homeVideoLaunch.dataset.playlist)}&autoplay=1&playsinline=1`;
-	iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-	iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-	iframe.allowFullscreen = true;
-	iframe.loading = 'lazy';
-	homeVideoLaunch.replaceWith(iframe);
-	iframe.focus();
-}, { once: true });
-
-
 /*=============================================
 	=    		Project Active		      =
 =============================================*/
