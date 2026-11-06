@@ -3091,6 +3091,10 @@ border-radius: 10px;
 	object-position: center;
 	border-radius: 8px;
 }
+.property-management-page .btn {
+	max-width: 100%;
+	white-space: normal;
+}
 .gallery-photo-frame {
 	width: 100%;
 	aspect-ratio: 16 / 9;
@@ -3344,6 +3348,13 @@ section[aria-labelledby="property-fieldwork-title"] .card-body {
 .inner-project-area .project-thumb-two {
 	border-radius: 8px;
 	overflow: hidden;
+	aspect-ratio: 4 / 3;
+}
+.inner-project-area .project-thumb-two img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /* project-details */
