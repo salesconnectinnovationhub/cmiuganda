@@ -53,7 +53,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
+                        <button class="mobile-nav-toggler" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu"><i class="fas fa-bars" aria-hidden="true"></i></button>
                         <div class="menu-wrap">
                             <nav class="menu-nav">
                                 <div class="logo">
@@ -61,38 +61,28 @@
                                 </div>
                                 <div class="navbar-wrap main-menu d-none d-lg-flex">
                                     <ul class="navigation">
-                                        <li><a href="index.html">Home</a></li>
-                                        <li class="menu-item-has-children"><a href="about.html">About</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="team.html">Team</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children"><a href="services.html">Services</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="property-management.html">Property Management</a></li>
-                                                <li><a href="block-estimator.html">Block Estimator</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children"><a href="project.html">Projects</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="gallery.html">Gallery</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="active"><a href="payments.html" aria-current="page">Pay</a></li>
-                                        <li class="menu-item-has-children"><a href="contact.html">Contact</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="https://chat.cmigroupuganda.com/" target="_blank" rel="noopener noreferrer">Chat Now</a></li>
-                                            </ul>
-                                        </li>
+                                        <li><a href='index.html'>Home</a></li>
+                                        <li><a href='about.html'>About us</a></li>
+                                        <li><a href='services.html'>Services</a></li>
+                                        <li><a href='property-management.html'>Property Management</a></li>
+                                        <li><a href='project.html'>Projects</a></li>
+                                        <li><a href='gallery.html'>Gallery</a></li>
+                                        <li><a href='team.html'>Team</a></li>
+                                        <li class="active"><a href='payments.html'>Pay</a></li>
+                                        <li><a href='contact.html'>Contact</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
 
                         <!-- Mobile Menu  -->
-                        <div class="mobile-menu">
+                        <div class="mobile-menu" id="mobile-menu">
                             <nav class="menu-box">
-                                <div class="close-btn"><i class="fas fa-times"></i></div>
+                                <button class="close-btn" type="button" aria-label="Close navigation"><i class="fas fa-times" aria-hidden="true"></i></button>
                                 <div class="nav-logo">
                                     <a href='index.html'><img src="assets/img/logo/logo_02.png" alt="Logo"></a>
                                 </div>
@@ -117,37 +107,70 @@
         <section class="contact-area pt-120 pb-120">
             <div class="container">
                 <div class="row justify-content-center mx-auto">
-                    <div class="col-xl-6 col-lg-10">
+                    <div class="col-xl-7 col-lg-10">
                         <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
-                            <h2 class="title">Pay now</h2>
-                            <p>Send financial support to your cherished ones effortlessly and securely by utilizing our trusted services. Rest assured that your funds will reach their destination promptly and with the utmost security, providing you with peace of mind throughout the process.</p>
-                            <form class="contact-form" id="paymentsForm">
+                            <h2 class="title">Pay securely with PesaPal</h2>
+                            <p>Use PesaPal to send funds to CMI Group for construction, property, or support payments. The payment is secure, the amount is confirmed before you complete the transaction, and confirmation is sent to your email or WhatsApp.</p>
+
+                            <div class="alert alert-light border mb-4" role="status" aria-live="polite">
+                                <strong>Before you pay:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>Accepted currencies:</strong> UGX and USD, depending on the merchant configuration available at checkout.</li>
+                                    <li><strong>Fees:</strong> processing fees are charged by PesaPal and may appear during checkout before confirmation.</li>
+                                    <li><strong>Recipient:</strong> CMI Group Co. Ltd. Payment purpose should match the project or support request.</li>
+                                    <li><strong>Confirmation:</strong> a payment confirmation is sent by email or WhatsApp after successful completion.</li>
+                                    <li><strong>Support:</strong> contact us at <a href="mailto:cmi.groupuganda@gmail.com">cmi.groupuganda@gmail.com</a> or <a href="tel:+256789612187">+256 789 612 187</a> if the payment does not go through.</li>
+                                </ul>
+                            </div>
+
+                            <form class="contact-form" id="paymentsForm" novalidate>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-grp">
+                                            <label for="fullname">Full name</label>
                                             <input id="fullname" name="fullname" type="text" placeholder="Full name*" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
+                                            <label for="email">Email address</label>
                                             <input id="email" name="email" type="email" placeholder="Email Address*" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
-                                            <input id="phone" name="phone" type="tel" pattern="[0-9]{10}" title="Enter a 10-digit phone number" placeholder="Phone Number*" required>
+                                            <label for="phone">Phone number</label>
+                                            <input id="phone" name="phone" type="tel" pattern="[0-9+\-\s]{7,20}" title="Enter a valid phone number" placeholder="Phone Number*" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-grp">
-                                            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="Amount in USD*" required>
+                                            <label for="amount">Amount</label>
+                                            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="Amount*" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <label for="currency">Currency</label>
+                                            <select id="currency" name="currency" required>
+                                                <option value="UGX">UGX</option>
+                                                <option value="USD">USD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-grp">
+                                            <label for="reference">Project or reference</label>
+                                            <input id="reference" name="reference" type="text" placeholder="Project or reference" required>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-grp">
-                                    <textarea id="paymentReason" name="paymentReason" placeholder="Payment reason" required></textarea>
+                                    <label for="paymentReason">Payment reason</label>
+                                    <textarea id="paymentReason" name="paymentReason" placeholder="Payment reason*" required></textarea>
                                 </div>
-                                <button class="btn" type="submit">Pay now</button>
+                                <div id="payment-status" class="mb-3" role="status" aria-live="polite"></div>
+                                <button class="btn" type="submit">Continue to PesaPal</button>
                             </form>
                         </div>
                     </div>
@@ -233,9 +256,9 @@
                                 </div>
                                 <div class="col-xl-5 col-lg-5 col-md-6">
                                     <div class="footer-social">
-                                        <h2 class="title">Opening hours: </h2>
+                                        <h2 class="title">Opening hours:</h2>
                                         <ul class="list-wrap"><br>
-                                            <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                            <li style="color: #fff;">Monday - Friday: 8:00 AM - 5:00 PM</li>
                                         </ul>
                                     </div>
                                 </div>

@@ -1,6 +1,6 @@
 import { getVerifiedAccessEmail } from "../_shared/review-auth.js";
 
-const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings", "resource"]);
+const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings", "resource", "page"]);
 const STATUSES = new Set(["draft", "published", "archived"]);
 const MAX_BODY_BYTES = 30_000;
 
@@ -12,6 +12,12 @@ const fields = {
   service: ["summary", "image", "imageAlt", "sortOrder"],
   settings: ["publicEmail", "mainPhone", "alternatePhone", "whatsappUrl", "fortPortalAddress", "kampalaAddress"],
   resource: ["summary", "file", "fileName"],
+  page: [
+    "heroTitle", "heroDescription", "primaryCtaText", "primaryCtaUrl", "secondaryCtaText", "secondaryCtaUrl",
+    "project1Title", "project1Location", "project1Summary", "project1Image", "project1ImageAlt",
+    "project2Title", "project2Location", "project2Summary", "project2Image", "project2ImageAlt",
+    "project3Title", "project3Location", "project3Summary", "project3Image", "project3ImageAlt",
+  ],
 };
 
 function jsonResponse(data, status = 200) {
@@ -47,8 +53,13 @@ function validSlug(value) {
 function validImageReference(value) {
   return typeof value === "string"
     && (/^(images|img|teamimages|propertyimages)\/[A-Za-z0-9_./-]+$/.test(value)
-      || /^cms-media\/(property|team|partner|service|promotion)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(value))
+      || /^cms-media\/(property|team|partner|service|promotion|page)\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(value))
     && !value.split("/").includes("..");
+}
+
+function validHomepageLink(value) {
+  return typeof value === "string"
+    && /^(?:[A-Za-z0-9_-]+\.html)(?:#[A-Za-z0-9_-]+)?$/.test(value);
 }
 
 function validResourceReference(value) {
@@ -101,9 +112,12 @@ function validateItem(type, item) {
       payload[field] = frequency;
       continue;
     }
-    const text = normalizeText(value, field === "bio" || field === "body" || field === "summary" ? 3000 : 500);
+    const text = normalizeText(value, field === "bio" || field === "body" || field === "summary" || field === "heroDescription" || /^project\d+Summary$/.test(field) ? 3000 : 500);
     if (!text) return `${field} must be text of the allowed length.`;
-    if (field === "image" || field === "logo") {
+    if (["primaryCtaUrl", "secondaryCtaUrl"].includes(field)) {
+      if (!validHomepageLink(text)) return `${field} must be a local .html page path, optionally with an anchor.`;
+    }
+    if (field === "image" || field === "logo" || /^project\d+Image$/.test(field)) {
       if (!validImageReference(text)) return "Choose an approved site image or upload an image through the CMS.";
     }
     if (field === "file" && !validResourceReference(text)) {
@@ -145,6 +159,23 @@ function validateItem(type, item) {
   }
   if (type === "resource" && payload.fileName.split(".").pop().toLowerCase() !== payload.file.split(".").pop().toLowerCase()) {
     return "The resource filename must match the uploaded file type.";
+  }
+  if (type === "page") {
+    if (item.slug !== "homepage") return "Use the fixed Homepage content record.";
+    for (const field of ["heroTitle", "heroDescription", "primaryCtaText", "primaryCtaUrl"]) {
+      if (!payload[field]) return `Homepage content requires ${field}.`;
+    }
+    if (Boolean(payload.secondaryCtaText) !== Boolean(payload.secondaryCtaUrl)) {
+      return "Secondary CTA text and link must both be completed or both be left blank.";
+    }
+    for (let index = 1; index <= 3; index += 1) {
+      const fieldsPresent = ["Title", "Location", "Summary", "Image", "ImageAlt"]
+        .some((suffix) => Boolean(payload[`project${index}${suffix}`]));
+      if (!fieldsPresent) continue;
+      if (!payload[`project${index}Title`] || !payload[`project${index}Summary`] || !payload[`project${index}Image`]) {
+        return `Project highlight ${index} requires a title, summary, and approved image.`;
+      }
+    }
   }
   if (type === "settings") {
     if (item.slug !== "business-contact") return "Use the Business contact details record.";

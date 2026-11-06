@@ -1,3 +1,5 @@
+import { calculateEstimate } from "./block-estimator-calculation.js";
+
 (() => {
     "use strict";
 
@@ -16,6 +18,15 @@
     let calculatedQuoteSummary = "";
 
     document.querySelector("#copyright-year").textContent = new Date().getFullYear();
+
+    function invalidateResults() {
+        const hasEstimate = !results.hidden || Boolean(calculatedQuoteSummary);
+        results.hidden = true;
+        calculatedQuoteSummary = "";
+        if (hasEstimate) {
+            quoteRequestStatus.textContent = "Inputs changed. Recalculate the quantity before requesting a quote.";
+        }
+    }
 
     function createInput(labelText, name, options = {}) {
         const group = document.createElement("div");
@@ -56,6 +67,7 @@
         remove.addEventListener("click", () => {
             row.remove();
             renumberOpenings(section);
+            invalidateResults();
         });
         heading.append(title, remove);
 
@@ -68,6 +80,7 @@
         );
         row.append(heading, fields);
         openings.append(row);
+        invalidateResults();
     }
 
     function renumberOpenings(section) {
@@ -100,6 +113,7 @@
             remove.addEventListener("click", () => {
                 section.remove();
                 renumberWalls();
+                invalidateResults();
             });
             heading.append(remove);
         }
@@ -126,6 +140,7 @@
         openings.className = "openings-list";
         section.append(heading, dimensions, openingHeading, openings);
         wallSections.append(section);
+        invalidateResults();
     }
 
     function renumberWalls() {
@@ -140,14 +155,6 @@
             });
         });
         wallCount = wallSections.children.length;
-    }
-
-    function readPositiveNumber(input, label, allowZero = false) {
-        const value = Number(input.value);
-        if (!input.value.trim() || !Number.isFinite(value) || (allowZero ? value < 0 : value <= 0)) {
-            throw new Error(`${label} must be ${allowZero ? "zero or greater" : "greater than zero"}.`);
-        }
-        return value;
     }
 
     quoteRequestLink.addEventListener("click", (event) => {
@@ -178,62 +185,30 @@
         calculatedQuoteSummary = "";
 
         try {
-            const unitLength = readPositiveNumber(form.querySelector("#unit-length"), "Unit length");
-            const unitHeight = readPositiveNumber(form.querySelector("#unit-height"), "Unit height");
-            const jointWidth = readPositiveNumber(form.querySelector("#joint-width"), "Mortar joint width", true);
-            const waste = readPositiveNumber(form.querySelector("#waste"), "Waste allowance", true);
-            if (waste > 25) throw new Error("Waste allowance cannot be more than 25%.");
-
             const walls = [...wallSections.querySelectorAll(".wall-section")];
-            if (walls.length === 0) throw new Error("Add at least one wall section.");
-
-            let netArea = 0;
-            const wallDetails = [];
-            for (const [index, wall] of walls.entries()) {
-                const length = readPositiveNumber(wall.querySelector('[name="wall-length"]'), `Wall ${index + 1} length`);
-                const height = readPositiveNumber(wall.querySelector('[name="wall-height"]'), `Wall ${index + 1} height`);
-                const grossArea = length * height;
-                let openingsArea = 0;
-                const openingDetails = [];
-
-                for (const [openingIndex, opening] of [...wall.querySelectorAll(".opening-row")].entries()) {
-                    const widthInput = opening.querySelector('[name="opening-width"]');
-                    const heightInput = opening.querySelector('[name="opening-height"]');
-                    const countInput = opening.querySelector('[name="opening-count"]');
-                    const openingValues = [widthInput.value, heightInput.value, countInput.value];
-                    if (openingValues.every((value) => !value.trim())) continue;
-                    if (openingValues.some((value) => !value.trim())) {
-                        throw new Error(`Complete the width, height, and count for wall ${index + 1}, opening ${openingIndex + 1}.`);
-                    }
-
-                    const width = readPositiveNumber(widthInput, `Wall ${index + 1}, opening ${openingIndex + 1} width`);
-                    const openingHeight = readPositiveNumber(heightInput, `Wall ${index + 1}, opening ${openingIndex + 1} height`);
-                    const count = readPositiveNumber(countInput, `Wall ${index + 1}, opening ${openingIndex + 1} count`);
-                    if (!Number.isInteger(count)) throw new Error(`Wall ${index + 1}, opening ${openingIndex + 1} count must be a whole number.`);
-                    if (width > length || openingHeight > height) {
-                        throw new Error(`Wall ${index + 1}, opening ${openingIndex + 1} cannot be larger than its wall.`);
-                    }
-                    const area = width * openingHeight * count;
-                    openingsArea += area;
-                    openingDetails.push(`Opening ${openingIndex + 1}: ${numberFormat.format(width)} m × ${numberFormat.format(openingHeight)} m × ${numberFormat.format(count)} = ${numberFormat.format(area)} m²`);
-                }
-
-                if (openingsArea > grossArea) {
-                    throw new Error(`Openings on wall ${index + 1} have more area than the wall. Check the dimensions and counts.`);
-                }
-                const wallNetArea = grossArea - openingsArea;
-                netArea += wallNetArea;
-                wallDetails.push(`Wall ${index + 1}: ${numberFormat.format(length)} m × ${numberFormat.format(height)} m = ${numberFormat.format(grossArea)} m² gross; ${openingDetails.length ? openingDetails.join("; ") : "no openings deducted"}; ${numberFormat.format(openingsArea)} m² openings deducted; ${numberFormat.format(wallNetArea)} m² net.`);
-            }
-
-            if (netArea <= 0) throw new Error("The measured walls have no remaining area after openings.");
-
-            const unitFaceArea = ((unitLength + jointWidth) / 1000) * ((unitHeight + jointWidth) / 1000);
-            const baseQuantity = netArea / unitFaceArea;
-            const wasteQuantity = baseQuantity * waste / 100;
-            const quantityWithWaste = baseQuantity + wasteQuantity;
-            const totalQuantity = Math.ceil(quantityWithWaste);
+            const estimate = calculateEstimate({
+                unitLength: form.querySelector("#unit-length").value,
+                unitHeight: form.querySelector("#unit-height").value,
+                jointWidth: form.querySelector("#joint-width").value,
+                waste: form.querySelector("#waste").value,
+                walls: walls.map((wall) => ({
+                    length: wall.querySelector('[name="wall-length"]').value,
+                    height: wall.querySelector('[name="wall-height"]').value,
+                    openings: [...wall.querySelectorAll(".opening-row")].map((opening) => ({
+                        width: opening.querySelector('[name="opening-width"]').value,
+                        height: opening.querySelector('[name="opening-height"]').value,
+                        count: opening.querySelector('[name="opening-count"]').value,
+                    })),
+                })),
+            });
+            const { unitLength, unitHeight, jointWidth, waste, netArea, unitFaceArea, baseQuantity, wasteQuantity, quantityWithWaste, totalQuantity } = estimate;
             const unitLabel = form.querySelector("#unit-type").selectedOptions[0].textContent.toLowerCase();
+            const wallDetails = estimate.walls.map((wall, index) => {
+                const openingDetails = wall.openings.map((opening, openingIndex) =>
+                    `Opening ${openingIndex + 1}: ${numberFormat.format(opening.width)} m × ${numberFormat.format(opening.height)} m × ${numberFormat.format(opening.count)} = ${numberFormat.format(opening.area)} m²`,
+                );
+                return `Wall ${index + 1}: ${numberFormat.format(wall.length)} m × ${numberFormat.format(wall.height)} m = ${numberFormat.format(wall.grossArea)} m² gross; ${openingDetails.length ? openingDetails.join("; ") : "no openings deducted"}; ${numberFormat.format(wall.openingsArea)} m² openings deducted; ${numberFormat.format(wall.netArea)} m² net.`;
+            });
 
             document.querySelector("#result-units").textContent = `${numberFormat.format(totalQuantity)} ${unitLabel}`;
             document.querySelector("#result-area").textContent = `${numberFormat.format(netArea)} m²`;
@@ -291,13 +266,7 @@
         }
     });
 
-    form.addEventListener("input", () => {
-        if (!results.hidden) {
-            results.hidden = true;
-            calculatedQuoteSummary = "";
-            quoteRequestStatus.textContent = "Inputs changed. Recalculate the quantity before requesting a quote.";
-        }
-    });
+    form.addEventListener("input", invalidateResults);
 
     document.querySelector("#add-wall").addEventListener("click", addWall);
     addWall();

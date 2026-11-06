@@ -1,6 +1,6 @@
 import { getVerifiedAccessEmail } from "../_shared/review-auth.js";
 
-const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings", "resource"]);
+const TYPES = new Set(["property", "team", "partner", "promotion", "service", "settings", "resource", "page"]);
 
 function jsonResponse(data, status = 200) {
   return Response.json(data, {

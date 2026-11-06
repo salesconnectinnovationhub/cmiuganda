@@ -53,7 +53,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
+                        <button class="mobile-nav-toggler" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-menu"><i class="fas fa-bars" aria-hidden="true"></i></button>
                         <div class="menu-wrap">
                             <nav class="menu-nav">
                                 <div class="logo">
@@ -61,38 +61,28 @@
                                 </div>
                                 <div class="navbar-wrap main-menu d-none d-lg-flex">
                                     <ul class="navigation">
-                                        <li><a href="index.html">Home</a></li>
-                                        <li class="menu-item-has-children"><a href="about.html">About</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="team.html">Team</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children"><a href="services.html">Services</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="property-management.html">Property Management</a></li>
-                                                <li><a href="block-estimator.html">Block Estimator</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children active"><a href="project.html">Projects</a>
-                                            <ul class="sub-menu">
-                                                <li class="active"><a href="gallery.html" aria-current="page">Gallery</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="payments.html">Pay</a></li>
-                                        <li class="menu-item-has-children"><a href="contact.html">Contact</a>
-                                            <ul class="sub-menu">
-                                                <li><a href="https://chat.cmigroupuganda.com/" target="_blank" rel="noopener noreferrer">Chat Now</a></li>
-                                            </ul>
-                                        </li>
+                                        <li><a href='index.html'>Home</a></li>
+                                        <li><a href='about.html'>About us</a></li>
+                                        <li><a href='services.html'>Services</a></li>
+                                        <li><a href='property-management.html'>Property Management</a></li>
+                                        <li><a href='project.html'>Projects</a></li>
+                                        <li class="active"><a href='gallery.html'>Gallery</a></li>
+                                        <li><a href='team.html'>Team</a></li>
+                                        <li><a href='payments.html'>Pay</a></li>
+                                        <li><a href='contact.html'>Contact</a></li>
+                                        <li><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
                                     </ul>
+                                    <div class="header-cta">
+                                        <a class="btn" href='contact.html'>Request a consultation</a>
+                                    </div>
                                 </div>
                             </nav>
                         </div>
 
                         <!-- Mobile Menu  -->
-                        <div class="mobile-menu">
+                        <div class="mobile-menu" id="mobile-menu">
                             <nav class="menu-box">
-                                <div class="close-btn"><i class="fas fa-times"></i></div>
+                                <button class="close-btn" type="button" aria-label="Close navigation"><i class="fas fa-times" aria-hidden="true"></i></button>
                                 <div class="nav-logo">
                                     <a href='index.html'><img src="assets/img/logo/logo_02.png" alt="Logo"></a>
                                 </div>
@@ -128,89 +118,177 @@
                 </div>
                 <div id="projects-container" class="row justify-content-center"></div>
 
+                <style>
+                    .project-evidence-card {
+                        border: 1px solid rgba(10, 40, 62, 0.08);
+                        border-radius: 18px;
+                        overflow: hidden;
+                        background: #fff;
+                        box-shadow: 0 12px 30px rgba(20, 41, 58, 0.06);
+                        transition: transform 0.2s ease, box-shadow 0.2s ease;
+                        height: 100%;
+                    }
+                    .project-evidence-card:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 18px 35px rgba(20, 41, 58, 0.12);
+                    }
+                    .project-evidence-card img {
+                        width: 100%;
+                        height: 260px;
+                        object-fit: cover;
+                        display: block;
+                    }
+                    .project-photo-link {
+                        position: relative;
+                        display: block;
+                    }
+                    .project-photo-label {
+                        position: absolute;
+                        left: 12px;
+                        bottom: 12px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
+                        background: rgba(15, 41, 60, 0.88);
+                        color: #fff;
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                    }
+                    .project-evidence-body {
+                        padding: 18px 18px 20px;
+                    }
+                    .project-evidence-body h3 {
+                        font-size: 1.1rem;
+                        margin-bottom: 6px;
+                    }
+                    .project-evidence-meta {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px 12px;
+                        margin-bottom: 12px;
+                        font-size: 12px;
+                        letter-spacing: 0.02em;
+                        text-transform: uppercase;
+                        color: #4b6478;
+                        font-weight: 700;
+                    }
+                    .project-evidence-body ul {
+                        margin: 0;
+                        padding-left: 18px;
+                        color: #4b6478;
+                    }
+                    .project-evidence-body li + li {
+                        margin-top: 5px;
+                    }
+                    .project-evidence-link {
+                        display: inline-flex;
+                        margin-top: 12px;
+                        font-weight: 700;
+                        color: var(--tg-primary-color);
+                    }
+                </style>
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
-                        // Call the function to generate cards when the DOM is loaded
                         generateProjectCards();
                     });
 
                     function generateProjectCards() {
-                        // Reference to the container where the cards will be added
                         var projectsContainer = document.getElementById("projects-container");
-
-                        var fieldPhotos = [
-                            ["IMG-20261104-WA0087.jpg", "Exterior of a multi-storey building with landscaped grounds", "Completed multi-storey building and site works"],
-                            ["IMG-20261104-WA0123.jpg", "Community building with an access ramp and a person beside it", "Community facility access ramp"],
-                            ["IMG-20261104-WA0142.jpg", "Worker finishing the exterior masonry of a small brick building", "External masonry finishing works"],
-                            ["IMG-20261104-WA0168.jpg", "Exterior maintenance work on a two-storey institutional building", "Institutional building maintenance works"],
-                            ["IMG-20261104-WA0187.jpg", "Concrete foundation and early masonry work at a rural site", "Concrete foundation and starter masonry"],
-                            ["IMG-20261104-WA0193.jpg", "Amazon Motel entrance and commercial building frontage", "Commercial entrance and building frontage"],
-                            ["IMG-20261104-WA0201.jpg", "Solar panel array at an installation site", "Solar photovoltaic array installation"],
-                            ["IMG-20261104-WA0205.jpg", "Workers building a brick wall at a construction site", "Bricklaying and masonry wall construction"],
-                            ["IMG-20261104-WA0206.jpg", "Long brick building exterior with multiple window bays", "Brick building envelope and window openings"],
-                            ["IMG-20261104-WA0218.jpg", "Solar panels beside an elevated water storage installation", "Solar-powered water storage infrastructure"],
-                            ["IMG-20261104-WA0243.jpg", "Architectural visualization of a proposed building and landscape", "Architectural rendering and site layout"],
-                            ["IMG-20261104-WA0260.jpg", "Small completed service building with high ventilation openings", "Completed service-building envelope"],
-                            ["IMG-20261031-WA0005.jpg", "Community gathering beside a water tank", "Community water access"],
-                            ["IMG-20261031-WA0007.jpg", "School and community compound with construction activity", "School and community compound"],
-                            ["IMG-20261031-WA0009.jpg", "Brick boundary-wall construction", "Boundary-wall construction"],
-                            ["IMG-20261031-WA0012.jpg", "School exterior with a worker completing exterior work", "School exterior work"],
-                            ["IMG-20261031-WA0016.jpg", "Team members inspecting an open project site", "Project site inspection"],
-                            ["IMG-20261031-WA0020.jpg", "Unfinished brick building", "Building under construction"],
-                            ["IMG-20261031-WA0022.jpg", "Ground preparation and early construction work", "Ground preparation"],
-                            ["IMG-20261031-WA0024.jpg", "Circular water-tank foundation under construction", "Water-tank foundation"],
-                            ["IMG-20261031-WA0030.jpg", "Foundation and site preparation", "Foundation preparation"],
-                            ["IMG-20261031-WA0035.jpg", "Building frame and columns during construction", "Structural construction"],
-                            ["IMG-20261031-WA0039.jpg", "Exterior view of a completed community building", "Community building exterior"],
-                            ["IMG-20261031-WA0041.jpg", "Dedication plaque at a community water project", "Water-project plaque"],
-                            ["IMG-20261031-WA0045.jpg", "Exterior view of a completed school building", "School building exterior"],
-                            ["IMG-20261031-WA0048.jpg", "Community members gathered at a water point", "Community water point"]
+                        var projects = [
+                            {
+                                title: "Water and community infrastructure",
+                                location: "Fort Portal, Uganda",
+                                scope: "Water point and access works",
+                                outcome: "Improved community access and safer project delivery",
+                                image: "images/enhanced-new/IMG-20261031-WA0041.jpg",
+                                alt: "Community water project plaque and completed infrastructure in Fort Portal"
+                            },
+                            {
+                                title: "School building progression",
+                                location: "Western Uganda",
+                                scope: "Exterior construction and finishing works",
+                                outcome: "Delivered a durable learning environment for the community",
+                                image: "images/enhanced-new/IMG-20261031-WA0045.jpg",
+                                alt: "Completed school building exterior finished by CMI Group"
+                            },
+                            {
+                                title: "Boundary wall masonry",
+                                location: "Uganda",
+                                scope: "Brick wall construction",
+                                outcome: "Secured the site and improved perimeter quality",
+                                image: "images/enhanced-new/IMG-20261031-WA0009.jpg",
+                                alt: "Brick boundary wall construction in progress"
+                            },
+                            {
+                                title: "Residential construction site",
+                                location: "Kampala area",
+                                scope: "Foundation and structural work",
+                                outcome: "Progressed from site prep to a strong structural frame",
+                                image: "images/enhanced-new/IMG-20261031-WA0035.jpg",
+                                alt: "Building frame and columns during active residential construction"
+                            },
+                            {
+                                title: "Project inspection and supervision",
+                                location: "On-site review",
+                                scope: "Site coordination and quality checks",
+                                outcome: "Kept construction standards visible and accountable",
+                                image: "images/enhanced-new/IMG-20261031-WA0016.jpg",
+                                alt: "CMI team members inspecting an active construction project"
+                            },
+                            {
+                                title: "Water tank and infrastructure works",
+                                location: "Community project",
+                                scope: "Tank foundation and utility installation",
+                                outcome: "Strengthened water access and project resilience",
+                                image: "images/enhanced-new/IMG-20261031-WA0024.jpg",
+                                alt: "Circular water tank foundation under construction"
+                            }
                         ];
 
-                        fieldPhotos.forEach(function (photo) {
-                            var imageUrl = "images/enhanced-new/" + photo[0];
-                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[2]);
+                        projects.forEach(function (project) {
+                            var cardColumn = document.createElement("div");
+                            cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
+                            var card = document.createElement("article");
+                            card.className = "project-evidence-card";
+
+                            var link = document.createElement("a");
+                            link.href = project.image;
+                            link.className = "popup-image project-photo-link";
+                            link.setAttribute("aria-label", "View full size photo: " + project.title);
+                            link.title = project.title;
+
+                            var img = document.createElement("img");
+                            img.src = project.image;
+                            img.alt = project.alt;
+                            img.loading = "lazy";
+                            img.decoding = "async";
+                            var photoLabel = document.createElement("span");
+                            photoLabel.className = "project-photo-label";
+                            photoLabel.textContent = "Enlarge photo";
+                            link.append(img, photoLabel);
+
+                            var body = document.createElement("div");
+                            body.className = "project-evidence-body";
+                            var heading = document.createElement("h3");
+                            heading.textContent = project.title;
+                            var meta = document.createElement("div");
+                            meta.className = "project-evidence-meta";
+                            meta.innerHTML = "<span>" + project.location + "</span><span>" + project.scope + "</span>";
+                            var list = document.createElement("ul");
+                            var scopeItem = document.createElement("li");
+                            scopeItem.textContent = "Scope: " + project.scope;
+                            var outcomeItem = document.createElement("li");
+                            outcomeItem.textContent = "Outcome: " + project.outcome;
+                            list.appendChild(scopeItem);
+                            list.appendChild(outcomeItem);
+                            body.appendChild(heading);
+                            body.appendChild(meta);
+                            body.appendChild(list);
+
+                            card.appendChild(link);
+                            card.appendChild(body);
+                            cardColumn.appendChild(card);
+                            projectsContainer.appendChild(cardColumn);
                         });
-
-                        var galleryCaptions = [
-                            "Cultural design references: African masks and traditional craftwork.",
-                            "Site surveying and ground assessment at a rocky excavation area.",
-                            "Quarry operations: mechanical excavation and aggregate handling.",
-                            "Residential interior fit-out with completed living-room finishes.",
-                            "Architectural visualization of a detached residence with a pitched roof.",
-                            "Completed single-storey residence with a finished exterior envelope.",
-                            "Architectural visualization of a contemporary building with a roof terrace.",
-                            "Masonry materials: concrete blocks staged for construction.",
-                            "Quarry plant operation: front loader handling rock material.",
-                            "Bricklaying works: clay masonry units laid in wall construction.",
-                            "Residential kitchen fit-out with installed cabinetry and appliances.",
-                            "Completed single-storey residence with paved site access.",
-                            "Architectural visualization of a landscaped residential development.",
-                            "Residential design concept featuring a blue roof finish.",
-                            "Completed community sanitation facility with finished external works.",
-                            "Institutional building and perimeter wall: completed site works.",
-                            "Residential external works: tiled entrance courtyard.",
-                            "Completed residence with a front porch and pitched roof.",
-                            "Building maintenance: exterior finishing works on a community facility.",
-                            "Structural roof design: steel truss model on construction drawings.",
-                            "Site planning: land-parcel layout and surrounding agricultural context.",
-                            "Civil works materials: large-diameter pipes stored at a project site.",
-                            "Roadside topographic survey and setting-out measurements.",
-                            "Construction estimating: scale model and cost-planning tools.",
-                            "Site clearance: excavator removing construction debris.",
-                            "Building material selection: stone-finish cladding sample.",
-                            "Community water infrastructure: outdoor standpipe in use.",
-                            "Residential interior fit-out: timber kitchen cabinetry."
-                        ];
-
-                        for (var i = 1; i <= 28; i++) {
-                            addGalleryCard(
-                                projectsContainer,
-                                "galleryimages/gallery_" + i + ".jpg",
-                                galleryCaptions[i - 1],
-                                galleryCaptions[i - 1]
-                            );
-                        }
 
                         if (window.jQuery && jQuery.fn.magnificPopup) {
                             jQuery(projectsContainer).magnificPopup({
@@ -220,36 +298,6 @@
                                 image: { titleSrc: function () { return ""; } }
                             });
                         }
-                    }
-
-                    function addGalleryCard(container, imageUrl, description, caption) {
-                        var cardColumn = document.createElement("div");
-                        cardColumn.className = "col-lg-4 col-md-6 col-sm-12 mb-4";
-                        var projectItem = document.createElement("div");
-                        projectItem.className = "card h-100 gallery-photo-card";
-                        var projectThumb = document.createElement("div");
-                        projectThumb.className = "gallery-photo-frame";
-                        var projectLink = document.createElement("a");
-                        projectLink.href = imageUrl;
-                        projectLink.className = "popup-image";
-                        projectLink.setAttribute("aria-label", "View full-size photo: " + description);
-                        var projectImage = document.createElement("img");
-                        projectImage.className = "field-photo gallery-photo";
-                        projectImage.src = imageUrl;
-                        projectImage.alt = description;
-                        projectImage.loading = "lazy";
-                        projectImage.decoding = "async";
-                        projectLink.appendChild(projectImage);
-                        projectThumb.appendChild(projectLink);
-                        projectItem.appendChild(projectThumb);
-                        if (caption) {
-                            var captionBody = document.createElement("div");
-                            captionBody.className = "card-body gallery-photo-caption";
-                            captionBody.textContent = caption;
-                            projectItem.appendChild(captionBody);
-                        }
-                        cardColumn.appendChild(projectItem);
-                        container.appendChild(cardColumn);
                     }
                 </script>
 
@@ -345,9 +393,9 @@
                             </div>
                             <div class="col-xl-5 col-lg-5 col-md-6">
                                 <div class="footer-social">
-                                    <h2 class="title">Opening hours: </h2>
+                                    <h2 class="title">Opening hours:</h2>
                                     <ul class="list-wrap"><br>
-                                        <li style="color: #fff;">Monday - Fiday: 8:00 PM - 5:00 PM</li>
+                                        <li style="color: #fff;">Monday - Friday: 8:00 AM - 5:00 PM</li>
                                     </ul>
                                 </div>
                             </div>
