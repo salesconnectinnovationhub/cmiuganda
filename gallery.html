@@ -61,17 +61,29 @@
                                 </div>
                                 <div class="navbar-wrap main-menu d-none d-lg-flex">
                                     <ul class="navigation">
-                                        <li><a href='index.html'>Home</a></li>
-                                        <li><a href='about.html'>About us</a></li>
-                                        <li ><a href='services.html'>Services</a></li>
-                                        <li><a href='property-management.html'>Property Management</a></li>
-                                        <li><a href='project.html'>Projects</a>
+                                        <li><a href="index.html">Home</a></li>
+                                        <li class="menu-item-has-children"><a href="about.html">About</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="team.html">Team</a></li>
+                                            </ul>
                                         </li>
-                                        <li class="active"><a href='gallery.html'>Gallery</a></li>
-                                        <li ><a href='team.html'>Team</a></li>
-                                        <li ><a href='payments.html'>Pay</a></li>
-                                        <li><a href='contact.html'>Contact</a></li>
-                                        <li ><a href="https://chat.cmigroupuganda.com/" target="_blank">Chat Now</a></li>
+                                        <li class="menu-item-has-children"><a href="services.html">Services</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="property-management.html">Property Management</a></li>
+                                                <li><a href="block-estimator.html">Block Estimator</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="menu-item-has-children active"><a href="project.html">Projects</a>
+                                            <ul class="sub-menu">
+                                                <li class="active"><a href="gallery.html" aria-current="page">Gallery</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="payments.html">Pay</a></li>
+                                        <li class="menu-item-has-children"><a href="contact.html">Contact</a>
+                                            <ul class="sub-menu">
+                                                <li><a href="https://chat.cmigroupuganda.com/" target="_blank" rel="noopener noreferrer">Chat Now</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </div>
                             </nav>
@@ -127,60 +139,102 @@
                         var projectsContainer = document.getElementById("projects-container");
 
                         var fieldPhotos = [
-                            ["IMG-20261031-WA0005.jpg", "Community gathering beside a water tank"],
-                            ["IMG-20261031-WA0007.jpg", "School and community compound with construction activity"],
-                            ["IMG-20261031-WA0009.jpg", "Brick boundary-wall construction"],
-                            ["IMG-20261031-WA0012.jpg", "School exterior with a worker completing exterior work"],
-                            ["IMG-20261031-WA0016.jpg", "Team members inspecting an open project site"],
-                            ["IMG-20261031-WA0020.jpg", "Unfinished brick building"],
-                            ["IMG-20261031-WA0022.jpg", "Ground preparation and early construction work"],
-                            ["IMG-20261031-WA0024.jpg", "Circular water-tank foundation under construction"],
-                            ["IMG-20261031-WA0030.jpg", "Foundation and site preparation"],
-                            ["IMG-20261031-WA0035.jpg", "Building frame and columns during construction"],
-                            ["IMG-20261031-WA0039.jpg", "Exterior view of a completed community building"],
-                            ["IMG-20261031-WA0041.jpg", "Dedication plaque at a community water project"],
-                            ["IMG-20261031-WA0045.jpg", "Exterior view of a completed school building"],
-                            ["IMG-20261031-WA0048.jpg", "Community members gathered at a water point"]
+                            ["IMG-20261104-WA0087.jpg", "Exterior of a multi-storey building with landscaped grounds", "Completed multi-storey building and site works"],
+                            ["IMG-20261104-WA0123.jpg", "Community building with an access ramp and a person beside it", "Community facility access ramp"],
+                            ["IMG-20261104-WA0142.jpg", "Worker finishing the exterior masonry of a small brick building", "External masonry finishing works"],
+                            ["IMG-20261104-WA0168.jpg", "Exterior maintenance work on a two-storey institutional building", "Institutional building maintenance works"],
+                            ["IMG-20261104-WA0187.jpg", "Concrete foundation and early masonry work at a rural site", "Concrete foundation and starter masonry"],
+                            ["IMG-20261104-WA0193.jpg", "Amazon Motel entrance and commercial building frontage", "Commercial entrance and building frontage"],
+                            ["IMG-20261104-WA0201.jpg", "Solar panel array at an installation site", "Solar photovoltaic array installation"],
+                            ["IMG-20261104-WA0205.jpg", "Workers building a brick wall at a construction site", "Bricklaying and masonry wall construction"],
+                            ["IMG-20261104-WA0206.jpg", "Long brick building exterior with multiple window bays", "Brick building envelope and window openings"],
+                            ["IMG-20261104-WA0218.jpg", "Solar panels beside an elevated water storage installation", "Solar-powered water storage infrastructure"],
+                            ["IMG-20261104-WA0243.jpg", "Architectural visualization of a proposed building and landscape", "Architectural rendering and site layout"],
+                            ["IMG-20261104-WA0260.jpg", "Small completed service building with high ventilation openings", "Completed service-building envelope"],
+                            ["IMG-20261031-WA0005.jpg", "Community gathering beside a water tank", "Community water access"],
+                            ["IMG-20261031-WA0007.jpg", "School and community compound with construction activity", "School and community compound"],
+                            ["IMG-20261031-WA0009.jpg", "Brick boundary-wall construction", "Boundary-wall construction"],
+                            ["IMG-20261031-WA0012.jpg", "School exterior with a worker completing exterior work", "School exterior work"],
+                            ["IMG-20261031-WA0016.jpg", "Team members inspecting an open project site", "Project site inspection"],
+                            ["IMG-20261031-WA0020.jpg", "Unfinished brick building", "Building under construction"],
+                            ["IMG-20261031-WA0022.jpg", "Ground preparation and early construction work", "Ground preparation"],
+                            ["IMG-20261031-WA0024.jpg", "Circular water-tank foundation under construction", "Water-tank foundation"],
+                            ["IMG-20261031-WA0030.jpg", "Foundation and site preparation", "Foundation preparation"],
+                            ["IMG-20261031-WA0035.jpg", "Building frame and columns during construction", "Structural construction"],
+                            ["IMG-20261031-WA0039.jpg", "Exterior view of a completed community building", "Community building exterior"],
+                            ["IMG-20261031-WA0041.jpg", "Dedication plaque at a community water project", "Water-project plaque"],
+                            ["IMG-20261031-WA0045.jpg", "Exterior view of a completed school building", "School building exterior"],
+                            ["IMG-20261031-WA0048.jpg", "Community members gathered at a water point", "Community water point"]
+                        ];
+
+                        fieldPhotos.forEach(function (photo) {
+                            var imageUrl = "images/enhanced-new/" + photo[0];
+                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[2]);
+                        });
+
+                        var galleryCaptions = [
+                            "Cultural design references: African masks and traditional craftwork.",
+                            "Site surveying and ground assessment at a rocky excavation area.",
+                            "Quarry operations: mechanical excavation and aggregate handling.",
+                            "Residential interior fit-out with completed living-room finishes.",
+                            "Architectural visualization of a detached residence with a pitched roof.",
+                            "Completed single-storey residence with a finished exterior envelope.",
+                            "Architectural visualization of a contemporary building with a roof terrace.",
+                            "Masonry materials: concrete blocks staged for construction.",
+                            "Quarry plant operation: front loader handling rock material.",
+                            "Bricklaying works: clay masonry units laid in wall construction.",
+                            "Residential kitchen fit-out with installed cabinetry and appliances.",
+                            "Completed single-storey residence with paved site access.",
+                            "Architectural visualization of a landscaped residential development.",
+                            "Residential design concept featuring a blue roof finish.",
+                            "Completed community sanitation facility with finished external works.",
+                            "Institutional building and perimeter wall: completed site works.",
+                            "Residential external works: tiled entrance courtyard.",
+                            "Completed residence with a front porch and pitched roof.",
+                            "Building maintenance: exterior finishing works on a community facility.",
+                            "Structural roof design: steel truss model on construction drawings.",
+                            "Site planning: land-parcel layout and surrounding agricultural context.",
+                            "Civil works materials: large-diameter pipes stored at a project site.",
+                            "Roadside topographic survey and setting-out measurements.",
+                            "Construction estimating: scale model and cost-planning tools.",
+                            "Site clearance: excavator removing construction debris.",
+                            "Building material selection: stone-finish cladding sample.",
+                            "Community water infrastructure: outdoor standpipe in use.",
+                            "Residential interior fit-out: timber kitchen cabinetry."
                         ];
 
                         for (var i = 1; i <= 28; i++) {
                             addGalleryCard(
                                 projectsContainer,
                                 "galleryimages/gallery_" + i + ".jpg",
-                                "CMI Group project photo " + i,
-                                "CMI Group project photo " + i
+                                galleryCaptions[i - 1],
+                                galleryCaptions[i - 1]
                             );
                         }
-
-                        fieldPhotos.forEach(function (photo) {
-                            var imageUrl = "images/enhanced-new/" + photo[0];
-                            addGalleryCard(projectsContainer, imageUrl, photo[1], photo[1]);
-                        });
 
                         if (window.jQuery && jQuery.fn.magnificPopup) {
                             jQuery(projectsContainer).magnificPopup({
                                 delegate: "a.popup-image",
                                 type: "image",
                                 gallery: { enabled: true },
-                                image: { titleSrc: "title" }
+                                image: { titleSrc: function () { return ""; } }
                             });
                         }
                     }
 
-                    function addGalleryCard(container, imageUrl, description, title) {
+                    function addGalleryCard(container, imageUrl, description, caption) {
                         var cardColumn = document.createElement("div");
-                        cardColumn.className = "col-lg-4 col-md-6 col-sm-10 mb-4";
+                        cardColumn.className = "col-lg-4 col-md-6 col-sm-12 mb-4";
                         var projectItem = document.createElement("div");
-                        projectItem.className = "project-item-two";
+                        projectItem.className = "card h-100 gallery-photo-card";
                         var projectThumb = document.createElement("div");
-                        projectThumb.className = "project-thumb-two";
+                        projectThumb.className = "gallery-photo-frame";
                         var projectLink = document.createElement("a");
                         projectLink.href = imageUrl;
                         projectLink.className = "popup-image";
-                        projectLink.title = title;
                         projectLink.setAttribute("aria-label", "View full-size photo: " + description);
                         var projectImage = document.createElement("img");
-                        projectImage.className = "field-photo";
+                        projectImage.className = "field-photo gallery-photo";
                         projectImage.src = imageUrl;
                         projectImage.alt = description;
                         projectImage.loading = "lazy";
@@ -188,6 +242,12 @@
                         projectLink.appendChild(projectImage);
                         projectThumb.appendChild(projectLink);
                         projectItem.appendChild(projectThumb);
+                        if (caption) {
+                            var captionBody = document.createElement("div");
+                            captionBody.className = "card-body gallery-photo-caption";
+                            captionBody.textContent = caption;
+                            projectItem.appendChild(captionBody);
+                        }
                         cardColumn.appendChild(projectItem);
                         container.appendChild(cardColumn);
                     }
