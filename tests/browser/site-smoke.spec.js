@@ -44,8 +44,8 @@ test("estimate quote handoff prefills the contact message", async ({ page }) => 
     await page.locator("#quote-request-link").click();
     await expect(page).toHaveURL(/contact\.html#contact-form$/);
     await expect(page.locator("#estimate-prefill-status")).toContainText("estimate has been added");
-    await expect(page.locator("#message")).toHaveValue(/Estimated quantity: 161 concrete blocks/);
-    await expect(page.locator("#message")).toHaveValue(/Net wall area after openings: 13\.2 m2/);
+    await expect(page.locator("#contact-message")).toHaveValue(/Estimated quantity: 161 concrete blocks/);
+    await expect(page.locator("#contact-message")).toHaveValue(/Net wall area after openings: 13\.2 m2/);
 });
 
 test("CMS editor and approver controls match their assigned roles", async ({ page }) => {
@@ -151,7 +151,9 @@ test("homepage CMS preview renders text as content rather than markup", async ({
 
     await expect(page.locator("#content-preview h2")).toHaveText("<img src=x onerror=alert(1)>");
     await expect(page.locator("#content-preview img")).toHaveCount(0);
-    await page.getByRole("button", { name: "Preview", exact: true }).click();
+    const previewButton = page.getByRole("button", { name: "Preview website", exact: true });
+    await expect(previewButton).toBeVisible();
+    await previewButton.click();
     await expect(page.locator("#preview-dialog")).toBeVisible();
     await expect(page.locator("#preview-dialog-content h2")).toHaveText("<img src=x onerror=alert(1)>");
 });

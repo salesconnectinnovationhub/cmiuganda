@@ -124,8 +124,8 @@ button:focus {
 a:hover,
 .portfolio-cat a:hover,
 .footer -menu li a:hover {
-	color: var(--tg-primary-color);
-	text-decoration: none;
+	color: #a63a00;
+	text-decoration: underline;
 }
 a,
 button {
@@ -215,7 +215,7 @@ label {
 	font-weight: 400;
 }
 *::-moz-selection {
-	background: var(--tg-primary-color);
+	background: #a63a00;
 	color: var(--tg-white);
 	text-shadow: none;
 }
@@ -546,8 +546,8 @@ label {
 	transition: all 0.3s ease;
 }
 .contact-choice-btn.is-active {
-	background: var(--tg-primary-color);
-	border-color: var(--tg-primary-color);
+	background: #a63a00;
+	border-color: #a63a00;
 	color: var(--tg-white);
 }
 .contact-form-panel {
@@ -1122,7 +1122,8 @@ label {
 	gap: 10px;
 	flex: 0 0 auto;
 	font-weight: 700;
-	color: var(--tg-primary-color);
+	color: #a63a00;
+	text-decoration: underline;
 }
 .home-project-slider {
 	position: relative;
@@ -1234,7 +1235,7 @@ label {
 	height: 48px;
 	margin-bottom: 20px;
 	border-radius: 50%;
-	background: var(--tg-primary-color);
+	background: #a63a00;
 	color: #fff;
 	font-weight: 700;
 }
@@ -1254,6 +1255,14 @@ label {
 }
 .home-video-section {
 	padding: 20px 0 90px;
+}
+.home-video-section p a,
+.contact-form-wrap .alert a {
+	color: #0056b3;
+	text-decoration: underline;
+}
+.sub-title.tg-element-title {
+	color: #a63a00;
 }
 .home-video-frame {
 	width: 100%;
@@ -2218,7 +2227,7 @@ border-radius: 10px;
 .section-title .sub-title {
 	font-size: 20px;
 	display: block;
-	color: var(--tg-primary-color);
+	color: #a63a00;
 	font-family: var(--tg-heading-font-family);
 	margin-bottom: 14px;
 }
@@ -4600,7 +4609,7 @@ section[aria-labelledby="property-fieldwork-title"] .card-body {
 }
 .testimonial-avatar .avatar-content p {
 	margin-bottom: 0;
-	color: var(--tg-primary-color);
+	color: #a63a00;
 }
 .testimonial-active .slick-dots {
 	margin: 0;
@@ -5734,6 +5743,7 @@ section[aria-labelledby="property-fieldwork-title"] .card-body {
 .footer-bg {
 	background-size: cover;
 	background-position: center;
+	background-color: var(--tg-secondary-color);
 }
 .footer-top {
 	padding: 115px 0 120px;

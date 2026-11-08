@@ -2,7 +2,7 @@
     "use strict";
 
     const form = document.querySelector("#contact-form");
-    const message = form?.querySelector("#message");
+    const message = form?.querySelector("#contact-message");
     const status = document.querySelector("#estimate-prefill-status");
     if (!form || !message || !status) return;
 
