@@ -513,19 +513,29 @@ label {
 .hero-proof {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 12px;
+	gap: 10px;
 	margin-top: 22px;
+}
+.hero-proof-heading {
+	flex: 0 0 100%;
+	margin: 0 0 2px;
+	color: var(--tg-white);
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: .08em;
+	text-transform: uppercase;
 }
 .hero-proof-item {
 	display: inline-flex;
 	align-items: center;
-	padding: 8px 14px;
+	padding: 10px 14px;
 	border-radius: 999px;
-	background: rgba(255,255,255,0.12);
-	border: 1px solid rgba(255,255,255,0.18);
+	background: rgba(255,255,255,0.2);
+	border: 1px solid rgba(255,255,255,0.55);
 	color: var(--tg-white);
-	font-size: 13px;
-	font-weight: 600;
+	font-size: 14px;
+	font-weight: 700;
+	box-shadow: 0 3px 12px rgba(0,0,0,.12);
 }
 .hero-proof-item strong {
 	font-weight: 800;
