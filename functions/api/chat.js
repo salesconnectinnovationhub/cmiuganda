@@ -12,6 +12,7 @@ import {
   readChatJson,
   validEmail,
 } from "../_shared/chat.js";
+import { sendEmail } from "../_shared/email.js";
 
 function databaseUnavailable() {
   return chatDatabaseUnavailable();
@@ -66,7 +67,7 @@ export async function onRequestPost({ request, env }) {
       const visitorEmail = cleanText(email, 254).toLowerCase();
       if (!visitorName) return chatError("Enter your name to start a conversation.");
       if (typeof name !== "string" || name.trim().length > 100) return chatError("Names must be 100 characters or fewer.");
-      if (visitorEmail && !validEmail(visitorEmail)) return chatError("Enter a valid email address, or leave it blank.");
+      if (!validEmail(visitorEmail)) return chatError("Enter a valid email address so the team can follow up.");
       const id = crypto.randomUUID();
       const token = newVisitorToken();
       const tokenHash = await hashVisitorToken(token);
@@ -74,15 +75,28 @@ export async function onRequestPost({ request, env }) {
       await env.DB.batch([
         env.DB.prepare(
           "INSERT INTO chat_conversations (id, visitor_name, visitor_email, visitor_token_hash, status, created_at, updated_at) VALUES (?, ?, ?, ?, 'open', ?, ?)",
-        ).bind(id, visitorName, visitorEmail || null, tokenHash, now, now),
+        ).bind(id, visitorName, visitorEmail, tokenHash, now, now),
         env.DB.prepare(
           "INSERT INTO chat_messages (id, conversation_id, sender, body, created_at) VALUES (?, ?, 'visitor', ?, ?)",
         ).bind(crypto.randomUUID(), id, body, now),
       ]);
+      const notification = await sendEmail(env, {
+        replyTo: visitorEmail,
+        subject: `New website chat from ${visitorName}`,
+        text: [
+          `A new website chat was started by ${visitorName} (${visitorEmail}).`,
+          "",
+          "Visitor message:",
+          body,
+          "",
+          "Reply in the staff chat inbox: https://cmigroupuganda.com/admin/chat.html",
+        ].join("\n"),
+      });
       return chatResponse({
         conversation: { id, status: "open" },
         token,
         messages: [{ sender: "visitor", body, createdAt: now }],
+        staffNotified: notification.status === 200,
       }, 201);
     }
 
@@ -91,7 +105,7 @@ export async function onRequestPost({ request, env }) {
     if (!token) return chatResponse({ error: "This chat could not be verified. Start a new conversation." }, 401);
     const tokenHash = await hashVisitorToken(token);
     const conversation = await env.DB.prepare(
-      "SELECT id, status FROM chat_conversations WHERE id = ? AND visitor_token_hash = ?",
+      "SELECT id, status, visitor_name AS visitorName, visitor_email AS visitorEmail FROM chat_conversations WHERE id = ? AND visitor_token_hash = ?",
     ).bind(conversationId, tokenHash).first();
     if (!conversation) return chatResponse({ error: "This chat could not be verified. Start a new conversation." }, 404);
     if (conversation.status !== "open") return chatResponse({ error: "This conversation is closed. Start a new chat if you need more help." }, 409);
@@ -104,7 +118,23 @@ export async function onRequestPost({ request, env }) {
         "UPDATE chat_conversations SET updated_at = ? WHERE id = ? AND visitor_token_hash = ? AND status = 'open'",
       ).bind(now, conversationId, tokenHash),
     ]);
-    return chatResponse({ ok: true, message: { sender: "visitor", body, createdAt: now } }, 201);
+    const notification = await sendEmail(env, {
+      replyTo: conversation.visitorEmail,
+      subject: `New website chat message from ${conversation.visitorName}`,
+      text: [
+        `A new message was sent by ${conversation.visitorName} (${conversation.visitorEmail}).`,
+        "",
+        "Visitor message:",
+        body,
+        "",
+        "Reply in the staff chat inbox: https://cmigroupuganda.com/admin/chat.html",
+      ].join("\n"),
+    });
+    return chatResponse({
+      ok: true,
+      message: { sender: "visitor", body, createdAt: now },
+      staffNotified: notification.status === 200,
+    }, 201);
   } catch (error) {
     console.error("Could not save a visitor chat message.", error);
     return chatResponse({ error: "Your message could not be saved. Please try again." }, 500);

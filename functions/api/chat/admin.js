@@ -9,6 +9,7 @@ import {
   MAX_CHAT_MESSAGE_LENGTH,
   readChatJson,
 } from "../../_shared/chat.js";
+import { RECIPIENT, sendEmail } from "../../_shared/email.js";
 
 function databaseUnavailable() {
   return chatDatabaseUnavailable();
@@ -64,7 +65,9 @@ export async function onRequestPost({ request, env }) {
 
   const now = new Date().toISOString();
   try {
-    const conversation = await env.DB.prepare("SELECT id FROM chat_conversations WHERE id = ?")
+    const conversation = await env.DB.prepare(
+      "SELECT id, visitor_name AS visitorName, visitor_email AS visitorEmail FROM chat_conversations WHERE id = ?",
+    )
       .bind(conversationId).first();
     if (!conversation) return chatResponse({ error: "Conversation not found." }, 404);
     await env.DB.batch([
@@ -75,7 +78,22 @@ export async function onRequestPost({ request, env }) {
         "UPDATE chat_conversations SET status = 'open', updated_at = ? WHERE id = ?",
       ).bind(now, conversationId),
     ]);
-    return chatResponse({ ok: true, staffEmail: staff.email }, 201);
+    const notification = await sendEmail(env, {
+      to: conversation.visitorEmail,
+      replyTo: RECIPIENT,
+      subject: "CMI Group has replied to your website chat",
+      text: [
+        `Hello ${conversation.visitorName},`,
+        "",
+        "CMI Group replied to your message:",
+        "",
+        body,
+        "",
+        "You can reply to this email or start another secure chat at https://cmigroupuganda.com/chat.html.",
+        "For your privacy, do not forward this message if it contains information you consider private.",
+      ].join("\n"),
+    });
+    return chatResponse({ ok: true, staffEmail: staff.email, visitorNotified: notification.status === 200 }, 201);
   } catch (error) {
     console.error("Could not save a staff chat reply.", error);
     return chatResponse({ error: "The reply could not be saved." }, 500);
