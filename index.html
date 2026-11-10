@@ -81,6 +81,7 @@
     <link rel="stylesheet" href="assets/css/default.css">
     <link rel="stylesheet" href="assets/css/jarallax.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/site-components.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
@@ -186,8 +187,9 @@
                     <h1 class="title wow fadeInDown" data-wow-delay=".2s" id="home-hero-title">Build in Uganda with confidence from overseas</h1>
                     <p class="wow fadeInUp" data-wow-delay=".2s" id="home-hero-description">CMI Group helps the Ugandan diaspora plan, manage, and complete homes, commercial builds, and property solutions from anywhere in the world. We keep the process clear, structured, and on-site with regular updates.</p>
                     <div class="hero-actions wow fadeInUp" data-wow-delay=".3s">
-                        <a class='btn wow fadeInUp' data-wow-delay='.4s' href='contact.html' id="home-primary-cta">Request a consultation</a>
-                        <a class='btn btn-secondary wow fadeInUp' data-wow-delay='.5s' href='project.html' id="home-secondary-cta">See project examples</a>
+                        <a class='btn wow fadeInUp' data-wow-delay='.4s' href='#home-enquiry' id="home-primary-cta">Plan your project</a>
+                        <a class='btn btn-secondary wow fadeInUp' data-wow-delay='.5s' href='project.html' id="home-secondary-cta">View Our Portfolio</a>
+                        <a class='btn btn-secondary wow fadeInUp' data-wow-delay='.6s' href='block-estimator.html'>Estimate wall blocks</a>
                     </div>
                     <div class="hero-proof wow fadeInUp" data-wow-delay=".4s">
                         <p class="hero-proof-heading">Why clients choose CMI Group</p>
@@ -268,6 +270,82 @@
         </section>
         <!-- banner-area-end -->
 
+        <section class="conversion-section" aria-labelledby="why-cmi-title">
+            <div class="container conversion-layout">
+                <div class="conversion-copy">
+                    <div class="section-title mb-3">
+                        <span class="sub-title">Why choose CMI?</span>
+                        <h2 class="title" id="why-cmi-title">Local delivery. Clear decisions. Confidence from anywhere.</h2>
+                    </div>
+                    <p>Since 2018, CMI Group has helped clients plan construction and property work in Uganda. Our remote-friendly approach keeps scope, progress, and next steps visible while work happens on the ground.</p>
+                    <div class="conversion-reasons" aria-label="CMI Group project credentials">
+                        <div class="conversion-reason">
+                            <strong>Established in 2018</strong>
+                            <span>Construction, engineering, and property support.</span>
+                        </div>
+                        <div class="conversion-reason">
+                            <strong>Fort Portal &amp; Kampala</strong>
+                            <span>Two listed offices supporting work across Uganda.</span>
+                        </div>
+                        <div class="conversion-reason">
+                            <strong>Project portfolio</strong>
+                            <span>Residential, community, and infrastructure work across Uganda.</span>
+                            <a href="project.html">Explore project work</a>
+                        </div>
+                        <div class="conversion-reason">
+                            <strong>Planned through handover</strong>
+                            <span>Agreed scope, progress updates, and quality checks.</span>
+                        </div>
+                    </div>
+                    <p class="conversion-trust-note">Applicable approvals, professional credentials, and written warranty terms depend on project scope. Ask us to confirm them before work begins.</p>
+                    <div class="home-roadmap-actions">
+                        <a class="btn btn-secondary" href="block-estimator.html">Get a project estimate</a>
+                        <a class="btn btn--outline" href="#home-enquiry">Book a site visit</a>
+                    </div>
+                </div>
+                <form id="home-enquiry" class="conversion-form" data-lead-form action="/api/contact" method="post">
+                    <h2 class="h3">Start with a project conversation</h2>
+                    <p>Share a few details and our team will follow up about the right next step.</p>
+                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                        <label for="home-website">Leave this field empty</label>
+                        <input id="home-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-grp">
+                                <label for="home-first-name">First name</label>
+                                <input id="home-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-grp">
+                                <label for="home-last-name">Last name</label>
+                                <input id="home-last-name" name="lastName" type="text" autocomplete="family-name" maxlength="100" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-grp">
+                                <label for="home-email">Email address</label>
+                                <input id="home-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-grp">
+                                <label for="home-phone">Phone number</label>
+                                <input id="home-phone" name="phone" type="tel" autocomplete="tel" maxlength="100" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grp">
+                        <label for="home-message">What would you like to build or discuss?</label>
+                        <textarea id="home-message" name="message" maxlength="5000" required placeholder="Include the project type, location, and whether you would like an estimate or site visit."></textarea>
+                    </div>
+                    <p class="form-submit-status" role="status" aria-live="polite"></p>
+                    <button class="btn" type="submit">Request a project consultation</button>
+                </form>
+            </div>
+        </section>
+
         <section class="home-project-showcase" aria-labelledby="home-project-showcase-title">
             <div class="container">
                 <div class="home-project-heading">
@@ -317,22 +395,22 @@
                     <div class="col-lg-4 col-md-6 mb-4">
                         <article class="home-roadmap-step h-100">
                             <span class="home-roadmap-number" aria-hidden="true">01</span>
-                            <h3>Virtual consultation and planning</h3>
-                            <p>Meet remotely to share your vision, location, and scope. We coordinate custom architectural planning and provide a transparent Bill of Quantities before work begins.</p>
+                            <h3>Consult</h3>
+                            <p>Meet remotely to share your vision, location, budget, and scope. We clarify the brief and identify the information needed to plan responsibly.</p>
                         </article>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <article class="home-roadmap-step h-100">
                             <span class="home-roadmap-number" aria-hidden="true">02</span>
-                            <h3>Agreed budgets and milestones</h3>
-                            <p>Review the scope, Bill of Quantities, and milestone-based payments together. Land checks, approvals, and funding arrangements are agreed before site work starts.</p>
+                            <h3>Design &amp; build</h3>
+                            <p>Review the design, scope, Bill of Quantities, budget, and milestones together. Required land checks, approvals, and funding arrangements are agreed before site work starts.</p>
                         </article>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <article class="home-roadmap-step h-100">
                             <span class="home-roadmap-number" aria-hidden="true">03</span>
-                            <h3>Remote progress and handover</h3>
-                            <p>Receive weekly photo and video updates from a dedicated project manager, then review the completed work and handover plan remotely.</p>
+                            <h3>Handover</h3>
+                            <p>Receive regular photo and video progress updates, complete quality checks, and review the handover plan with your project team.</p>
                         </article>
                     </div>
                 </div>
@@ -707,7 +785,7 @@
                         <div class="testimonial-content">
                             <div class="section-title mb-45 tg-heading-subheading animation-style3">
                                 <span class="sub-title tg-element-title">Our Testimonials</span>
-                                <h2 class="title tg-element-title">Some of Our Respected Happy Clients Says</h2>
+                                <h2 class="title tg-element-title">Built on trust, from planning through handover</h2>
                             </div>
                             <div class="testimonial-active">
                                 <div class="testimonial-item">
@@ -729,7 +807,7 @@
                                         </div> -->
                                         <div class="avatar-content">
                                             <h6 class="title">John and Susan</h6>
-                                            <p>Satisfied Homeowners</p>
+                                            <p>Diaspora home construction</p>
                                         </div>
                                     </div>
                                 </div>
@@ -754,7 +832,7 @@
                                         </div> -->
                                         <div class="avatar-content">
                                             <h6 class="title">Michael and Sarah</h6>
-                                            <p>Happy Homeowners</p>
+                                            <p>Diaspora home construction</p>
                                         </div>
                                     </div>
                                 </div>
@@ -778,7 +856,7 @@
                                         </div> -->
                                         <div class="avatar-content">
                                             <h6 class="title">Emily and David</h6>
-                                            <p>Satisfied Customers</p>
+                                            <p>Diaspora home construction</p>
                                         </div>
                                     </div>
                                 </div>
@@ -876,6 +954,7 @@
                                         </li>
                                         <li><a href='project.html'><i class="fas fa-angle-double-right"></i>Our
                                                 Projects</a></li>
+                                        <li><a href="policies.html"><i class="fas fa-angle-double-right"></i>Policies</a></li>
 
                                     </ul>
                                 </div>
@@ -939,7 +1018,6 @@
     <script src="assets/js/jquery.appear.js"></script>
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/ajax-form.js"></script>
     <script src="assets/js/jarallax.min.js"></script>
     <script src="assets/js/parallax.min.js"></script>
     <script src="assets/js/gsap.js"></script>
@@ -950,6 +1028,7 @@
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
+    <script src="assets/js/lead-form.js" defer></script>
 </body>
 
 </html>

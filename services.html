@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="assets/css/default.css">
     <link rel="stylesheet" href="assets/css/jarallax.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/site-components.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
@@ -304,6 +305,87 @@
             </div>
         </section>
 
+        <section class="conversion-section conversion-section--light" aria-labelledby="service-delivery-title">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="section-title text-center mb-4">
+                            <span class="sub-title">How engagements work</span>
+                            <h2 class="title" id="service-delivery-title">Clear scope, practical deliverables</h2>
+                            <p>Each engagement is scoped to the site, service, and decisions you need to make.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="conversion-steps">
+                    <div class="conversion-step"><strong>01 · Understand the brief</strong><span>Discuss goals, site information, constraints, and the service required.</span></div>
+                    <div class="conversion-step"><strong>02 · Agree scope and cost</strong><span>Review the proposed work, relevant plans or quantities, exclusions, costs, and milestones before authorizing work.</span></div>
+                    <div class="conversion-step"><strong>03 · Deliver and review</strong><span>Coordinate agreed work, share progress updates, and review applicable quality checks and handover requirements.</span></div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-lg-6 mb-3">
+                        <article class="conversion-reason h-100">
+                            <strong>Planning and estimates</strong>
+                            <span>Where included in the agreed scope: plans, specifications, quantities, and a project-specific cost proposal. The wall estimator is an early quantity guide, not a quotation or full bill of quantities.</span>
+                        </article>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <article class="conversion-reason h-100">
+                            <strong>Construction and property work</strong>
+                            <span>Deliverables, reporting frequency, schedule, and completion checks are set out for the particular project before work starts.</span>
+                        </article>
+                    </div>
+                </div>
+                <p class="conversion-trust-note">CMI does not publish a single rate card because project costs depend on scope, site conditions, specifications, quantities, location, and schedule. Request a written, project-specific estimate and confirm inclusions, exclusions, taxes, and payment milestones before committing.</p>
+            </div>
+        </section>
+
+        <section class="conversion-section" aria-labelledby="service-faq-title">
+            <div class="container">
+                <div class="section-title text-center mb-4">
+                    <span class="sub-title">Common questions</span>
+                    <h2 class="title" id="service-faq-title">Before you get started</h2>
+                </div>
+                <div class="professional-faq">
+                    <details><summary>Can I manage a project while living abroad?</summary><p>CMI describes a remote-friendly process with project communication and progress updates. Agree the update format, frequency, decision process, and named contacts in your project scope.</p></details>
+                    <details><summary>How do I get an accurate project cost?</summary><p>Share the site location, project brief, plans if available, specifications, and expected timing. Ask for the scope, quantities, assumptions, exclusions, and payment milestones in a written proposal. The online wall estimator only approximates masonry-unit quantities.</p></details>
+                    <details><summary>How long will my project take?</summary><p>Duration depends on the scope, site conditions, approvals, materials, and agreed delivery plan. Request a project-specific schedule and confirm how changes or delays are handled before work begins.</p></details>
+                    <details><summary>Are approvals, maintenance, and warranties included?</summary><p>These are not universal inclusions. Confirm which approvals or services are in scope, and request any maintenance responsibilities and warranty terms in writing before signing.</p></details>
+                </div>
+            </div>
+        </section>
+
+        <section class="conversion-section conversion-section--light" aria-labelledby="service-enquiry-title">
+            <div class="container conversion-layout">
+                <div class="conversion-copy">
+                    <div class="section-title mb-3">
+                        <span class="sub-title">Your next step</span>
+                        <h2 class="title" id="service-enquiry-title">Get a clear starting point for your project</h2>
+                    </div>
+                    <p>Tell us what you need, where the work is, and what stage you are at. We can discuss an estimate, a design conversation, or a site visit.</p>
+                    <div class="home-roadmap-actions">
+                        <a class="btn btn-secondary" href="block-estimator.html">Get a project estimate</a>
+                        <a class="btn btn--outline" href="#service-enquiry-form">Book a site visit</a>
+                    </div>
+                </div>
+                <form id="service-enquiry-form" class="conversion-form" data-lead-form action="/api/contact" method="post">
+                    <h2 class="h3">Discuss a service</h2>
+                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                        <label for="service-website">Leave this field empty</label>
+                        <input id="service-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6"><div class="form-grp"><label for="service-first-name">First name</label><input id="service-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="service-last-name">Last name</label><input id="service-last-name" name="lastName" type="text" autocomplete="family-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="service-email">Email address</label><input id="service-email" name="email" type="email" autocomplete="email" maxlength="254" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="service-phone">Phone number</label><input id="service-phone" name="phone" type="tel" autocomplete="tel" maxlength="100" required></div></div>
+                    </div>
+                    <div class="form-grp"><label for="service-message">Service and project details</label><textarea id="service-message" name="message" maxlength="5000" required placeholder="What service do you need, where is the project, and would you like an estimate or site visit?"></textarea></div>
+                    <p class="form-submit-status" role="status" aria-live="polite"></p>
+                    <button class="btn" type="submit">Request a project consultation</button>
+                </form>
+            </div>
+        </section>
+
         <section class="pt-60 pb-60" aria-labelledby="service-fieldwork-title">
             <div class="container">
                 <div class="row justify-content-center">
@@ -511,6 +593,7 @@
                                                     class="fas fa-angle-double-right"></i>Services</a></li>
                                         <li><a href='project.html'><i class="fas fa-angle-double-right"></i>Our
                                                 Projects</a></li>
+                                        <li><a href="policies.html"><i class="fas fa-angle-double-right"></i>Policies</a></li>
 
                                     </ul>
                                 </div>
@@ -577,7 +660,6 @@
     <script src="assets/js/jquery.appear.js"></script>
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/ajax-form.js"></script>
     <script src="assets/js/jarallax.min.js"></script>
     <script src="assets/js/parallax.min.js"></script>
     <script src="assets/js/gsap.js"></script>
@@ -588,6 +670,7 @@
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
+    <script src="assets/js/lead-form.js" defer></script>
 </body>
 
 </html>

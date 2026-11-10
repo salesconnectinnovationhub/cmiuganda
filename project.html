@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="assets/css/default.css">
     <link rel="stylesheet" href="assets/css/jarallax.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/site-components.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
@@ -224,6 +225,99 @@
                 </div>
             </div>
         </section>
+        <section class="conversion-section conversion-section--light" aria-labelledby="project-studies-title">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9">
+                        <div class="section-title text-center mb-4">
+                            <span class="sub-title">Project records</span>
+                            <h2 class="title" id="project-studies-title">From project brief to work on site</h2>
+                            <p>These snapshots use details visible in CMI Group’s current portfolio. Client briefs, approved before/after sets, measured outcomes, and historical durations are not published, so we distinguish confirmed project information from details that need to be agreed or supplied.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-case-grid">
+                    <article class="project-case-card">
+                        <img src="images/project_1.jpg" alt="Residential home build project listed in Kyegegwa" loading="lazy" decoding="async">
+                        <div class="project-case-body">
+                            <p class="project-case-location">Residential construction · Kyegegwa</p>
+                            <h3>Residential home build</h3>
+                            <dl>
+                                <div><dt>Brief</dt><dd>Residential home build; individual client objectives are not published.</dd></div>
+                                <div><dt>Delivery</dt><dd>The portfolio lists a residential home project. Detailed scope and construction methods are not published.</dd></div>
+                                <div><dt>Result and before/after</dt><dd>A project image is available; a verified before/after pair and handover outcome are not published.</dd></div>
+                                <div><dt>Timeline</dt><dd>Historical duration is not published. Confirm the schedule in a project proposal.</dd></div>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="project-case-card">
+                        <img src="images/project_3.jpg" alt="Apartment development project listed in Fort Portal" loading="lazy" decoding="async">
+                        <div class="project-case-body">
+                            <p class="project-case-location">Apartment development · Fort Portal</p>
+                            <h3>Apartment development</h3>
+                            <dl>
+                                <div><dt>Brief</dt><dd>Apartment development; client requirements and initial site condition are not published.</dd></div>
+                                <div><dt>Delivery</dt><dd>The portfolio identifies an apartment development. Detailed scope and delivery stages are not published.</dd></div>
+                                <div><dt>Result and before/after</dt><dd>A project image is available; verified completion metrics and before/after images are not published.</dd></div>
+                                <div><dt>Timeline</dt><dd>Historical duration is not published. Confirm the schedule in a project proposal.</dd></div>
+                            </dl>
+                        </div>
+                    </article>
+                    <article class="project-case-card">
+                        <img src="images/project_5.jpg" alt="VIP improved latrine project listed at Kahinju Primary School" loading="lazy" decoding="async">
+                        <div class="project-case-body">
+                            <p class="project-case-location">Community infrastructure · Kahinju Primary School</p>
+                            <h3>VIP improved latrine</h3>
+                            <dl>
+                                <div><dt>Brief</dt><dd>VIP improved latrine project; the client brief and baseline conditions are not published.</dd></div>
+                                <div><dt>Delivery</dt><dd>The portfolio lists the sanitation project. Detailed specifications and construction stages are not published.</dd></div>
+                                <div><dt>Result and before/after</dt><dd>A project image is available; verified usage, impact, and before/after records are not published.</dd></div>
+                                <div><dt>Timeline</dt><dd>Historical duration is not published. Confirm the schedule in a project proposal.</dd></div>
+                            </dl>
+                        </div>
+                    </article>
+                </div>
+                <p class="conversion-trust-note">To publish fuller case studies, CMI should add client-approved briefs, scope, dates, verified outcomes, and matched before/after photos. We do not infer client challenges or project performance from photos alone.</p>
+            </div>
+        </section>
+
+        <section class="conversion-section" aria-labelledby="project-enquiry-title">
+            <div class="container conversion-layout">
+                <div class="conversion-copy">
+                    <div class="section-title mb-3">
+                        <span class="sub-title">Planning a similar project?</span>
+                        <h2 class="title" id="project-enquiry-title">Let’s discuss your site and scope</h2>
+                    </div>
+                    <p>Share your location and project goals. Our team can help identify the next planning step, discuss an estimate, or arrange a site visit.</p>
+                    <div class="conversion-steps" aria-label="Project delivery steps">
+                        <div class="conversion-step"><strong>01 · Consult</strong><span>Clarify your priorities, location, and scope.</span></div>
+                        <div class="conversion-step"><strong>02 · Design &amp; build</strong><span>Agree plans, costs, and milestones before work.</span></div>
+                        <div class="conversion-step"><strong>03 · Handover</strong><span>Review progress, quality checks, and handover.</span></div>
+                    </div>
+                    <div class="home-roadmap-actions">
+                        <a class="btn btn-secondary" href="block-estimator.html">Get a project estimate</a>
+                        <a class="btn btn--outline" href="#project-enquiry-form">Book a site visit</a>
+                    </div>
+                </div>
+                <form id="project-enquiry-form" class="conversion-form" data-lead-form action="/api/contact" method="post">
+                    <h2 class="h3">Tell us about your project</h2>
+                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                        <label for="project-website">Leave this field empty</label>
+                        <input id="project-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6"><div class="form-grp"><label for="project-first-name">First name</label><input id="project-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="project-last-name">Last name</label><input id="project-last-name" name="lastName" type="text" autocomplete="family-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="project-email">Email address</label><input id="project-email" name="email" type="email" autocomplete="email" maxlength="254" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="project-phone">Phone number</label><input id="project-phone" name="phone" type="tel" autocomplete="tel" maxlength="100" required></div></div>
+                    </div>
+                    <div class="form-grp"><label for="project-message">Project location and goals</label><textarea id="project-message" name="message" maxlength="5000" required placeholder="What are you planning, where is the site, and would you like an estimate or site visit?"></textarea></div>
+                    <p class="form-submit-status" role="status" aria-live="polite"></p>
+                    <button class="btn" type="submit">Request a project consultation</button>
+                </form>
+            </div>
+        </section>
+
         <section class="inner-project-area pt-60 pb-60" aria-labelledby="field-highlights-title">
             <div class="container">
                 <div class="row justify-content-center">
@@ -510,6 +604,7 @@
                                     <li><a href='services.html'><i class="fas fa-angle-double-right"></i>Services</a></li>
                                     <li><a href='project.html'><i class="fas fa-angle-double-right"></i>Our
                                             Projects</a></li>
+                                    <li><a href="policies.html"><i class="fas fa-angle-double-right"></i>Policies</a></li>
 
                                 </ul>
                             </div>
@@ -571,7 +666,6 @@
     <script src="assets/js/jquery.appear.js"></script>
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/ajax-form.js"></script>
     <script src="assets/js/jarallax.min.js"></script>
     <script src="assets/js/parallax.min.js"></script>
     <script src="assets/js/gsap.js"></script>
@@ -582,6 +676,7 @@
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
+    <script src="assets/js/lead-form.js" defer></script>
 </body>
 
 </html>

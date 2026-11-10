@@ -42,24 +42,56 @@
 	01. Variable CSS
 ===============================*/
 :root {
+    --cmi-accent: #c7511d;
+    --cmi-accent-hover: #a94016;
+    --cmi-accent-text: #b74716;
+    --cmi-accent-on-dark: #ff9467;
+    --cmi-ink: #17243a;
+    --cmi-ink-deep: #101a2b;
+    --cmi-text: #596577;
+    --cmi-muted: #748093;
+    --cmi-canvas: #f7f7f5;
+    --cmi-surface: #ffffff;
+    --cmi-border: #e3e7ec;
+    --cmi-shadow-sm: 0 8px 24px rgba(23, 36, 58, 0.07);
+    --cmi-shadow-md: 0 18px 48px rgba(23, 36, 58, 0.11);
+    --cmi-radius-sm: 6px;
+    --cmi-radius-md: 12px;
+    --cmi-radius-lg: 20px;
+    --cmi-radius-pill: 999px;
+    --cmi-space-1: 0.5rem;
+    --cmi-space-2: 0.75rem;
+    --cmi-space-3: 1rem;
+    --cmi-space-4: 1.5rem;
+    --cmi-space-5: 2rem;
+    --cmi-space-6: 3rem;
+    --cmi-section-space: clamp(4rem, 7vw, 6.5rem);
+    --cmi-section-space-compact: clamp(3rem, 5vw, 4.5rem);
+    --cmi-type-display: clamp(2.75rem, 5.2vw, 4.25rem);
+    --cmi-type-h1: clamp(2.25rem, 4.2vw, 3.5rem);
+    --cmi-type-h2: clamp(1.875rem, 3.2vw, 2.75rem);
+    --cmi-type-h3: clamp(1.5rem, 2.5vw, 2rem);
+    --cmi-type-h4: clamp(1.25rem, 1.8vw, 1.5rem);
+    --cmi-type-h5: 1.125rem;
+    --cmi-type-h6: 1rem;
     --tg-body-font-family: 'DM Sans', sans-serif;
     --tg-heading-font-family: 'Poppins', sans-serif;
-    --tg-primary-color: #FE5D14;
-    --tg-secondary-color: #131944;
-    --tg-body-font-color: #61657E;
-    --tg-heading-font-color: #1C1C1C;
-    --tg-paragraph-color: #61657E;
-    --tg-menu-color: #0C1239;
+    --tg-primary-color: var(--cmi-accent);
+    --tg-secondary-color: var(--cmi-ink);
+    --tg-body-font-color: var(--cmi-text);
+    --tg-heading-font-color: var(--cmi-ink-deep);
+    --tg-paragraph-color: var(--cmi-text);
+    --tg-menu-color: var(--cmi-ink);
     --tg-body-font-size: 16px;
     --tg-body-font-weight: 400;
-    --tg-heading-font-weight: 700;
+    --tg-heading-font-weight: 600;
     --tg-body-line-height: 1.62;
     --tg-heading-line-height: 1.2;
-    --tg-blue: #161C49;
-    --tg-blue-two: #0F1437;
-    --tg-blue-three: #0A0E21;
-    --tg-border-color: #D8DEFC;
-    --tg-input-border-color: #CFCFCF;
+    --tg-blue: var(--cmi-ink);
+    --tg-blue-two: var(--cmi-ink);
+    --tg-blue-three: var(--cmi-ink-deep);
+    --tg-border-color: var(--cmi-border);
+    --tg-input-border-color: var(--cmi-border);
     --tg-indigo: #6610f2;
     --tg-purple: #6f42c1;
     --tg-pink: #d63384;
@@ -72,8 +104,8 @@
     --tg-teal: #20c997;
     --tg-cyan: #0dcaf0;
     --tg-white: #ffffff;
-    --tg-gray: #F4F6FF;
-    --tg-gray-two: #EDF0FF;
+    --tg-gray: var(--cmi-canvas);
+    --tg-gray-two: #edf0f4;
     --tg-gray-three: #B8B8B8;
     --facebook: #3b5998;
     --twitter: #00acee;
@@ -6182,4 +6214,267 @@ section[aria-labelledby="property-fieldwork-title"] .card-body {
 }
 .video_frame iframe{
 	width: 70%;
+}
+
+/* CMI Group visual system */
+body {
+	background-color: var(--cmi-surface);
+	color: var(--cmi-text);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+	color: var(--cmi-ink-deep);
+	font-weight: 600;
+	letter-spacing: -0.025em;
+}
+
+body h1 {
+	font-size: var(--cmi-type-h1);
+}
+
+body h2,
+body .section-title .title {
+	font-size: var(--cmi-type-h2);
+}
+
+body h3 {
+	font-size: var(--cmi-type-h3);
+}
+
+body h4 {
+	font-size: var(--cmi-type-h4);
+}
+
+body h5 {
+	font-size: var(--cmi-type-h5);
+}
+
+body h6 {
+	font-size: var(--cmi-type-h6);
+}
+
+body .banner-content .title,
+body .banner-content-two .title,
+body .banner-content-three .title {
+	font-size: var(--cmi-type-display);
+	font-weight: 600;
+	letter-spacing: -0.04em;
+	line-height: 1.12;
+}
+
+body .section-title .sub-title {
+	font-size: 0.875rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	line-height: 1.4;
+	text-transform: uppercase;
+}
+
+body p {
+	color: var(--cmi-text);
+}
+
+body a {
+	color: var(--cmi-accent-text);
+}
+
+body a:hover {
+	color: var(--cmi-accent-hover);
+}
+
+body .btn {
+	border: 1px solid transparent;
+	border-radius: var(--cmi-radius-sm);
+	box-shadow: var(--cmi-shadow-sm);
+	font-size: 1rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	padding: 1rem 1.5rem;
+}
+
+body .btn:hover {
+	background-color: var(--cmi-accent-hover);
+	box-shadow: var(--cmi-shadow-md);
+	transform: translateY(-1px);
+}
+
+body .btn--secondary,
+body .btn-secondary {
+	background-color: var(--cmi-ink);
+	color: var(--cmi-surface);
+}
+
+body .btn--secondary::before,
+body .btn-secondary::before {
+	background-color: var(--cmi-ink-deep);
+}
+
+body .btn--outline {
+	background-color: transparent;
+	border-color: var(--cmi-ink);
+	box-shadow: none;
+	color: var(--cmi-ink);
+}
+
+body .btn--outline::before {
+	background-color: var(--cmi-ink);
+}
+
+body .btn--outline:hover {
+	color: var(--cmi-surface);
+}
+
+body .btn--light {
+	background-color: var(--cmi-surface);
+	color: var(--cmi-ink);
+}
+
+body .btn--light::before {
+	background-color: #edf0f4;
+}
+
+body .btn--light:hover {
+	background-color: #edf0f4;
+	color: var(--cmi-ink);
+}
+
+body .btn:focus-visible,
+body a:focus-visible,
+body button:focus-visible,
+body input:focus-visible,
+body textarea:focus-visible,
+body select:focus-visible {
+	outline: 3px solid var(--cmi-accent);
+	outline-offset: 3px;
+}
+
+body .section-title .title {
+	line-height: 1.16;
+}
+
+body .section-title .sub-title,
+body .home-project-gallery-link,
+body .testimonial-avatar .avatar-content p {
+	color: var(--cmi-accent-text);
+}
+
+body .section-title.white-title .sub-title,
+body .section-title.white-title-two .sub-title {
+	color: var(--cmi-accent-on-dark);
+}
+
+body .services-content .title,
+body .services-content-two .content .title,
+body .services-content-three .title,
+body .project-content .title,
+body .project-content-two .title,
+body .project-content-four .title,
+body .team-content .title,
+body .team-content-two .title,
+body .team-content-three .title {
+	font-size: var(--cmi-type-h3);
+	font-weight: 600;
+	letter-spacing: -0.02em;
+	line-height: 1.25;
+}
+
+body .services-area,
+body .services-area-three,
+body .project-area-two,
+body .project-area-three,
+body .work-area,
+body .testimonial-area {
+	padding-block: var(--cmi-section-space);
+}
+
+body .services-area {
+	background-color: var(--cmi-canvas);
+}
+
+body .footer-bottom .copyright-text a {
+	color: var(--cmi-accent-on-dark);
+}
+
+body .footer-bottom .copyright-text a:hover {
+	color: var(--cmi-surface);
+}
+
+body .card,
+body .service-card,
+body .services-item-two,
+body .services-item-three {
+	border: 1px solid var(--cmi-border);
+	border-radius: var(--cmi-radius-md);
+	box-shadow: var(--cmi-shadow-sm);
+}
+
+body .card {
+	overflow: hidden;
+}
+
+body .card-img-top,
+body .service-card img,
+body .services-thumb-two img,
+body .services-thumb-three img,
+body .team-thumb img {
+	border-radius: var(--cmi-radius-md);
+}
+
+body .card-img-top {
+	border-radius: var(--cmi-radius-md) var(--cmi-radius-md) 0 0;
+}
+
+body .card-body {
+	padding: var(--cmi-space-4);
+}
+
+body .service-card,
+body .services-item-two,
+body .services-item-three {
+	background-color: var(--cmi-surface);
+}
+
+body .services-item {
+	border-radius: var(--cmi-radius-md);
+}
+
+body .services-item::before,
+body .services-item::after {
+	border-radius: var(--cmi-radius-md);
+}
+
+body .project-item {
+	border-radius: var(--cmi-radius-md);
+}
+
+body .team-thumb,
+body .team-thumb img,
+body .team-content {
+	border-radius: var(--cmi-radius-md);
+}
+
+@media (max-width: 767px) {
+	body .services-area,
+	body .services-area-three,
+	body .project-area-two,
+	body .project-area-three,
+	body .work-area,
+	body .testimonial-area {
+		padding-block: var(--cmi-section-space-compact);
+	}
+
+	body .btn {
+		padding: 0.875rem 1.25rem;
+	}
+
+	body .card-body {
+		padding: var(--cmi-space-3);
+	}
 }

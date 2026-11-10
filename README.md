@@ -18,10 +18,12 @@ The site is designed for Cloudflare Pages deployment and uses serverless functio
 
 - `index.html` and supporting HTML pages for home, about, services, projects, gallery, team, contact, and payment flow
 - `assets/` for styling, images, fonts, and JavaScript shared by the site
+- `assets/css/site-components.css` for reusable conversion and company-information components
+- `ASSET-STRATEGY.md` for frontend structure and safe media cleanup guidance
 - `admin/` for the content management dashboard
 - `functions/` for Cloudflare Pages API endpoints and database schemas
 - `images/`, `img/`, `galleryimages/`, `teamimages/`, `cmipics/` for website media
-- `submit/` containing legacy PHP form handlers retained for reference or compatibility
+- `submit/` containing legacy PHP handlers and PHPMailer files; not used by the active Cloudflare Pages forms
 
 ## Main features and functionality
 
@@ -36,6 +38,15 @@ The main website presents CMI Group as a construction and property solutions com
 - contact and enquiry pages
 - property management page
 - payment and send-money flow
+- company policy information at `policies.html`
+
+The public company profile uses the documented founding year (2018), listed
+Fort Portal and Kampala offices, and the Managing Director named on the team
+page. Project snapshots intentionally distinguish published portfolio facts
+from client briefs, timelines, warranties, and measured outcomes that have not
+been supplied for publication. Review and approve the plain-language website
+policy summary with qualified counsel before treating it as a complete legal
+policy or contract.
 
 These pages are mostly static HTML and are designed to be easy to update by a non-technical marketing/admin team.
 
@@ -116,7 +127,15 @@ The estimator is a preliminary planning tool and clearly states that it is not a
 The repo includes payment-related pages such as `pay.html`, `payments.html`, and `pay.js`. These support customer payment flows and provide a way for visitors to send money or contact the company for billing and transaction inquiries.
 
 ### 8. Legacy and compatibility files
-The project still contains older PHP or legacy script files in `submit/` and other folders. These are useful as reference, but the active public-facing workflows are moving toward Cloudflare Pages serverless functions.
+The project retains legacy PHP handlers and their PHPMailer dependency in
+`submit/` for reference. Public forms use Cloudflare Pages Functions. The old
+AJAX form script was removed because it was not needed and could duplicate the
+contact-page request. Before removing or moving any other legacy files, confirm
+that no separate PHP deployment depends on them.
+
+Run `npm run audit:assets` to list likely unreferenced media for manual review.
+The audit does not delete files and cannot infer references stored in the CMS or
+other runtime data. See `ASSET-STRATEGY.md` before reorganizing media.
 
 ## Repository structure
 

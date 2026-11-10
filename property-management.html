@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="assets/css/default.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/site-components.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
@@ -56,6 +57,7 @@
                                                 <li><a href="https://chat.cmigroupuganda.com/" target="_blank" rel="noopener noreferrer">Chat Now</a></li>
                                             </ul>
                                         </li>
+                                        <li><a href="policies.html">Policies</a></li>
                                     </ul>
                                     <div class="header-cta">
                                         <a class="btn" href="contact.html">Request a consultation</a>
@@ -90,7 +92,7 @@
                         </div>
                         <p>CMI Group provides property and asset oversight for owners who need trusted support in Uganda. We help coordinate property care and development needs, with a focus on clear communication for clients living abroad.</p>
                         <p>Tell us about your property or plans. Our team will discuss the scope, location, reporting needs, and next steps with you.</p>
-                        <a class="btn mr-2 mb-2" href="contact.html">Request a property consultation</a>
+                        <a class="btn mr-2 mb-2" href="#property-enquiry-form">Request a property consultation</a>
                         <a class="btn mb-2" href="tel:+256789612187">Call +256 789 612 187</a>
                     </div>
                     <div class="col-lg-6 mb-4">
@@ -143,6 +145,59 @@
                 <div class="text-center mt-3">
                     <a class="btn" href="mailto:cmi.groupuganda@gmail.com?subject=Property%20management%20enquiry">Email our property team</a>
                     <a class="btn ml-2" href="https://wa.me/message/DYT6JQFKYJNLF1" target="_blank" rel="noopener noreferrer">Message us on WhatsApp</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="conversion-section" aria-labelledby="property-enquiry-title">
+            <div class="container conversion-layout">
+                <div class="conversion-copy">
+                    <div class="section-title mb-3">
+                        <span class="sub-title">Property support in Uganda</span>
+                        <h2 class="title" id="property-enquiry-title">Get a practical plan for your property</h2>
+                    </div>
+                    <p>Tell us where your property is and what support you need. We will discuss the scope, reporting expectations, and a suitable next step with you.</p>
+                    <div class="conversion-reasons" aria-label="Property management service commitments">
+                        <div class="conversion-reason"><strong>Clear scope</strong><span>Agree the support needed before work begins.</span></div>
+                        <div class="conversion-reason"><strong>Owner-led instructions</strong><span>Coordinate work around your requirements.</span></div>
+                        <div class="conversion-reason"><strong>Local coordination</strong><span>Discuss site visits and property needs in Uganda.</span></div>
+                        <div class="conversion-reason"><strong>Defined reporting</strong><span>Set expectations for updates and communication.</span></div>
+                    </div>
+                    <div class="home-roadmap-actions">
+                        <a class="btn btn--outline" href="#property-enquiry-form">Book a property site visit</a>
+                        <a class="btn btn-secondary" href="mailto:cmi.groupuganda@gmail.com?subject=Property%20management%20enquiry">Email our property team</a>
+                    </div>
+                </div>
+                <form id="property-enquiry-form" class="conversion-form" data-lead-form action="/api/contact" method="post">
+                    <h2 class="h3">Discuss your property</h2>
+                    <div aria-hidden="true" style="position:absolute;left:-10000px">
+                        <label for="property-website">Leave this field empty</label>
+                        <input id="property-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6"><div class="form-grp"><label for="property-first-name">First name</label><input id="property-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="property-last-name">Last name</label><input id="property-last-name" name="lastName" type="text" autocomplete="family-name" maxlength="100" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="property-email">Email address</label><input id="property-email" name="email" type="email" autocomplete="email" maxlength="254" required></div></div>
+                        <div class="col-sm-6"><div class="form-grp"><label for="property-phone">Phone number</label><input id="property-phone" name="phone" type="tel" autocomplete="tel" maxlength="100" required></div></div>
+                    </div>
+                    <div class="form-grp"><label for="property-message">Property location and support needed</label><textarea id="property-message" name="message" maxlength="5000" required placeholder="Include the property location, support needed, and whether you would like a site visit."></textarea></div>
+                    <p class="form-submit-status" role="status" aria-live="polite"></p>
+                    <button class="btn" type="submit">Request a property consultation</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="conversion-section conversion-section--light" aria-labelledby="property-faq-title">
+            <div class="container">
+                <div class="section-title text-center mb-4">
+                    <span class="sub-title">Property management FAQs</span>
+                    <h2 class="title" id="property-faq-title">Know what to agree before engagement</h2>
+                </div>
+                <div class="professional-faq">
+                    <details><summary>What does property management include?</summary><p>Services can include property oversight, maintenance coordination, trustee support, or development coordination. Agree the exact tasks, authority limits, vendors, reporting, and fees in writing for your property.</p></details>
+                    <details><summary>How will I receive updates while abroad?</summary><p>Agree your preferred channels, update frequency, records or photos required, and who can approve work or spending before the service starts.</p></details>
+                    <details><summary>How are maintenance costs approved?</summary><p>Set an approval threshold, emergency contact process, documentation requirements, and payment method in your service agreement. Do not assume third-party maintenance costs are included in a management fee.</p></details>
+                    <details><summary>Is there a standard maintenance or warranty package?</summary><p>No blanket package is published. Ask CMI to confirm the service duration, covered work, exclusions, response process, and any maintenance or warranty terms in writing.</p></details>
                 </div>
             </div>
         </section>
@@ -261,7 +316,6 @@
     <script src="assets/js/jquery.appear.js"></script>
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/slick-animation.min.js"></script>
-    <script src="assets/js/ajax-form.js"></script>
     <script src="assets/js/jarallax.min.js"></script>
     <script src="assets/js/parallax.min.js"></script>
     <script src="assets/js/gsap.js"></script>
@@ -273,6 +327,7 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
     <script src="assets/js/property-listings.js" defer></script>
+    <script src="assets/js/lead-form.js" defer></script>
 </body>
 
 </html>

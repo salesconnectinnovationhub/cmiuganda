@@ -109,6 +109,9 @@ test("homepage embeds the CMI Group project video feed without a click", async (
     const video = page.locator("#youtube-videos iframe");
     await expect(video).toHaveAttribute("title", "CMI Group project videos");
     await expect(video).toHaveAttribute("src", /youtube-nocookie\.com\/embed\/videoseries\?list=/);
+    await expect(page.getByRole("heading", { name: "Local delivery. Clear decisions. Confidence from anywhere." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "How We Work" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");
     await expect(page.getByRole("link", { name: "Explore Project Management" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Meet Our Engineers" })).toBeVisible();
     await expect(page.getByRole("link", { name: "See Our Quality Standards" })).toBeVisible();
@@ -125,6 +128,9 @@ test("contact conversion is recorded only after the API accepts the form", async
         await route.fulfill({ status: 204, body: "" });
     });
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("heading", { name: "Office locations in Uganda" })).toBeVisible();
+    await expect(page.locator(".office-location-card iframe")).toHaveCount(2);
+    await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");
     await page.locator("#contact-first-name").fill("Test");
     await page.locator("#contact-last-name").fill("Visitor");
     await page.locator("#contact-email").fill("visitor@example.com");
@@ -134,6 +140,40 @@ test("contact conversion is recorded only after the API accepts the form", async
 
     await expect(page.locator("#contact-form .form-submit-status")).toHaveText("Message accepted.");
     await expect.poll(() => analyticsEvents.some((event) => event.event === "contact_submit" && event.path === "/contact.html")).toBe(true);
+});
+
+test("project enquiry forms appear at key conversion points", async ({ page }) => {
+    for (const path of ["/", "/services.html", "/project.html", "/property-management.html"]) {
+        await page.goto(path, { waitUntil: "domcontentloaded" });
+        await expect(page.locator("[data-lead-form]")).toHaveCount(1);
+        await expect(page.locator("[data-lead-form]")).toBeVisible();
+    }
+
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("heading", { name: "Local delivery. Clear decisions. Confidence from anywhere." })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Get a project estimate" })).toHaveAttribute("href", "block-estimator.html");
+    await expect(page.getByRole("link", { name: "Book a site visit" })).toHaveAttribute("href", "#home-enquiry");
+});
+
+test("embedded project enquiry form posts through the contact API", async ({ page }) => {
+    let submittedBody = "";
+    await page.route("**/api/contact", async (route) => {
+        submittedBody = route.request().postData() || "";
+        await route.fulfill({ status: 200, contentType: "text/plain", body: "Enquiry received." });
+    });
+    await page.goto("/services.html", { waitUntil: "domcontentloaded" });
+    await page.locator("#service-first-name").fill("Test");
+    await page.locator("#service-last-name").fill("Visitor");
+    await page.locator("#service-email").fill("visitor@example.com");
+    await page.locator("#service-phone").fill("+256700000000");
+    await page.locator("#service-message").fill("I would like to discuss a building project in Kampala.");
+    await page.locator("#service-enquiry-form").getByRole("button", { name: "Request a project consultation" }).click();
+
+    await expect(page.locator("#service-enquiry-form .form-submit-status")).toHaveText("Enquiry received.");
+    const formData = new URLSearchParams(submittedBody);
+    expect(formData.get("firstName")).toBe("Test");
+    expect(formData.get("lastName")).toBe("Visitor");
+    expect(formData.get("message")).toContain("Kampala");
 });
 
 test("homepage CMS preview renders text as content rather than markup", async ({ page }) => {
