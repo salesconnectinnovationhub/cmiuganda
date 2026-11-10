@@ -34,11 +34,6 @@
 
 
 /*=============================
-	1. Google Fonts
-===============================*/
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&amp;family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap');
-
-/*=============================
 	01. Variable CSS
 ===============================*/
 :root {
@@ -149,8 +144,6 @@ a:focus,
 .btn:focus,
 button:focus {
 	text-decoration: none;
-	outline: none;
-	box-shadow: none;
 }
 
 a:hover,
@@ -171,7 +164,7 @@ input:focus,
 input:focus,
 textarea,
 textarea:focus {
-	outline: 0
+	outline-color: var(--cmi-accent);
 }
 .uppercase {
 	text-transform: uppercase;
@@ -6353,6 +6346,21 @@ body textarea:focus-visible,
 body select:focus-visible {
 	outline: 3px solid var(--cmi-accent);
 	outline-offset: 3px;
+}
+
+body :focus:not(:focus-visible) {
+	outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
 }
 
 body .section-title .title {

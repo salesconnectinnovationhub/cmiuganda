@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="assets/css/tg-cursor.css">
     <link rel="stylesheet" href="assets/css/default.css">
     <link rel="stylesheet" href="assets/css/jarallax.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
@@ -260,7 +263,10 @@
                             link.setAttribute("aria-label", "Enlarge photo: " + project.title);
 
                             var img = document.createElement("img");
-                            img.src = project.image;
+                            var imageName = project.image.split("/").pop().replace(/\.jpe?g$/i, "");
+                            img.src = "images/gallery-thumbnails/" + imageName + "-720.webp";
+                            img.srcset = "images/gallery-thumbnails/" + imageName + "-360.webp 360w, images/gallery-thumbnails/" + imageName + "-720.webp 720w";
+                            img.sizes = "(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw";
                             img.alt = project.alt;
                             img.loading = "lazy";
                             img.decoding = "async";

@@ -8,7 +8,7 @@
 }
 .conversion-layout {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(320px, .82fr);
+	grid-template-columns: 1fr;
 	gap: clamp(2rem, 5vw, 4.5rem);
 	align-items: center;
 }
@@ -85,7 +85,7 @@
 }
 .conversion-steps {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: 1fr;
 	gap: 1rem;
 	margin-top: 1.5rem;
 }
@@ -151,7 +151,7 @@
 .project-case-grid,
 .office-location-grid {
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: 1fr;
 	gap: 1.25rem;
 }
 .project-case-card,
@@ -217,14 +217,22 @@
 	border: 0;
 	border-top: 1px solid var(--cmi-border);
 }
-@media (max-width: 767px) {
+@media (min-width: 768px) {
 	.conversion-layout {
-		grid-template-columns: 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(320px, .82fr);
 	}
 	.conversion-reasons,
 	.conversion-steps,
-	.project-case-grid,
+	.project-case-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
 	.office-location-grid {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+@media (min-width: 1024px) {
+	.conversion-steps,
+	.project-case-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 	}
 }
