@@ -64,10 +64,14 @@ export async function readFormData(request) {
   }
 }
 
-export async function sendEmail(env, { replyTo, subject, text }) {
+export async function sendEmail(env, { to = RECIPIENT, replyTo, subject, text }) {
   if (!env.RESEND_API_KEY || !env.CMI_FROM_EMAIL) {
     console.error("CMI Group email configuration is incomplete.");
     return { status: 503 };
+  }
+  if (typeof to !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+    console.error("CMI Group email notification recipient is invalid.");
+    return { status: 400 };
   }
 
   let mailResponse;
@@ -80,7 +84,7 @@ export async function sendEmail(env, { replyTo, subject, text }) {
       },
       body: JSON.stringify({
         from: env.CMI_FROM_EMAIL,
-        to: [RECIPIENT],
+        to: [to],
         reply_to: replyTo,
         subject,
         text,
