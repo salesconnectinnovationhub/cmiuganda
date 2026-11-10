@@ -22,7 +22,7 @@ test("asset audit resolves references relative to nested source files", () => {
 
 test("asset audit recognizes CSS URLs and srcset entries", () => {
     const references = extractAssetReferences(
-        'background-image: url("../images/bg.webp"); srcset="images/small.jpg 1x, images/large.jpg 2x"',
+        'background-image: url("../../images/bg.webp"); srcset="images/small.jpg 1x, images/large.jpg 2x"',
         "assets/css/site.css",
     );
 
