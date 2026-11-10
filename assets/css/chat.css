@@ -1,0 +1,204 @@
+.chat-site-header {
+	border-bottom: 1px solid var(--cmi-border);
+	background: var(--cmi-surface);
+}
+.chat-site-header .container,
+.chat-site-footer .container {
+	display: flex;
+	min-height: 4.5rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+.chat-site-header a:first-child,
+.chat-site-footer a {
+	color: var(--cmi-ink);
+	font-family: var(--tg-heading-font-family);
+	font-weight: 700;
+}
+.chat-page {
+	min-height: calc(100vh - 8rem);
+	padding: var(--cmi-section-space-compact) 0;
+	background: var(--cmi-canvas);
+}
+.chat-container {
+	max-width: 860px;
+}
+.chat-intro {
+	max-width: 700px;
+	margin: 0 auto 2rem;
+	text-align: center;
+}
+.chat-intro h1 {
+	font-size: var(--cmi-type-h1);
+}
+.chat-intro > p:not(.sub-title) {
+	font-size: 1.05rem;
+}
+.chat-privacy-note {
+	font-size: .9rem !important;
+}
+.chat-card {
+	overflow: hidden;
+	border: 1px solid var(--cmi-border);
+	border-radius: var(--cmi-radius-lg);
+	background: var(--cmi-surface);
+	box-shadow: var(--cmi-shadow-md);
+}
+.chat-card-heading {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1.25rem clamp(1.25rem, 3vw, 2rem);
+	border-bottom: 1px solid var(--cmi-border);
+}
+.chat-card-heading h2 {
+	margin-bottom: .25rem;
+	font-size: 1.25rem;
+}
+.chat-card-heading p {
+	margin: 0;
+	font-size: .9rem;
+}
+.chat-availability {
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	color: var(--cmi-text);
+	font-size: .85rem;
+}
+.chat-availability span {
+	width: .6rem;
+	height: .6rem;
+	border-radius: 50%;
+	background: #198754;
+}
+.chat-form,
+.chat-reply-form {
+	padding: clamp(1.25rem, 3vw, 2rem);
+}
+.chat-form .form-grp {
+	margin-bottom: 1rem;
+}
+.chat-form label,
+.chat-reply-form label {
+	display: block;
+	margin-bottom: .4rem;
+	color: var(--cmi-ink);
+	font-weight: 600;
+}
+.chat-form input,
+.chat-form textarea,
+.chat-reply-form textarea {
+	display: block;
+	width: 100%;
+	border: 1px solid var(--cmi-border);
+	border-radius: var(--cmi-radius-sm);
+	padding: .8rem .9rem;
+	background: var(--cmi-surface);
+	color: var(--cmi-ink);
+}
+.chat-form textarea,
+.chat-reply-form textarea {
+	resize: vertical;
+}
+.chat-form small {
+	display: block;
+	margin-top: .35rem;
+	color: var(--cmi-muted);
+}
+.chat-honeypot {
+	position: absolute;
+	left: -10000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.chat-error {
+	min-height: 1.5rem;
+	margin: 0 0 .75rem;
+	color: #a32121;
+}
+.chat-thread {
+	padding: 1.25rem clamp(1.25rem, 3vw, 2rem);
+}
+.chat-messages {
+	display: flex;
+	max-height: 55vh;
+	min-height: 180px;
+	flex-direction: column;
+	gap: .75rem;
+	overflow-y: auto;
+	margin: 0;
+	padding: .25rem;
+	list-style: none;
+}
+.chat-message {
+	max-width: min(90%, 42rem);
+	padding: .85rem 1rem;
+	border: 1px solid var(--cmi-border);
+	border-radius: var(--cmi-radius-md);
+	background: var(--cmi-canvas);
+	color: var(--cmi-ink);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.chat-message--visitor {
+	align-self: flex-end;
+	border-color: var(--cmi-ink);
+	background: var(--cmi-ink);
+	color: var(--cmi-surface);
+}
+.chat-message-meta {
+	display: block;
+	margin-bottom: .3rem;
+	font-size: .75rem;
+	font-weight: 700;
+	opacity: .8;
+}
+.chat-reply-form {
+	padding: 1rem 0 0;
+}
+.chat-reply-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+.chat-reply-actions span {
+	color: var(--cmi-muted);
+	font-size: .9rem;
+}
+.chat-new-button {
+	margin-top: 1rem;
+	border: 0;
+	background: transparent;
+	color: var(--cmi-accent-text);
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: .15em;
+}
+.chat-contact-fallback {
+	margin-top: 1.5rem;
+	text-align: center;
+}
+.chat-site-footer {
+	padding: .5rem 0;
+	background: var(--cmi-surface);
+}
+.chat-site-footer span {
+	color: var(--cmi-muted);
+	font-size: .9rem;
+}
+@media (max-width: 575px) {
+	.chat-site-header .container,
+	.chat-site-footer .container {
+		align-items: flex-start;
+		flex-direction: column;
+		justify-content: center;
+		padding-block: .75rem;
+	}
+}

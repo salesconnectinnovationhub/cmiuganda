@@ -821,7 +821,7 @@ document.addEventListener('click', (event) => {
 	let eventName = link.dataset.analyticsEvent;
 	if (!eventName && href.startsWith('tel:')) eventName = 'phone_click';
 	if (!eventName && /(?:wa\.me|api\.whatsapp\.com)/i.test(href)) eventName = 'whatsapp_click';
-	if (!eventName && /chat\.cmigroupuganda\.com/i.test(href)) eventName = 'chat_click';
+	if (!eventName && /(?:^|\/)chat\.html(?:[?#]|$)/i.test(href)) eventName = 'chat_click';
 	if (!eventName && link.textContent.trim().toLowerCase().includes('request a consultation')) eventName = 'consultation_click';
 	if (eventName) window.cmiTrackConversion(eventName);
 });

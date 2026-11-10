@@ -22,6 +22,7 @@ const PUBLIC_PATHS = new Set([
   "/gallery.html",
   "/team.html",
   "/contact.html",
+  "/chat.html",
   "/block-estimator.html",
   "/payments.html",
   "/success.html",

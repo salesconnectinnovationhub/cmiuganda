@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Chat directly with CMI Group about construction, project planning, and property support in Uganda.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://cmigroupuganda.com/chat.html">
+    <title>Chat with CMI Group | Uganda Construction &amp; Property Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/site-components.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <script src="assets/js/site-chat.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to chat</a>
+    <header class="chat-site-header">
+        <div class="container">
+            <a href="index.html" aria-label="CMI Group home">CMI Group</a>
+            <a href="contact.html">Other ways to contact us</a>
+        </div>
+    </header>
+    <main id="main-content" class="chat-page">
+        <div class="container chat-container">
+            <div class="chat-intro">
+                <p class="sub-title">CMI Group support</p>
+                <h1>How can we help with your project?</h1>
+                <p>Send a message to our team about construction, estimates, site visits, or property management. We’ll reply here and send a notification to your email.</p>
+                <p class="chat-privacy-note">Please don’t send payment details, passwords, or sensitive documents in chat. Messages are stored so the team can respond. Read our <a href="policies.html">privacy information</a>.</p>
+            </div>
+
+            <section class="chat-card" aria-labelledby="chat-card-title">
+                <div class="chat-card-heading">
+                    <div>
+                        <h2 id="chat-card-title">Chat with CMI Group</h2>
+                        <p id="chat-status" role="status" aria-live="polite">Start a conversation and we’ll get back to you.</p>
+                    </div>
+                    <span class="chat-availability"><span aria-hidden="true"></span> Messages monitored by our team</span>
+                </div>
+
+                <form id="chat-start-form" class="chat-form">
+                    <div class="chat-honeypot" aria-hidden="true">
+                        <label for="chat-website">Leave this field empty</label>
+                        <input id="chat-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                    </div>
+                    <div class="form-grp">
+                        <label for="chat-name">Your name</label>
+                        <input id="chat-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+                    </div>
+                    <div class="form-grp">
+                        <label for="chat-email">Email address</label>
+                        <input id="chat-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+                        <small>We’ll email you when the team replies.</small>
+                    </div>
+                    <div class="form-grp">
+                        <label for="chat-first-message">Your message</label>
+                        <textarea id="chat-first-message" name="message" rows="5" maxlength="4000" required placeholder="What are you planning, and where is your project?"></textarea>
+                    </div>
+                    <p class="chat-error" id="chat-start-error" role="alert"></p>
+                    <button class="btn" type="submit">Start chat</button>
+                </form>
+
+                <section id="chat-thread" class="chat-thread" hidden aria-label="Your conversation">
+                    <ol id="chat-messages" class="chat-messages" aria-live="polite" aria-relevant="additions"></ol>
+                    <form id="chat-reply-form" class="chat-reply-form">
+                        <label for="chat-reply">Write a message</label>
+                        <textarea id="chat-reply" name="message" rows="3" maxlength="4000" required></textarea>
+                        <p class="chat-error" id="chat-reply-error" role="alert"></p>
+                        <div class="chat-reply-actions">
+                            <span id="chat-reply-notice" role="status" aria-live="polite"></span>
+                            <button class="btn" type="submit">Send message</button>
+                        </div>
+                    </form>
+                    <button id="chat-new-button" class="chat-new-button" type="button" hidden>Start a new conversation</button>
+                </section>
+            </section>
+            <p class="chat-contact-fallback">Need urgent help? <a href="tel:+256789612187">Call +256 789 612 187</a> or <a href="mailto:cmi.groupuganda@gmail.com">email our team</a>.</p>
+        </div>
+    </main>
+    <footer class="chat-site-footer">
+        <div class="container"><a href="index.html">CMI Group Uganda</a><span>Construction and property support in Uganda</span></div>
+    </footer>
+</body>
+</html>

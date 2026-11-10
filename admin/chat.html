@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>CMI Group Chat Inbox</title>
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/chat.css">
+    <style>
+        body { min-height: 100vh; background: #f5f6f8; }
+        .inbox-shell { max-width: 1280px; }
+        .inbox-layout { display: grid; grid-template-columns: minmax(260px, .75fr) minmax(0, 1.5fr); gap: 1rem; }
+        .inbox-list, .inbox-thread { min-height: 65vh; }
+        .inbox-items { display: grid; gap: .5rem; }
+        .inbox-item { width: 100%; padding: .8rem; border: 1px solid #e3e7ec; border-radius: .5rem; background: #fff; color: #17243a; text-align: left; }
+        .inbox-item[aria-current="true"] { border-color: #c7511d; box-shadow: 0 0 0 2px rgb(199 81 29 / 15%); }
+        .inbox-item strong, .inbox-item span { display: block; }
+        .inbox-item span { overflow: hidden; color: #596577; font-size: .85rem; text-overflow: ellipsis; white-space: nowrap; }
+        .inbox-status { min-height: 1.5rem; }
+        .inbox-thread .chat-messages { max-height: 48vh; }
+        .inbox-thread-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+        .inbox-empty { display: grid; min-height: 40vh; place-items: center; color: #596577; text-align: center; }
+        @media (max-width: 767px) { .inbox-layout { grid-template-columns: 1fr; } .inbox-list { min-height: auto; } }
+    </style>
+    <script src="chat.js" defer></script>
+</head>
+<body>
+    <main class="container inbox-shell py-4 py-lg-5">
+        <header class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="text-uppercase mb-1">CMI Group · Staff only</p>
+                <h1 class="h2 mb-1">Website chat inbox</h1>
+                <p class="mb-0">Signed in as <span id="staff-email">verifying access…</span></p>
+            </div>
+            <nav class="d-flex flex-wrap gap-2" aria-label="Staff links">
+                <a class="btn btn-outline-primary" href="index.html">Content management</a>
+                <a class="btn btn-outline-secondary" href="../chat.html">Public chat</a>
+            </nav>
+        </header>
+        <p id="inbox-status" class="alert alert-info inbox-status" role="status" aria-live="polite">Checking staff access and chat storage…</p>
+        <div class="inbox-layout">
+            <section class="card inbox-list" aria-labelledby="inbox-list-heading">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h4 mb-0" id="inbox-list-heading">Conversations</h2>
+                        <button id="refresh-inbox" class="btn btn-sm btn-outline-secondary" type="button">Refresh</button>
+                    </div>
+                    <div id="inbox-items" class="inbox-items"></div>
+                </div>
+            </section>
+            <section class="card inbox-thread" aria-labelledby="thread-heading">
+                <div class="card-body">
+                    <div id="thread-empty" class="inbox-empty">Select a conversation to view messages and reply.</div>
+                    <div id="thread-content" hidden>
+                        <div class="inbox-thread-meta mb-3">
+                            <div>
+                                <h2 id="thread-heading" class="h4 mb-1"></h2>
+                                <a id="visitor-email" href=""></a>
+                                <p id="thread-details" class="small text-muted mb-0"></p>
+                            </div>
+                            <button id="toggle-status" class="btn btn-outline-secondary" type="button"></button>
+                        </div>
+                        <ol id="staff-messages" class="chat-messages" aria-live="polite" aria-relevant="additions"></ol>
+                        <form id="staff-reply-form" class="chat-reply-form">
+                            <label for="staff-reply">Reply to visitor</label>
+                            <textarea id="staff-reply" rows="3" maxlength="4000" required></textarea>
+                            <p id="reply-error" class="chat-error" role="alert"></p>
+                            <div class="chat-reply-actions">
+                                <span id="reply-notice" role="status" aria-live="polite"></span>
+                                <button class="btn" type="submit">Send reply</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

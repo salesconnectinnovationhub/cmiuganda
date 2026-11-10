@@ -29,7 +29,7 @@ export async function onRequestGet({ request, env }) {
       ).bind(conversationId).first();
       if (!conversation) return chatResponse({ error: "Conversation not found." }, 404);
       const { results } = await env.DB.prepare(
-        "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, id LIMIT 200",
+        "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, rowid LIMIT 200",
       ).bind(conversationId).all();
       return chatResponse({ conversation, messages: results || [] });
     }
@@ -37,7 +37,7 @@ export async function onRequestGet({ request, env }) {
     const { results } = await env.DB.prepare(
       `SELECT c.id, c.visitor_name AS visitorName, c.visitor_email AS visitorEmail,
         c.status, c.created_at AS createdAt, c.updated_at AS updatedAt,
-        (SELECT m.body FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC, m.id DESC LIMIT 1) AS lastMessage
+        (SELECT m.body FROM chat_messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC, m.rowid DESC LIMIT 1) AS lastMessage
        FROM chat_conversations c ORDER BY CASE c.status WHEN 'open' THEN 0 ELSE 1 END, c.updated_at DESC LIMIT 100`,
     ).all();
     return chatResponse({ conversations: results || [], staffEmail: staff.email });
@@ -49,6 +49,9 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
   if (!hasSameOrigin(request)) return chatResponse({ error: "Send staff replies from the CMI Group admin site." }, 403);
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return chatResponse({ error: "Staff replies must be sent as JSON." }, 415);
+  }
   const staff = await authorizeChatStaff(request, env);
   if (staff.error) return staff.error;
   if (!env.DB) return databaseUnavailable();
@@ -102,6 +105,9 @@ export async function onRequestPost({ request, env }) {
 
 export async function onRequestPatch({ request, env }) {
   if (!hasSameOrigin(request)) return chatResponse({ error: "Update chats from the CMI Group admin site." }, 403);
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return chatResponse({ error: "Chat status updates must be sent as JSON." }, 415);
+  }
   const staff = await authorizeChatStaff(request, env);
   if (staff.error) return staff.error;
   if (!env.DB) return databaseUnavailable();

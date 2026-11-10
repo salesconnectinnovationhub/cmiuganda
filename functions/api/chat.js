@@ -36,7 +36,7 @@ export async function onRequestGet({ request, env }) {
     if (!conversation) return chatResponse({ error: "This chat could not be found. Start a new conversation." }, 404);
 
     const { results } = await env.DB.prepare(
-      "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, id LIMIT 200",
+      "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, rowid LIMIT 200",
     ).bind(conversationId).all();
     return chatResponse({ conversation: { id: conversation.id, status: conversation.status }, messages: results || [] });
   } catch (error) {
@@ -47,6 +47,9 @@ export async function onRequestGet({ request, env }) {
 
 export async function onRequestPost({ request, env }) {
   if (!hasSameOrigin(request)) return chatResponse({ error: "Send messages from the CMI Group website." }, 403);
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return chatResponse({ error: "Chat messages must be sent as JSON." }, 415);
+  }
   if (!env.DB) return databaseUnavailable();
 
   const parsed = await readChatJson(request);
