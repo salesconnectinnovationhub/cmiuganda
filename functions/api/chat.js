@@ -36,9 +36,9 @@ export async function onRequestGet({ request, env }) {
     if (!conversation) return chatResponse({ error: "This chat could not be found. Start a new conversation." }, 404);
 
     const { results } = await env.DB.prepare(
-      "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at, rowid LIMIT 200",
+      "SELECT id, sender, body, created_at AS createdAt FROM chat_messages WHERE conversation_id = ? ORDER BY created_at DESC, rowid DESC LIMIT 200",
     ).bind(conversationId).all();
-    return chatResponse({ conversation: { id: conversation.id, status: conversation.status }, messages: results || [] });
+    return chatResponse({ conversation: { id: conversation.id, status: conversation.status }, messages: (results || []).reverse() });
   } catch (error) {
     console.error("Could not load a visitor chat conversation.", error);
     return chatResponse({ error: "Your conversation could not be loaded. Please try again." }, 500);

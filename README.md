@@ -60,7 +60,21 @@ Key endpoints:
 - server-side validation for email, phone, and message formatting
 - spam honeypot protection using a hidden `website` field
 
-### 3. Review system
+### 3. Website chat
+Visitors use the same-site `chat.html` page to create persistent conversations
+and receive replies by email. Conversations and messages are stored in the
+Cloudflare D1 database. Staff manage the inbox at `/admin/chat.html`, protected
+by Cloudflare Access and the CMS editor/approver email allowlists. The visitor
+interface polls for updates while open; messages are also sent through the
+existing Resend email integration so conversations do not depend on a separate
+chat service or the visitor keeping the browser tab open.
+
+Apply `functions/chat-schema.sql` to the D1 database bound as `DB` before
+enabling this feature. The chat needs the same verified Resend sender settings
+as the contact forms. Apply a Cloudflare rate-limit rule to `POST /api/chat`
+and verify the staff Access application protects `/admin/*`.
+
+### 4. Review system
 The site includes a public review form and a moderation/admin reply workflow.
 
 - visitors submit ratings and comments
@@ -69,7 +83,7 @@ The site includes a public review form and a moderation/admin reply workflow.
 - public replies are rendered below each review
 - review API is protected by Cloudflare Access checks for authorized admins
 
-### 4. Content management system (CMS)
+### 5. Content management system (CMS)
 The admin dashboard in `admin/` lets authorized staff manage website content without editing HTML directly.
 
 Managed content types include:
@@ -93,7 +107,7 @@ report. It stores daily aggregate counts by event and public page path, without
 visitor IDs, cookies, query strings, form content, or IP addresses. Apply
 `functions/analytics-schema.sql` to the bound D1 database before enabling it.
 
-### 5. Property management and listings
+### 6. Property management and listings
 The property-management page provides a public-facing property and asset oversight experience. Listing content can be managed through the admin CMS and stored in D1, with fields such as:
 
 - title
@@ -108,7 +122,7 @@ The property-management page provides a public-facing property and asset oversig
 
 This allows CMI to maintain a clean property catalog without manually editing page templates.
 
-### 6. Wall/block estimator
+### 7. Wall/block estimator
 A standalone estimator lets visitors estimate masonry quantities for wall sections.
 
 Features include:
@@ -123,10 +137,10 @@ Features include:
 
 The estimator is a preliminary planning tool and clearly states that it is not a quotation or full bill of quantities.
 
-### 7. Payments and contact actions
+### 8. Payments and contact actions
 The repo includes payment-related pages such as `pay.html`, `payments.html`, and `pay.js`. These support customer payment flows and provide a way for visitors to send money or contact the company for billing and transaction inquiries.
 
-### 8. Legacy and compatibility files
+### 9. Legacy and compatibility files
 The project retains legacy PHP handlers and their PHPMailer dependency in
 `submit/` for reference. Public forms use Cloudflare Pages Functions. The old
 AJAX form script was removed because it was not needed and could duplicate the

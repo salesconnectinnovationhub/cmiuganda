@@ -1,7 +1,40 @@
 # Expression-of-interest email
 
+## Same-site customer chat
+
+`/chat.html` uses the Pages Function at `POST /api/chat` to open a conversation
+and add visitor messages. Visitors receive a random bearer token; only its
+SHA-256 digest is stored with the conversation. The token is retained in the
+current browser session, while every new visitor message and every staff reply
+also sends an email notification through the configured Resend sender.
+
+Staff use `/admin/chat.html`. The page is expected to be covered by the existing
+Cloudflare Access application for `/admin*`; the API independently verifies
+the Cloudflare Access JWT against `CF_ACCESS_CMS_AUD` and allows only addresses
+in `CMS_EDITOR_EMAILS` or `CMS_APPROVER_EMAILS`.
+
+Before deploying chat:
+
+1. Apply `functions/chat-schema.sql` to the D1 database bound to Pages as `DB`:
+   `npx wrangler d1 execute <database-name> --remote --file=functions/chat-schema.sql`
+2. Verify the Resend sender settings (`CMI_FROM_EMAIL` and `RESEND_API_KEY`) used
+   by the contact forms. Chat messages are saved even if an email notification
+   fails; the UI surfaces that failure.
+3. Configure and test a Cloudflare rate-limit rule for `POST /api/chat`. Start
+   with a per-IP threshold that permits a normal conversation (for example 20
+   requests per 60 seconds) and returns HTTP 429 only after the threshold.
+4. Verify the Access application protects `/admin/chat.html`, and test the
+   inbox, visitor messages, staff replies, close/reopen status, and email
+   notifications with test addresses before launch.
+
+Chat history is stored in D1 until removed under an approved retention process;
+no retention period or automated deletion policy is configured by this code.
+Do not treat email delivery as guaranteed chat availability. Check the inbox and
+Resend activity during launch verification.
+
 The Cloudflare Pages Functions at `POST /api/interest` and `POST /api/contact`
-send both public contact forms to `cmigroupuganda@gmail.com` through Resend.
+send both public contact forms to `cmi.groupuganda@gmail.com` (the public
+contact email) through Resend.
 They validate submitted fields on the server and return success only when the
 email provider accepts the message.
 

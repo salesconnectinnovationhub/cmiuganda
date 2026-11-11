@@ -1,6 +1,6 @@
 ﻿const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
-export const RECIPIENT = "cmigroupuganda@gmail.com";
+export const RECIPIENT = "cmi.groupuganda@gmail.com";
 
 export function response(message, status, title = "CMI Group message") {
   const safeMessage = message.replace(/[&<>"']/g, (character) => ({

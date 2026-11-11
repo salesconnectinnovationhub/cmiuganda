@@ -23,9 +23,13 @@ or CI logs.
       `CMS_EDITOR_EMAILS` and `CMS_APPROVER_EMAILS` allowlists.
 - [ ] Configure staging `CMI_FROM_EMAIL` and `RESEND_API_KEY` using encrypted
       Cloudflare secrets. Confirm the sender domain is verified in Resend.
+- [ ] Confirm the Cloudflare Access application protects `/admin/*`, including
+      `/admin/chat.html`, and the chat API allowlists only authorized CMS staff.
 - [ ] Back up the staging D1 database before applying SQL.
 - [ ] For a fresh database, apply `functions/cms-schema.sql` and
       `functions/reviews-schema.sql` when reviews are enabled.
+- [ ] Apply `functions/chat-schema.sql` to the staging D1 database before
+      testing the same-site chat.
 - [ ] For an existing database, apply only the required upgrade scripts in
       order. Follow the settings migration instructions in
       `functions/README.md`; apply `functions/cms-resource-migration.sql` only
@@ -53,13 +57,16 @@ or CI logs.
 ## Public workflows and release record
 
 - [ ] Confirm Cloudflare zone rate-limit rules cover `/api/contact` and
-      `/api/interest`, and cover `POST /api/reviews` when method matching is
-      available. Verify a threshold-crossing staging request receives HTTP 429
-      without blocking normal review reads.
+      `/api/interest`, `POST /api/chat`, and `POST /api/reviews` when method
+      matching is available. Verify a threshold-crossing staging request
+      receives HTTP 429 without blocking normal review reads.
 - [ ] Submit a staging contact form and an expression of interest with test
       details. Confirm each message arrives in the intended test inbox and
       appears as accepted in Resend activity; a 200 response alone is not proof
       of delivery.
+- [ ] Open a public chat, send messages from the visitor page, reply from the
+      staff inbox, and confirm email notifications, persistence, close/reopen,
+      same-origin validation, and unauthorized staff rejection.
 - [ ] Submit a review, verify it appears publicly, then publish/edit a reply as
       the authorized review administrator and confirm unauthorized accounts
       cannot do so.
