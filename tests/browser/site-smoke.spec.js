@@ -108,7 +108,9 @@ test("homepage embeds the CMI Group project video feed without a click", async (
 
     const video = page.locator("#youtube-videos iframe");
     await expect(video).toHaveAttribute("title", "CMI Group project videos");
-    await expect(video).toHaveAttribute("src", /youtube-nocookie\.com\/embed\/videoseries\?list=/);
+    await expect(video).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/videoseries?list=UUa3V24ALFnDtzuyOugOEQcA");
+    await expect(page.locator(".testimonial-area").locator("xpath=following-sibling::section[@id='youtube-videos']")).toHaveCount(1);
+    await expect(page.getByRole("link", { name: "Visit the CMI Group YouTube channel" })).toHaveAttribute("href", "https://youtube.com/@cmigroupuganda?si=jyNaFJrmtMHXYjsk");
     await expect(page.getByRole("heading", { name: "Local delivery. Clear decisions. Confidence from anywhere." })).toBeVisible();
     await expect(page.getByRole("heading", { name: "How We Work" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");

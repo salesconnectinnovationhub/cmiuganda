@@ -1308,6 +1308,9 @@ label {
 	overflow: hidden;
 	background: #102b3d;
 }
+.home-video-frame .cmi-video-player {
+	height: 100%;
+}
 .home-video-launch {
 	position: relative;
 	display: grid;
