@@ -235,11 +235,17 @@ Then open:
 http://localhost:8000
 ```
 
-Do not open pages directly with `file://`. The public CMS uses `/api/cms`
-endpoints, which are unavailable when serving static files with Python; run
-the Cloudflare Pages preview below to test CMS-backed content locally.
+Do not open pages directly with `file://`: browser requests such as
+`/api/contact` resolve to a local disk path (for example, `D:/api/contact`)
+instead of reaching the website. Contact and quotation emails are sent by
+Cloudflare Pages Functions, so use the Pages preview below or the deployed
+website to submit forms. The public CMS also uses `/api/cms` endpoints, which
+are unavailable when serving static files with Python.
 
 2. For Cloudflare Functions, preview the site using Wrangler or deploy to Cloudflare Pages.
+   To test email delivery locally, the Pages preview also needs the
+   `RESEND_API_KEY` and `CMI_FROM_EMAIL` values configured; the sender must be
+   verified in Resend. Never commit these values to the repository.
 
 Example:
 

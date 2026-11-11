@@ -700,6 +700,10 @@
                     const submitButton = form.querySelector('[type="submit"]');
                     const submitStatus = form.querySelector('.form-submit-status');
                     const isInterest = form.classList.contains('interestForm');
+                    if (window.location.protocol === 'file:') {
+                        submitStatus.textContent = 'Email delivery is unavailable when this page is opened as a local file. Open the CMI Group website or a Cloudflare Pages preview to send your message.';
+                        return;
+                    }
                     if (submitButton) submitButton.disabled = true;
                     submitStatus.textContent = 'Sending your message...';
                     fetch(form.action, {

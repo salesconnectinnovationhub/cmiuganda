@@ -9,6 +9,11 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
             throw new Error("The project enquiry form is missing its submit controls.");
         }
 
+        if (window.location.protocol === "file:") {
+            status.textContent = "Email delivery is unavailable when this page is opened as a local file. Open the CMI Group website or a Cloudflare Pages preview to send your enquiry.";
+            return;
+        }
+
         submitButton.disabled = true;
         status.textContent = "Sending your enquiry...";
         try {
