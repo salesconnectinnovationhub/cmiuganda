@@ -123,7 +123,7 @@
                     <div class="col-xl-8 col-lg-10">
                         <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
                             <h1 class="title">Tell us what you need help with</h1>
-                            <p>Choose a short enquiry or a more detailed expression of interest. Website enquiries and quotation requests are routed to cmi.groupuganda@gmail.com so our team can follow up. For a faster conversation, call, email, or message us directly.</p>
+                            <p>Choose a short enquiry or a more detailed expression of interest. Submitting opens a prefilled email to cmi.groupuganda@gmail.com in your email app. Review the draft and press Send; no Cloudflare email service or API is used. For a faster conversation, call or message us directly.</p>
                             <p class="contact-direct-options"><a href="tel:+256789612187">Call +256 789 612 187</a> · <a href="mailto:cmi.groupuganda@gmail.com">Email CMI Group</a> · <a href="https://wa.me/message/DYT6JQFKYJNLF1" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
                             <div class="contact-choice-group" aria-label="Contact form selector">
                                 <button class="contact-choice-btn is-active" type="button" data-form-target="contact-form-panel">General enquiry</button>
@@ -131,7 +131,7 @@
                             </div>
 
                             <div id="contact-form-panel" class="contact-form-panel">
-                                <form id="contact-form" action="/api/contact" class="contact-form" method="post" novalidate>
+                                <form id="contact-form" action="mailto:cmi.groupuganda@gmail.com" class="contact-form" method="post" enctype="text/plain" novalidate>
                                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                                         <label for="contact-website">Leave this field empty</label>
                                         <input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off">
@@ -179,7 +179,7 @@
                             </div>
 
                             <div id="interest-form-panel" class="contact-form-panel is-hidden">
-                                <form action="/api/interest" class="interestForm" method="post" novalidate>
+                                <form action="mailto:cmi.groupuganda@gmail.com" class="interestForm" method="post" enctype="text/plain" novalidate>
                                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                                         <label for="interest-website">Leave this field empty</label>
                                         <input id="interest-website" name="website" type="text" tabindex="-1" autocomplete="off">
@@ -606,6 +606,7 @@
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/contact-estimate-prefill.js"></script>
+    <script src="assets/js/email-form.js"></script>
     <script src="assets/js/cms-public.js" defer></script>
     <script>
         (function () {
@@ -702,33 +703,8 @@
                     }
 
                     event.preventDefault();
-                    const submitButton = form.querySelector('[type="submit"]');
                     const submitStatus = form.querySelector('.form-submit-status');
-                    const isInterest = form.classList.contains('interestForm');
-                    if (window.location.protocol === 'file:') {
-                        submitStatus.textContent = 'Email delivery is unavailable when this page is opened as a local file. Open the CMI Group website or a Cloudflare Pages preview to send your message.';
-                        return;
-                    }
-                    if (submitButton) submitButton.disabled = true;
-                    submitStatus.textContent = 'Sending your message...';
-                    fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-                            'Accept': 'text/plain',
-                        },
-                        body: new URLSearchParams(new FormData(form)).toString(),
-                    }).then(async (response) => {
-                        const message = await response.text();
-                        if (!response.ok) throw new Error(message || 'Your message could not be sent. Please try again.');
-                        submitStatus.textContent = message;
-                        form.reset();
-                        window.cmiTrackConversion?.(isInterest ? 'interest_submit' : 'contact_submit');
-                    }).catch((error) => {
-                        submitStatus.textContent = error.message || 'Your message could not be sent. Please try again.';
-                    }).finally(() => {
-                        if (submitButton) submitButton.disabled = false;
-                    });
+                    window.cmiEmailForm.openDraft(form, submitStatus);
                 });
             });
         })();

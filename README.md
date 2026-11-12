@@ -1,6 +1,6 @@
 ﻿# CMI Group Uganda
 
-CMI Group Uganda is a static marketing and lead-generation website for CMI Group Co. Ltd, a construction, property, and home-building company serving clients in Uganda and the diaspora. The repository combines a multi-page front-end with Cloudflare Pages Functions for contact handling, reviews, and a lightweight CMS so the company can manage public content without a traditional backend server.
+CMI Group Uganda is a static marketing and lead-generation website for CMI Group Co. Ltd, a construction, property, and home-building company serving clients in Uganda and the diaspora. The repository combines a multi-page front-end with Cloudflare Pages Functions for chat, reviews, and a lightweight CMS so the company can manage public content without a traditional backend server.
 
 ## Project purpose
 
@@ -12,7 +12,7 @@ This project supports the public website for:
 - lead capture and enquiry handling
 - public reviews and admin-managed content updates
 
-The site is designed for Cloudflare Pages deployment and uses serverless functions to process form submissions and database-backed content.
+The site is designed for Cloudflare Pages deployment. Website enquiries use the visitor's email app; other features use serverless functions and database-backed content.
 
 ## What this repo contains
 
@@ -56,14 +56,16 @@ separately selected featured video. Update the featured video's ID and title in
 as new channel videos are published.
 
 ### 2. Enquiry and contact forms
-Public forms collect client details and send them by email via Cloudflare Pages Functions. The API handlers validate input length and format, block obvious spam fields, and send messages through Resend.
+Public enquiry forms prepare a prefilled email addressed to
+`cmi.groupuganda@gmail.com` in the visitor's email app. Visitors review the draft
+and press Send themselves. This path does not use a Cloudflare email function,
+API key, or paid email service, but it does require an email app/account set up
+on the visitor's device.
 
-Key endpoints:
-
-- `POST /api/contact` for general enquiries
-- `POST /api/interest` for project expressions of interest
-- server-side validation for email, phone, and message formatting
-- spam honeypot protection using a hidden `website` field
+The detailed project-interest form and the shorter enquiry forms share this
+flow. The old `/api/contact` and `/api/interest` handlers remain in
+`functions/` for optional server-side use, but the public website forms do not
+call them.
 
 ### 3. Website chat
 Visitors use the same-site `chat.html` page to create persistent conversations
@@ -75,9 +77,9 @@ existing Resend email integration so conversations do not depend on a separate
 chat service or the visitor keeping the browser tab open.
 
 Apply `functions/chat-schema.sql` to the D1 database bound as `DB` before
-enabling this feature. The chat needs the same verified Resend sender settings
-as the contact forms. Apply a Cloudflare rate-limit rule to `POST /api/chat`
-and verify the staff Access application protects `/admin/*`.
+enabling this feature. Chat email notifications require the verified Resend
+sender settings. Apply a Cloudflare rate-limit rule to `POST /api/chat` and
+verify the staff Access application protects `/admin/*`.
 
 ### 4. Review system
 The site includes a public review form and a moderation/admin reply workflow.
@@ -211,7 +213,7 @@ other runtime data. See `ASSET-STRATEGY.md` before reorganizing media.
 
 This project is designed to run on Cloudflare Pages with Pages Functions enabled.
 
-Required setup commonly includes:
+Required setup for server-backed features commonly includes:
 
 - D1 database binding named `DB`
 - `CMI_FROM_EMAIL` environment variable
@@ -219,9 +221,9 @@ Required setup commonly includes:
 - Cloudflare Access configuration for admin panels and review moderation
 - deployment of the `functions/` directory with the main site
 
-The `functions/README.md` file contains the operational deployment notes for
-forms, reviews, CMS roles, revisions, contact settings, and the database
-migration required when upgrading an existing CMS database.
+The `functions/README.md` file contains operational deployment notes for chat,
+the optional legacy form endpoints, reviews, CMS roles, revisions, contact
+settings, and database migrations.
 
 ## Local development
 
@@ -240,17 +242,16 @@ Then open:
 http://localhost:8000
 ```
 
-Do not open pages directly with `file://`: browser requests such as
-`/api/contact` resolve to a local disk path (for example, `D:/api/contact`)
-instead of reaching the website. Contact and quotation emails are sent by
-Cloudflare Pages Functions, so use the Pages preview below or the deployed
-website to submit forms. The public CMS also uses `/api/cms` endpoints, which
-are unavailable when serving static files with Python.
+Opening pages with `file://` is not suitable for testing site features that
+call APIs. Enquiry forms can still prepare an email draft locally, but the
+public CMS and other Cloudflare Functions (such as chat) are unavailable when
+serving static files with Python.
 
 2. For Cloudflare Functions, preview the site using Wrangler or deploy to Cloudflare Pages.
-   To test email delivery locally, the Pages preview also needs the
-   `RESEND_API_KEY` and `CMI_FROM_EMAIL` values configured; the sender must be
-   verified in Resend. Never commit these values to the repository.
+   Chat email notifications and optional legacy form API delivery need
+   `RESEND_API_KEY` and `CMI_FROM_EMAIL` configured; the sender must be verified
+   in Resend. Website enquiry forms do not need these settings. Never commit
+   these values to the repository.
 
 Example:
 

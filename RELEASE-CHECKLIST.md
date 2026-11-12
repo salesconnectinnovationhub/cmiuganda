@@ -21,8 +21,9 @@ or CI logs.
 - [ ] Configure staging-only `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_CMS_AUD`,
       and, when reviews are enabled, `CF_ACCESS_AUD`. Configure explicit
       `CMS_EDITOR_EMAILS` and `CMS_APPROVER_EMAILS` allowlists.
-- [ ] Configure staging `CMI_FROM_EMAIL` and `RESEND_API_KEY` using encrypted
-      Cloudflare secrets. Confirm the sender domain is verified in Resend.
+- [ ] If chat email notifications or optional legacy contact endpoints are
+      enabled, configure staging `CMI_FROM_EMAIL` and `RESEND_API_KEY` using
+      encrypted Cloudflare secrets and confirm the sender domain is verified.
 - [ ] Confirm the Cloudflare Access application protects `/admin/*`, including
       `/admin/chat.html`, and the chat API allowlists only authorized CMS staff.
 - [ ] Back up the staging D1 database before applying SQL.
@@ -56,14 +57,14 @@ or CI logs.
 
 ## Public workflows and release record
 
-- [ ] Confirm Cloudflare zone rate-limit rules cover `/api/contact` and
-      `/api/interest`, `POST /api/chat`, and `POST /api/reviews` when method
-      matching is available. Verify a threshold-crossing staging request
+- [ ] Confirm Cloudflare zone rate-limit rules cover `POST /api/chat` and
+      `POST /api/reviews` when method matching is available. Verify a
+      threshold-crossing staging request
       receives HTTP 429 without blocking normal review reads.
-- [ ] Submit a staging contact form and an expression of interest with test
-      details. Confirm each message arrives in the intended test inbox and
-      appears as accepted in Resend activity; a 200 response alone is not proof
-      of delivery.
+- [ ] Submit a staging contact form and an expression of interest. Confirm
+      each opens a draft addressed to `cmi.groupuganda@gmail.com`, then press
+      Send in the configured email app and verify delivery. These forms do not
+      call Cloudflare email APIs.
 - [ ] Open a public chat, send messages from the visitor page, reply from the
       staff inbox, and confirm email notifications, persistence, close/reopen,
       same-origin validation, and unauthorized staff rejection.
@@ -71,7 +72,7 @@ or CI logs.
       the authorized review administrator and confirm unauthorized accounts
       cannot do so.
 - [ ] Test the estimator quote handoff through the contact form and confirm
-      the estimate summary is present and editable.
+      the estimate summary is present in the editable email draft.
 - [ ] Check the gallery at mobile and desktop widths; confirm responsive
       thumbnails load in supported formats and each card still opens its
       original full-resolution photo.

@@ -2,10 +2,16 @@ import { expect, test } from "@playwright/test";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-test("contact form explains why local-file submissions cannot be sent", async ({ page }) => {
-    let contactRequests = 0;
+test("contact form opens a prefilled CMI email draft from a local file", async ({ page }) => {
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
+    });
+    let apiRequests = 0;
     page.on("request", (request) => {
-        if (/\/api\/(contact|interest)$/.test(request.url())) contactRequests += 1;
+        if (/\/api\/(contact|interest)$/.test(request.url())) apiRequests += 1;
     });
 
     await page.goto(pathToFileURL(resolve("contact.html")).href);
@@ -17,14 +23,23 @@ test("contact form explains why local-file submissions cannot be sent", async ({
     await page.getByRole("button", { name: "Send message" }).click();
 
     await expect(page.locator("#contact-form .form-submit-status"))
-        .toContainText("unavailable when this page is opened as a local file");
-    expect(contactRequests).toBe(0);
+        .toContainText("email app should open a draft");
+    const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
+    expect(draftUrl).toContain("mailto:cmi.groupuganda@gmail.com");
+    expect(new URL(draftUrl).searchParams.get("body")).toContain("I would like to discuss a project.");
+    expect(apiRequests).toBe(0);
 });
 
-test("project enquiry form explains why local-file submissions cannot be sent", async ({ page }) => {
-    let contactRequests = 0;
+test("homepage enquiry opens a prefilled CMI email draft from a local file", async ({ page }) => {
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
+    });
+    let apiRequests = 0;
     page.on("request", (request) => {
-        if (/\/api\/contact$/.test(request.url())) contactRequests += 1;
+        if (/\/api\/contact$/.test(request.url())) apiRequests += 1;
     });
 
     await page.goto(pathToFileURL(resolve("index.html")).href);
@@ -36,6 +51,9 @@ test("project enquiry form explains why local-file submissions cannot be sent", 
     await page.locator("#home-enquiry [type='submit']").click();
 
     await expect(page.locator("#home-enquiry .form-submit-status"))
-        .toContainText("unavailable when this page is opened as a local file");
-    expect(contactRequests).toBe(0);
+        .toContainText("email app should open a draft");
+    const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
+    expect(draftUrl).toContain("mailto:cmi.groupuganda@gmail.com");
+    expect(new URL(draftUrl).searchParams.get("body")).toContain("I would like to discuss a project.");
+    expect(apiRequests).toBe(0);
 });

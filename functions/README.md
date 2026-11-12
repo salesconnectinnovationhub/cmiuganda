@@ -17,9 +17,9 @@ Before deploying chat:
 
 1. Apply `functions/chat-schema.sql` to the D1 database bound to Pages as `DB`:
    `npx wrangler d1 execute <database-name> --remote --file=functions/chat-schema.sql`
-2. Verify the Resend sender settings (`CMI_FROM_EMAIL` and `RESEND_API_KEY`) used
-   by the contact forms. Chat messages are saved even if an email notification
-   fails; the UI surfaces that failure.
+2. Verify the Resend sender settings (`CMI_FROM_EMAIL` and `RESEND_API_KEY`)
+   used for chat notifications. Chat messages are saved even if an email
+   notification fails; the UI surfaces that failure.
 3. Configure and test a Cloudflare rate-limit rule for `POST /api/chat`. Start
    with a per-IP threshold that permits a normal conversation (for example 20
    requests per 60 seconds) and returns HTTP 429 only after the threshold.
@@ -32,33 +32,36 @@ no retention period or automated deletion policy is configured by this code.
 Do not treat email delivery as guaranteed chat availability. Check the inbox and
 Resend activity during launch verification.
 
-The Cloudflare Pages Functions at `POST /api/contact` and `POST /api/interest`
-send general enquiries, quotation requests, consultations, and detailed
-expressions of interest to `cmi.groupuganda@gmail.com` (the public contact
-email) through Resend. The Pages Functions validate submitted fields on the
-server and return success only when the email provider accepts the message.
+The public website enquiry and interest forms open a prefilled `mailto:` draft
+to `cmi.groupuganda@gmail.com` in the visitor's email app. The visitor must
+review and send the draft; the website does not make a Cloudflare/API request or
+send email automatically. This works without an email-provider account or
+service fee, but relies on the visitor having an email app configured.
+
+The Pages Functions at `POST /api/contact` and `POST /api/interest` remain
+available as optional legacy server-side endpoints; the public HTML forms do
+not call them. If these endpoints are used, they need Resend configuration.
 The legacy PHP contact handlers use the same recipient.
 
 If the legacy PHP handlers are deployed separately, configure
 `CMI_SMTP_HOST`, `CMI_SMTP_USERNAME`, `CMI_SMTP_PASSWORD`, and
 `CMI_SMTP_FROM_EMAIL` in that server's environment. They return HTTP 503 when
 these settings are missing. Rotate any SMTP credentials previously stored in
-source code; the current Pages deployment uses the Resend settings above.
+source code; chat and optional legacy Pages endpoints use the Resend settings above.
 
 ## Public submission abuse controls
 
-Contact and interest submissions require a same-origin `Origin` header in
-addition to server-side field validation and the honeypot. Review submissions
-also require a same-origin header. These checks reduce cross-site form abuse,
-but they are not a substitute for edge rate limiting.
+Review submissions require a same-origin header. The website's current contact
+forms open a visitor-side email draft and do not submit data to an API. The
+optional legacy contact and interest endpoints still validate same-origin
+requests and submitted fields.
 
-Configure a Cloudflare zone rate-limiting rule for the public form endpoints in
-the Cloudflare dashboard. Use the expression
-`http.request.uri.path in {"/api/contact" "/api/interest"}`, count by source
-IP, and start with 5 requests per 60 seconds with a 60-second block. Adjust
-after observing legitimate traffic. Since Pages Functions do not currently
-expose the Workers Rate Limiting API as a Pages binding, this rule is configured
-at the zone and is not deployed by application code.
+No Cloudflare IP/rate-limit rule or email API is needed for the current contact
+forms. If the optional legacy endpoints remain enabled and are used, protect
+them with an edge rate limit such as 5 requests per 60 seconds per source IP.
+Since Pages Functions do not currently expose the Workers Rate Limiting API as
+a Pages binding, any such rule is configured at the zone and is not deployed by
+application code.
 
 If the Cloudflare plan supports method matching and a second rule, separately
 protect review writes with
@@ -72,22 +75,18 @@ spam persists, consider adding Turnstile with server-side token verification.
 ## Cloudflare setup
 
 1. Deploy this site as a Cloudflare Pages project attached to
-   `https://cmigroupuganda.com`. Pages Functions must be enabled by deploying
-   the `functions/` directory with the site.
-2. Verify a sender domain in Resend, then configure the verified sender address
-   as the `CMI_FROM_EMAIL` Pages environment variable. The submitted email is
-   used as `Reply-To`; a Gmail address cannot be used as a Resend sender unless
-   that address/domain is verified with Resend.
-3. Add the Resend API key as the encrypted `RESEND_API_KEY` secret in the
-   Cloudflare Pages project settings. Do not put this key in site files.
-4. Deploy, then submit a real test form and confirm delivery in the recipient
-   inbox and Resend activity before treating EOI routing as live.
+   `https://cmigroupuganda.com` for features that use Pages Functions.
+2. The public enquiry and interest forms need no Cloudflare email settings.
+   Submit a test enquiry and confirm it opens a draft addressed to
+   `cmi.groupuganda@gmail.com`; press Send in the email app to verify delivery.
+3. If chat notifications or the optional legacy contact endpoints are enabled,
+   verify a sender domain in Resend, configure the verified sender as
+   `CMI_FROM_EMAIL`, and add `RESEND_API_KEY` as an encrypted Pages secret.
+   Do not put this key in site files.
 
 The repository does not contain Cloudflare deployment configuration or
-credentials, so deployment and delivery must be completed and verified in the
-CMI Group Cloudflare and Resend accounts. The legacy PHP handlers have also
-been pointed at the same inbox, but the public HTML forms now use the Cloudflare
-Pages Functions.
+credentials. The legacy PHP handlers have also been pointed at the same inbox,
+but the public HTML forms use the visitor's email app rather than those handlers.
 
 ## Public reviews and admin replies
 

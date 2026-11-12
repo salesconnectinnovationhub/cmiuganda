@@ -127,14 +127,16 @@ test("homepage embeds the CMI Group project video feed without a click", async (
     await expect(page.getByRole("link", { name: "Learn About CMI Group" })).toBeVisible();
 });
 
-test("contact conversion is recorded only after the API accepts the form", async ({ page }) => {
-    const analyticsEvents = [];
-    await page.route("**/api/contact", async (route) => {
-        await route.fulfill({ status: 200, contentType: "text/plain", body: "Message accepted." });
+test("contact form prepares a CMI email draft without calling an API", async ({ page }) => {
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
     });
-    await page.route("**/api/analytics", async (route) => {
-        analyticsEvents.push(route.request().postDataJSON());
-        await route.fulfill({ status: 204, body: "" });
+    const apiRequests = [];
+    page.on("request", (request) => {
+        if (/\/api\/(contact|interest|analytics)$/.test(request.url())) apiRequests.push(request.url());
     });
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { name: "Office locations in Uganda" })).toBeVisible();
@@ -147,8 +149,14 @@ test("contact conversion is recorded only after the API accepts the form", async
     await page.locator("#contact-message").fill("I would like to discuss a building project.");
     await page.getByRole("button", { name: "Send message" }).click();
 
-    await expect(page.locator("#contact-form .form-submit-status")).toHaveText("Message accepted.");
-    await expect.poll(() => analyticsEvents.some((event) => event.event === "contact_submit" && event.path === "/contact.html")).toBe(true);
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("email app should open a draft");
+    const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
+    const draft = new URL(draftUrl);
+    expect(draft.protocol).toBe("mailto:");
+    expect(draft.pathname).toBe("cmi.groupuganda@gmail.com");
+    expect(draft.searchParams.get("subject")).toContain("Test Visitor");
+    expect(draft.searchParams.get("body")).toContain("I would like to discuss a building project.");
+    expect(apiRequests).toEqual([]);
 });
 
 test("project enquiry forms appear at key conversion points", async ({ page }) => {
@@ -164,11 +172,12 @@ test("project enquiry forms appear at key conversion points", async ({ page }) =
     await expect(page.getByRole("link", { name: "Book a site visit" })).toHaveAttribute("href", "#home-enquiry");
 });
 
-test("embedded project enquiry form posts through the contact API", async ({ page }) => {
-    let submittedBody = "";
-    await page.route("**/api/contact", async (route) => {
-        submittedBody = route.request().postData() || "";
-        await route.fulfill({ status: 200, contentType: "text/plain", body: "Enquiry received." });
+test("embedded project enquiry form opens a CMI email draft", async ({ page }) => {
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
     });
     await page.goto("/services.html", { waitUntil: "domcontentloaded" });
     await page.locator("#service-first-name").fill("Test");
@@ -178,11 +187,13 @@ test("embedded project enquiry form posts through the contact API", async ({ pag
     await page.locator("#service-message").fill("I would like to discuss a building project in Kampala.");
     await page.locator("#service-enquiry-form").getByRole("button", { name: "Request a project consultation" }).click();
 
-    await expect(page.locator("#service-enquiry-form .form-submit-status")).toHaveText("Enquiry received.");
-    const formData = new URLSearchParams(submittedBody);
-    expect(formData.get("firstName")).toBe("Test");
-    expect(formData.get("lastName")).toBe("Visitor");
-    expect(formData.get("message")).toContain("Kampala");
+    await expect(page.locator("#service-enquiry-form .form-submit-status")).toContainText("email app should open a draft");
+    const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
+    const draft = new URL(draftUrl);
+    expect(draft.pathname).toBe("cmi.groupuganda@gmail.com");
+    expect(draft.searchParams.get("body")).toContain("First name: Test");
+    expect(draft.searchParams.get("body")).toContain("Last name: Visitor");
+    expect(draft.searchParams.get("body")).toContain("Kampala");
 });
 
 test("homepage CMS preview renders text as content rather than markup", async ({ page }) => {
@@ -224,10 +235,12 @@ test("mobile navigation supports keyboard open, escape, and focus return", async
 
 test("mobile contact flow switches forms and submits a valid enquiry", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.route("**/api/contact", async (route) => {
-        await route.fulfill({ status: 200, contentType: "text/plain", body: "Message accepted." });
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
     });
-    await page.route("**/api/analytics", async (route) => route.fulfill({ status: 204, body: "" }));
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
     await page.getByRole("button", { name: "Detailed project interest" }).click();
     await expect(page.locator("#interest-form-panel")).toBeVisible();
@@ -241,7 +254,38 @@ test("mobile contact flow switches forms and submits a valid enquiry", async ({ 
     await page.locator("#contact-phone").fill("+256700000000");
     await page.locator("#contact-message").fill("I would like to discuss a project.");
     await page.getByRole("button", { name: "Send message" }).click();
-    await expect(page.locator("#contact-form .form-submit-status")).toHaveText("Message accepted.");
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("email app should open a draft");
+    expect(await page.evaluate(() => window.__emailDraftUrl)).toContain("mailto:cmi.groupuganda@gmail.com");
+});
+
+test("detailed interest form includes selected services in the CMI email draft", async ({ page }) => {
+    await page.addInitScript(() => {
+        window.open = (url) => {
+            window.__emailDraftUrl = url;
+            return null;
+        };
+    });
+    await page.goto("/contact.html#express", { waitUntil: "domcontentloaded" });
+    await page.getByLabel("Full name").fill("Test Visitor");
+    await page.getByLabel("Email address").nth(1).fill("visitor@example.com");
+    await page.getByLabel("Phone number").nth(1).fill("+256700000000");
+    await page.getByLabel("Current address").fill("Kampala");
+    await page.getByLabel("Country code").fill("+256");
+    await page.getByLabel("WhatsApp number").fill("+256700000000");
+    await page.getByLabel("Mobile phone").fill("+256700000000");
+    await page.getByLabel("Home phone").fill("+256700000000");
+    await page.getByLabel("Home country").fill("Uganda");
+    await page.getByLabel("Home district/city").fill("Kampala");
+    await page.getByLabel("Project country").fill("Uganda");
+    await page.getByLabel("Build a residential house").check();
+    await page.getByRole("button", { name: "Submit interest" }).click();
+
+    await expect(page.locator(".interestForm .form-submit-status")).toContainText("email app should open a draft");
+    const draft = new URL(await page.evaluate(() => window.__emailDraftUrl));
+    expect(draft.pathname).toBe("cmi.groupuganda@gmail.com");
+    expect(draft.searchParams.get("subject")).toContain("Test Visitor");
+    expect(draft.searchParams.get("body")).toContain("Full name: Test Visitor");
+    expect(draft.searchParams.get("body")).toContain("Build a residential house: Yes");
 });
 
 test("quotation CTAs open the detailed contact form", async ({ page }) => {
