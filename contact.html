@@ -123,7 +123,7 @@
                     <div class="col-xl-8 col-lg-10">
                         <div class="contact-form-wrap" data-background="assets/img/images/contact_form_bg.jpg">
                             <h1 class="title">Tell us what you need help with</h1>
-                            <p>Choose a short enquiry or a more detailed expression of interest. For a faster conversation, call, email, or message our team directly.</p>
+                            <p>Choose a short enquiry or a more detailed expression of interest. Website enquiries and quotation requests are routed to cmi.groupuganda@gmail.com so our team can follow up. For a faster conversation, call, email, or message us directly.</p>
                             <p class="contact-direct-options"><a href="tel:+256789612187">Call +256 789 612 187</a> · <a href="mailto:cmi.groupuganda@gmail.com">Email CMI Group</a> · <a href="https://wa.me/message/DYT6JQFKYJNLF1" target="_blank" rel="noopener noreferrer">WhatsApp</a></p>
                             <div class="contact-choice-group" aria-label="Contact form selector">
                                 <button class="contact-choice-btn is-active" type="button" data-form-target="contact-form-panel">General enquiry</button>
@@ -630,6 +630,11 @@
                     showForm(this.dataset.formTarget);
                 });
             });
+
+            if (window.location.hash === '#express') {
+                showForm('interest-form-panel');
+                document.querySelector('.contact-form-wrap').scrollIntoView({ block: 'start' });
+            }
 
             function setFieldState(field, message) {
                 const group = field.closest('.form-grp');

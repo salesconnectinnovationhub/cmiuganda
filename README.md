@@ -50,6 +50,11 @@ policy or contract.
 
 These pages are mostly static HTML and are designed to be easy to update by a non-technical marketing/admin team.
 
+The landing page embeds the channel's uploads playlist for recent videos and a
+separately selected featured video. Update the featured video's ID and title in
+`index.html` when choosing a new most-viewed video; the uploads playlist updates
+as new channel videos are published.
+
 ### 2. Enquiry and contact forms
 Public forms collect client details and send them by email via Cloudflare Pages Functions. The API handlers validate input length and format, block obvious spam fields, and send messages through Resend.
 

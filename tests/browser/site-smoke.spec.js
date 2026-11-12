@@ -104,13 +104,20 @@ test("published homepage CMS content updates hero and project highlights", async
 });
 
 test("homepage embeds the CMI Group project video feed without a click", async ({ page }) => {
+    await page.route("https://www.youtube-nocookie.com/**", (route) => route.fulfill({
+        contentType: "text/html",
+        body: "<!doctype html><title>YouTube embed mock</title>",
+    }));
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    const video = page.locator("#youtube-videos iframe");
-    await expect(video).toHaveAttribute("title", "CMI Group project videos");
-    await expect(video).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/videoseries?list=UUhS7w2_gNGsj61jGtMxkywA");
+    const recentVideo = page.locator("#youtube-videos iframe").nth(0);
+    await expect(recentVideo).toHaveAttribute("title", "Recently published CMI Group videos");
+    await expect(recentVideo).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/videoseries?list=UUhS7w2_gNGsj61jGtMxkywA");
+    const popularVideo = page.locator("#youtube-videos iframe").nth(1);
+    await expect(popularVideo).toHaveAttribute("title", "Most-viewed CMI Group video: Diaspora Ugandans building back home");
+    await expect(popularVideo).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/ti6fqpmF1aY");
     await expect(page.locator(".testimonial-area").locator("xpath=following-sibling::section[@id='youtube-videos']")).toHaveCount(1);
-    await expect(page.getByRole("link", { name: "Visit the CMI Group YouTube channel" })).toHaveAttribute("href", "https://youtube.com/@cmigroupconstruct");
+    await expect(page.getByRole("link", { name: "Visit the CMI Group YouTube channel" })).toHaveAttribute("href", "https://youtube.com/@cmigroupconstruct?si=PhzkGZjLEsvlL72j");
     await expect(page.getByRole("heading", { name: "Local delivery. Clear decisions. Confidence from anywhere." })).toBeVisible();
     await expect(page.getByRole("heading", { name: "How We Work" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");
@@ -222,7 +229,7 @@ test("mobile contact flow switches forms and submits a valid enquiry", async ({ 
     });
     await page.route("**/api/analytics", async (route) => route.fulfill({ status: 204, body: "" }));
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
-    await page.getByRole("button", { name: "Expression of interest" }).click();
+    await page.getByRole("button", { name: "Detailed project interest" }).click();
     await expect(page.locator("#interest-form-panel")).toBeVisible();
     await page.getByRole("button", { name: "General enquiry" }).click();
     await expect(page.locator("#contact-form-panel")).toBeVisible();
@@ -235,6 +242,13 @@ test("mobile contact flow switches forms and submits a valid enquiry", async ({ 
     await page.locator("#contact-message").fill("I would like to discuss a project.");
     await page.getByRole("button", { name: "Send message" }).click();
     await expect(page.locator("#contact-form .form-submit-status")).toHaveText("Message accepted.");
+});
+
+test("quotation CTAs open the detailed contact form", async ({ page }) => {
+    await page.goto("/contact.html#express", { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator("#interest-form-panel")).toBeVisible();
+    await expect(page.locator("#contact-form-panel")).toBeHidden();
 });
 
 test("mobile payment form labels fields and begins PesaPal checkout", async ({ page }) => {

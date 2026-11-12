@@ -21,6 +21,7 @@ function formRequest(path, fields) {
     headers: {
       Origin: "https://cmi.example",
       "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "text/plain",
     },
     body: new URLSearchParams(fields),
   });
@@ -40,6 +41,8 @@ test("contact form notifications go to the public CMI contact email", async (t) 
   });
 
   assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /^text\/plain/);
+  assert.match(await response.clone().text(), /sent to CMI Group/);
   assert.deepEqual(getMessage().to, [CMI_CONTACT_EMAIL]);
   assert.equal(getMessage().reply_to, "visitor@example.com");
 });
@@ -58,6 +61,7 @@ test("quotation and consultation enquiries go to the public CMI contact email", 
   });
 
   assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /^text\/plain/);
   assert.deepEqual(getMessage().to, [CMI_CONTACT_EMAIL]);
   assert.match(getMessage().text, /quotation and arrange a project consultation/);
   assert.equal(getMessage().reply_to, "visitor@example.com");
@@ -83,6 +87,7 @@ test("expression-of-interest quote requests go to the public CMI contact email",
   });
 
   assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /^text\/plain/);
   assert.deepEqual(getMessage().to, [CMI_CONTACT_EMAIL]);
   assert.equal(getMessage().reply_to, "visitor@example.com");
 });

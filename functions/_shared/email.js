@@ -2,7 +2,21 @@
 
 export const RECIPIENT = "cmi.groupuganda@gmail.com";
 
-export function response(message, status, title = "CMI Group message") {
+export function response(message, status, title = "CMI Group message", accept = "") {
+  const wantsPlainText = accept
+    .split(",")
+    .some((mediaType) => mediaType.split(";")[0].trim().toLowerCase() === "text/plain");
+  if (wantsPlainText) {
+    return new Response(message, {
+      status,
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        "cache-control": "no-store",
+        "x-content-type-options": "nosniff",
+      },
+    });
+  }
+
   const safeMessage = message.replace(/[&<>"']/g, (character) => ({
     "&": "&amp;",
     "<": "&lt;",
@@ -30,27 +44,28 @@ export function sanitize(value) {
 }
 
 export async function readFormData(request) {
+  const respond = (message, status) => response(message, status, "CMI Group message", request.headers.get("Accept") || "");
   const origin = request.headers.get("Origin");
   if (!origin) {
-    return { error: response("Please submit the form from the CMI Group website.", 403) };
+    return { error: respond("Please submit the form from the CMI Group website.", 403) };
   }
   try {
     if (new URL(origin).origin !== new URL(request.url).origin) {
-      return { error: response("Please submit the form from the CMI Group website.", 403) };
+      return { error: respond("Please submit the form from the CMI Group website.", 403) };
     }
   } catch (error) {
-    return { error: response("Please submit the form from the CMI Group website.", 403) };
+    return { error: respond("Please submit the form from the CMI Group website.", 403) };
   }
 
   const contentType = request.headers.get("Content-Type") || "";
   if (!contentType.includes("application/x-www-form-urlencoded") && !contentType.includes("multipart/form-data")) {
-    return { error: response("The form submission could not be read. Please return to the contact page and try again.", 415) };
+    return { error: respond("The form submission could not be read. Please return to the contact page and try again.", 415) };
   }
 
   try {
     const body = await request.arrayBuffer();
     if (body.byteLength > 20_000) {
-      return { error: response("The submitted form is too large. Please shorten your answers and try again.", 413) };
+      return { error: respond("The submitted form is too large. Please shorten your answers and try again.", 413) };
     }
     const formRequest = new Request(request.url, {
       method: "POST",
@@ -60,7 +75,7 @@ export async function readFormData(request) {
     return { formData: await formRequest.formData() };
   } catch (error) {
     console.error("Could not parse CMI Group form data.", error);
-    return { error: response("The form submission could not be read. Please try again.", 400) };
+    return { error: respond("The form submission could not be read. Please try again.", 400) };
   }
 }
 
