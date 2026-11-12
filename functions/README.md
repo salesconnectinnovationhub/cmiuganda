@@ -32,11 +32,18 @@ no retention period or automated deletion policy is configured by this code.
 Do not treat email delivery as guaranteed chat availability. Check the inbox and
 Resend activity during launch verification.
 
-The Cloudflare Pages Functions at `POST /api/interest` and `POST /api/contact`
-send both public contact forms to `cmi.groupuganda@gmail.com` (the public
-contact email) through Resend.
-They validate submitted fields on the server and return success only when the
-email provider accepts the message.
+The Cloudflare Pages Functions at `POST /api/contact` and `POST /api/interest`
+send general enquiries, quotation requests, consultations, and detailed
+expressions of interest to `cmi.groupuganda@gmail.com` (the public contact
+email) through Resend. The Pages Functions validate submitted fields on the
+server and return success only when the email provider accepts the message.
+The legacy PHP contact handlers use the same recipient.
+
+If the legacy PHP handlers are deployed separately, configure
+`CMI_SMTP_HOST`, `CMI_SMTP_USERNAME`, `CMI_SMTP_PASSWORD`, and
+`CMI_SMTP_FROM_EMAIL` in that server's environment. They return HTTP 503 when
+these settings are missing. Rotate any SMTP credentials previously stored in
+source code; the current Pages deployment uses the Resend settings above.
 
 ## Public submission abuse controls
 

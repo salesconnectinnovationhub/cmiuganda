@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { onRequestGet as loadVisitorChat, onRequestPost as saveVisitorChat } from "../../functions/api/chat.js";
 import { onRequestGet as loadStaffInbox } from "../../functions/api/chat/admin.js";
+import { RECIPIENT } from "../../functions/_shared/email.js";
 import {
     ACCESS_ENV,
     CMS_AUDIENCE,
@@ -69,6 +70,30 @@ test("chat creates a conversation with a random visitor token and stores only it
     assert.equal(db.batches[0][0].values[3].length, 64);
     assert.notEqual(db.batches[0][0].values[3], result.token);
     assert.equal(db.batches[0][1].values[2], "I would like to discuss a home build.");
+});
+
+test("new visitor chat messages notify the public CMI contact email", async (t) => {
+    let email;
+    t.mock.method(globalThis, "fetch", async (_url, options) => {
+        email = JSON.parse(options.body);
+        return new Response(null, { status: 200 });
+    });
+    const response = await saveVisitorChat({
+        request: visitorRequest({
+            name: "Test Visitor",
+            email: "visitor@example.com",
+            message: "I would like a project consultation.",
+        }),
+        env: {
+            DB: makeDatabase(),
+            RESEND_API_KEY: "test-key",
+            CMI_FROM_EMAIL: "website@example.com",
+        },
+    });
+
+    assert.equal(response.status, 201);
+    assert.deepEqual(email.to, [RECIPIENT]);
+    assert.match(email.text, /project consultation/);
 });
 
 test("chat rejects cross-origin requests and invalid visitor details before writing", async () => {

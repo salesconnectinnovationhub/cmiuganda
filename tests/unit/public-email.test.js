@@ -44,6 +44,25 @@ test("contact form notifications go to the public CMI contact email", async (t) 
   assert.equal(getMessage().reply_to, "visitor@example.com");
 });
 
+test("quotation and consultation enquiries go to the public CMI contact email", async (t) => {
+  const getMessage = mockEmailDelivery(t);
+  const response = await submitContact({
+    request: formRequest("contact", {
+      firstName: "Test",
+      lastName: "Visitor",
+      email: "visitor@example.com",
+      phone: "+256700000000",
+      message: "Please send a quotation and arrange a project consultation.",
+    }),
+    env: EMAIL_ENV,
+  });
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(getMessage().to, [CMI_CONTACT_EMAIL]);
+  assert.match(getMessage().text, /quotation and arrange a project consultation/);
+  assert.equal(getMessage().reply_to, "visitor@example.com");
+});
+
 test("expression-of-interest quote requests go to the public CMI contact email", async (t) => {
   const getMessage = mockEmailDelivery(t);
   const response = await submitInterest({

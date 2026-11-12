@@ -45,18 +45,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $projectCountry = isset($_POST['projectCountry']) ? $_POST['projectCountry'] : '';
     $projectDistrict = isset($_POST['projectDistrict']) ? $_POST['projectDistrict'] : '';
     $mail = new PHPMailer(true);
-    $dEmail = "cmigroupuganda@gmail.com";
-    
+    $dEmail = "cmi.groupuganda@gmail.com";
+    $smtpHost = getenv('CMI_SMTP_HOST');
+    $smtpUsername = getenv('CMI_SMTP_USERNAME');
+    $smtpPassword = getenv('CMI_SMTP_PASSWORD');
+    $smtpFromEmail = getenv('CMI_SMTP_FROM_EMAIL');
+
+    if (!$smtpHost || !$smtpUsername || !$smtpPassword || !$smtpFromEmail) {
+        http_response_code(503);
+        echo "Email delivery is not configured.";
+        exit;
+    }
+
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = $smtpHost;
         $mail->SMTPAuth = true;
-        $mail->Username = 'salesconnectinnovationhub@gmail.com';
-        $mail->Password = 'idvofiyimcipxyzv';
+        $mail->Username = $smtpUsername;
+        $mail->Password = $smtpPassword;
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
 
-        $mail->setFrom('uzisalesconnectinnovationhub@gmail.com', 'CMI Notifications');
+        $mail->setFrom($smtpFromEmail, 'CMI Notifications');
         $mail->addAddress($dEmail);
         $mail->isHTML(true);
         $mail->Subject = 'New expression of interest';
