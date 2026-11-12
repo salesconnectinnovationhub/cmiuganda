@@ -26,8 +26,19 @@
 
     window.cmiEmailForm = {
         openDraft(form, status) {
-            window.open(createMailtoUrl(form), "_blank");
-            status.textContent = "Your email app should open a draft addressed to CMI Group. Review it and press Send to deliver your message.";
+            const draftUrl = createMailtoUrl(form);
+            const fallbackLink = document.createElement("a");
+            fallbackLink.href = draftUrl;
+            fallbackLink.target = "_blank";
+            fallbackLink.rel = "noopener noreferrer";
+            fallbackLink.textContent = "open the prefilled email draft";
+
+            status.replaceChildren(
+                document.createTextNode("Your email app should open a draft addressed to CMI Group. If it doesn't, "),
+                fallbackLink,
+                document.createTextNode(" and press Send. The message isn't sent until you press Send.")
+            );
+            window.open(draftUrl, "_blank");
         },
     };
 })();

@@ -22,10 +22,12 @@ test("contact form opens a prefilled CMI email draft from a local file", async (
     await page.locator("#contact-message").fill("I would like to discuss a project.");
     await page.getByRole("button", { name: "Send message" }).click();
 
-    await expect(page.locator("#contact-form .form-submit-status"))
-        .toContainText("email app should open a draft");
+    const status = page.locator("#contact-form .form-submit-status");
+    await expect(status).toContainText("email app should open a draft");
+    const fallbackLink = status.getByRole("link", { name: "open the prefilled email draft" });
     const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
     expect(draftUrl).toContain("mailto:cmi.groupuganda@gmail.com");
+    await expect(fallbackLink).toHaveAttribute("href", draftUrl);
     expect(new URL(draftUrl).searchParams.get("body")).toContain("I would like to discuss a project.");
     expect(apiRequests).toBe(0);
 });
@@ -50,10 +52,12 @@ test("homepage enquiry opens a prefilled CMI email draft from a local file", asy
     await page.locator("#home-enquiry [name='message']").fill("I would like to discuss a project.");
     await page.locator("#home-enquiry [type='submit']").click();
 
-    await expect(page.locator("#home-enquiry .form-submit-status"))
-        .toContainText("email app should open a draft");
+    const status = page.locator("#home-enquiry .form-submit-status");
+    await expect(status).toContainText("email app should open a draft");
+    const fallbackLink = status.getByRole("link", { name: "open the prefilled email draft" });
     const draftUrl = await page.evaluate(() => window.__emailDraftUrl);
     expect(draftUrl).toContain("mailto:cmi.groupuganda@gmail.com");
+    await expect(fallbackLink).toHaveAttribute("href", draftUrl);
     expect(new URL(draftUrl).searchParams.get("body")).toContain("I would like to discuss a project.");
     expect(apiRequests).toBe(0);
 });
