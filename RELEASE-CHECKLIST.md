@@ -61,10 +61,11 @@ or CI logs.
       `POST /api/reviews` when method matching is available. Verify a
       threshold-crossing staging request
       receives HTTP 429 without blocking normal review reads.
-- [ ] Submit a staging contact form and an expression of interest. Confirm
-      each opens a draft addressed to `cmi.groupuganda@gmail.com`, then press
-      Send in the configured email app and verify delivery. These forms do not
-      call Cloudflare email APIs.
+- [ ] Configure `RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL` in the
+      hosting environment. Submit a staging contact form and an expression of
+      interest; confirm the page stays open, inline status is shown, and email
+      reaches `cmi.groupuganda@gmail.com`. Verify Resend activity and the
+      destination inbox.
 - [ ] Open a public chat, send messages from the visitor page, reply from the
       staff inbox, and confirm email notifications, persistence, close/reopen,
       same-origin validation, and unauthorized staff rejection.
@@ -72,7 +73,7 @@ or CI logs.
       the authorized review administrator and confirm unauthorized accounts
       cannot do so.
 - [ ] Test the estimator quote handoff through the contact form and confirm
-      the estimate summary is present in the editable email draft.
+      the estimate summary is included in the delivered email.
 - [ ] Check the gallery at mobile and desktop widths; confirm responsive
       thumbnails load in supported formats and each card still opens its
       original full-resolution photo.

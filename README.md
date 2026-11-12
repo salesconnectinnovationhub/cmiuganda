@@ -12,7 +12,7 @@ This project supports the public website for:
 - lead capture and enquiry handling
 - public reviews and admin-managed content updates
 
-The site is designed for Cloudflare Pages deployment. Website enquiries use the visitor's email app; other features use serverless functions and database-backed content.
+The site is designed for Cloudflare Pages deployment, with Netlify Function adapters for public enquiry email when hosted on Netlify. The CMS, chat, and review features still use Cloudflare Pages Functions and Cloudflare services.
 
 ## What this repo contains
 
@@ -56,16 +56,15 @@ separately selected featured video. Update the featured video's ID and title in
 as new channel videos are published.
 
 ### 2. Enquiry and contact forms
-Public enquiry forms prepare a prefilled email addressed to
-`cmi.groupuganda@gmail.com` in the visitor's email app. Visitors review the draft
-and press Send themselves. This path does not use a Cloudflare email function,
-API key, or paid email service, but it does require an email app/account set up
-on the visitor's device.
-
-The detailed project-interest form and the shorter enquiry forms share this
-flow. The old `/api/contact` and `/api/interest` handlers remain in
-`functions/` for optional server-side use, but the public website forms do not
-call them.
+Public enquiry forms submit to the same-origin `/api/contact` and
+`/api/interest` endpoints without opening the visitor's email app or leaving
+the page. On Netlify, the functions in `netlify/functions/` route to the shared
+email handlers; on Cloudflare Pages, `functions/api/` handles the same paths.
+Both require `RESEND_API_KEY` and a verified `CMI_FROM_EMAIL` sender in the
+hosting platform's environment. A successful response means the email provider
+accepted the message; verify delivery in Resend and the destination inbox.
+If sending fails, the form keeps the entered details and offers a direct email
+link.
 
 ### 3. Website chat
 Visitors use the same-site `chat.html` page to create persistent conversations

@@ -8,6 +8,6 @@ document.querySelectorAll("[data-lead-form]").forEach((form) => {
             throw new Error("The project enquiry form is missing its submit controls.");
         }
 
-        window.cmiEmailForm.openDraft(form, status);
+        window.cmiEmailForm.submit(form, status);
     });
 });

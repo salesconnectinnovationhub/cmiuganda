@@ -1,44 +1,60 @@
 (function () {
     const recipient = "cmi.groupuganda@gmail.com";
 
-    function fieldLabel(field) {
-        const label = field.labels && field.labels[0];
-        if (label) return label.textContent.trim();
-        return field.name
-            .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-            .replace(/^./, (character) => character.toUpperCase());
-    }
-
-    function createMailtoUrl(form) {
-        const isInterest = form.classList.contains("interestForm");
-        const name = isInterest
-            ? form.elements.fullname.value.trim()
-            : `${form.elements.firstName.value.trim()} ${form.elements.lastName.value.trim()}`.trim();
-        const subject = `${isInterest ? "Project interest" : "Website enquiry"} from ${name}`;
-        const lines = Array.from(form.elements)
-            .filter((field) => field.name && field.name !== "website" && field.type !== "submit")
-            .filter((field) => field.type !== "checkbox" || field.checked)
-            .map((field) => `${fieldLabel(field)}: ${field.type === "checkbox" ? "Yes" : field.value.trim()}`);
-        const body = lines.join("\n");
-
-        return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    function showFailure(status, message) {
+        const fallbackLink = document.createElement("a");
+        fallbackLink.href = `mailto:${recipient}`;
+        fallbackLink.textContent = "email CMI Group directly";
+        status.replaceChildren(
+            document.createTextNode(`${message} You can also `),
+            fallbackLink,
+            document.createTextNode(".")
+        );
     }
 
     window.cmiEmailForm = {
-        openDraft(form, status) {
-            const draftUrl = createMailtoUrl(form);
-            const fallbackLink = document.createElement("a");
-            fallbackLink.href = draftUrl;
-            fallbackLink.target = "_blank";
-            fallbackLink.rel = "noopener noreferrer";
-            fallbackLink.textContent = "open the prefilled email draft";
+        async submit(form, status) {
+            if (!(status instanceof HTMLElement)) {
+                throw new Error("The enquiry form is missing its submit status element.");
+            }
 
-            status.replaceChildren(
-                document.createTextNode("Your email app should open a draft addressed to CMI Group. If it doesn't, "),
-                fallbackLink,
-                document.createTextNode(" and press Send. The message isn't sent until you press Send.")
-            );
-            window.open(draftUrl, "_blank");
+            const button = form.querySelector('[type="submit"]');
+            if (!(button instanceof HTMLButtonElement || button instanceof HTMLInputElement)) {
+                throw new Error("The enquiry form is missing its submit button.");
+            }
+            if (form.dataset.submitting === "true") return;
+
+            form.dataset.submitting = "true";
+            form.setAttribute("aria-busy", "true");
+            button.disabled = true;
+            status.textContent = "Sending your message…";
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: { Accept: "text/plain" },
+                    credentials: "same-origin",
+                });
+                const message = (await response.text()).trim();
+
+                if (!response.ok) {
+                    showFailure(status, message || "We could not send your message just now. Please try again.");
+                    return false;
+                }
+
+                status.textContent = message || "Your message has been sent to CMI Group.";
+                form.reset();
+                return true;
+            } catch (error) {
+                console.error("Could not submit the CMI Group enquiry form.", error);
+                showFailure(status, "We could not reach the email service. Your details are still here; please try again.");
+                return false;
+            } finally {
+                delete form.dataset.submitting;
+                form.removeAttribute("aria-busy");
+                button.disabled = false;
+            }
         },
     };
 })();
