@@ -1,5 +1,5 @@
-const assert = require("node:assert/strict");
-const test = require("node:test");
+import assert from "node:assert/strict";
+import test from "node:test";
 
 test("Netlify public CMS endpoint returns an empty list for supported content types", async () => {
   const { default: cms } = await import("../../netlify/functions/cms.mjs");
