@@ -244,6 +244,32 @@ test("project enquiry forms appear at key conversion points", async ({ page }) =
     await expect(page.getByRole("link", { name: "Book a site visit" })).toHaveAttribute("href", "#home-enquiry");
 });
 
+test("home, project, and property consultation forms submit to Netlify", async ({ page }) => {
+    const forms = [
+        ["/", "/index.html", "#home-enquiry", "home-enquiry"],
+        ["/project.html", "/project.html", "#project-enquiry-form", "project-enquiry"],
+        ["/property-management.html", "/property-management.html", "#property-enquiry-form", "property-enquiry"],
+    ];
+
+    for (const [path, action, selector, name] of forms) {
+        const getSubmission = await mockNetlifyForm(page, action, name);
+        await page.goto(path, { waitUntil: "domcontentloaded" });
+        await dismissAnnouncement(page);
+
+        const form = page.locator(selector);
+        await form.locator('[name="firstName"]').fill("Test");
+        await form.locator('[name="lastName"]').fill("Visitor");
+        await form.locator('[name="email"]').fill("visitor@example.com");
+        await form.locator('[name="phone"]').fill("+256700000000");
+        await form.locator('[name="message"]').fill("I would like to discuss a project.");
+        await form.locator('[type="submit"]').click();
+
+        await expect(form.locator(".form-submit-status")).toContainText("Your enquiry has been submitted to CMI Group.");
+        expect(getSubmission().get("form-name")).toBe(name);
+        expect(getSubmission().get("message")).toBe("I would like to discuss a project.");
+    }
+});
+
 test("embedded project enquiry form submits to its Netlify form", async ({ page }) => {
     const getSubmission = await mockNetlifyForm(page, "/services.html", "service-enquiry");
     await page.goto("/services.html", { waitUntil: "domcontentloaded" });

@@ -102,8 +102,10 @@ spam persists, consider adding Turnstile with server-side token verification.
 These forms submit directly to Netlify Forms and do not call the Netlify
 Functions or require `RESEND_API_KEY`. Netlify plan limits or usage charges may
 apply. The functions in `netlify/functions/` remain optional adapters for the
-separate Resend-based API endpoints. The CMS, chat, and review endpoints still
-need their documented Cloudflare Pages environment and bindings.
+separate Resend-based API endpoints. On Netlify, `/api/cms` returns an empty
+public record list so pages keep their static content and default announcements
+without 404 errors. Editing or persisting CMS content, chat, and review features
+still requires their documented Cloudflare Pages environment and bindings.
 
 The repository does not contain Cloudflare deployment configuration or
 credentials. The public forms use Netlify Forms when deployed on Netlify; the

@@ -123,6 +123,13 @@ async function loadCmsItems(type) {
         const request = fetch(`/api/cms?type=${encodeURIComponent(type)}`, {
             headers: { accept: "application/json" },
         }).then(async (response) => {
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.toLowerCase().includes("application/json")) {
+                if (!response.ok) {
+                    throw new Error(`Content is temporarily unavailable (HTTP ${response.status}).`);
+                }
+                throw new Error("Content response is not JSON.");
+            }
             const result = await response.json();
             if (!response.ok) throw new Error(result.error || "Content is temporarily unavailable.");
             if (!Array.isArray(result.items)) throw new Error("Content response is invalid.");
