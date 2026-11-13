@@ -307,12 +307,13 @@
                         <a class="btn btn--outline" href="#home-enquiry">Book a site visit</a>
                     </div>
                 </div>
-                <form id="home-enquiry" class="conversion-form" data-lead-form action="mailto:cmi.groupuganda@gmail.com" method="post" enctype="text/plain">
+                <form id="home-enquiry" name="home-enquiry" class="conversion-form" data-lead-form action="/index.html" method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="home-enquiry">
                     <h2 class="h3">Start with a project conversation</h2>
                     <p>Share a few details and our team will follow up about the right next step.</p>
                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                         <label for="home-website">Leave this field empty</label>
-                        <input id="home-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        <input id="home-website" name="bot-field" type="text" tabindex="-1" autocomplete="off">
                     </div>
                     <div class="row">
                         <div class="col-sm-6">

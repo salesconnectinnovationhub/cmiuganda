@@ -32,10 +32,14 @@ no retention period or automated deletion policy is configured by this code.
 Do not treat email delivery as guaranteed chat availability. Check the inbox and
 Resend activity during launch verification.
 
-The public quotation, contact, and interest forms now prepare a `mailto:`
-message to `cmi.groupuganda@gmail.com` in the visitor's email app. The visitor
-must review and send the draft; this requires no email provider/API key and
-cannot confirm delivery. The form details are retained on the page.
+The public quotation, contact, and interest forms are configured as Netlify
+Forms and submit their fields in the background. On Netlify, enable form
+detection, deploy the site, and configure an email notification for each form
+to `cmi.groupuganda@gmail.com`. Netlify receives the submission; no Resend API
+key is needed for these forms. Netlify plan limits or usage charges may apply,
+so check the Forms usage in the site's dashboard. On Cloudflare Pages, Netlify
+Forms are not processed; use the optional provider-backed handlers below or
+deploy these forms on Netlify.
 
 The same-origin `POST /api/contact` and `POST /api/interest` handlers, including
 the Netlify adapters, remain available for deployments that specifically want
@@ -77,28 +81,34 @@ spam persists, consider adding Turnstile with server-side token verification.
 
 1. Deploy this site as a Cloudflare Pages project attached to
    `https://cmigroupuganda.com` for features that use Pages Functions.
-2. No email-provider variables are needed for the public enquiry forms. Test a
-   form and confirm its draft opens addressed to
-   `cmi.groupuganda@gmail.com`; then press Send in the email app and verify
-   receipt. Configure `RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL`
-   only if automated email delivery is separately enabled for chat or the
-   optional enquiry API handlers.
+2. Netlify Forms are not processed on Cloudflare Pages. Configure the optional
+   `/api/contact` and `/api/interest` handlers with `RESEND_API_KEY` and a
+   verified `CMI_FROM_EMAIL` sender if automated form delivery is required
+   there.
 3. If chat notifications are enabled, they use the same Resend configuration.
    Do not put the API key in site files.
 
 ## Netlify enquiry email setup
 
-The public forms do not require Netlify Functions or provider credentials:
-they prepare an email in the visitor's email app, and the visitor must press
-Send. The Netlify Functions in `netlify/functions/` remain optional adapters for
-automated delivery and require `RESEND_API_KEY` and a verified
-`CMI_FROM_EMAIL`. The CMS, chat, and review endpoints still need their
-documented Cloudflare Pages environment and bindings.
+1. In Netlify, open the site's **Forms** settings and enable form detection.
+2. Deploy the site so Netlify can scan the static HTML and register its named
+   forms.
+3. Open **Forms** in the site dashboard. For each enquiry form, add an email
+   notification addressed to `cmi.groupuganda@gmail.com`.
+4. Submit a test enquiry and a test quotation. Confirm the submission appears
+   in Netlify Forms and the notification reaches the CMI inbox (including its
+   spam folder). The visitor sees success when Netlify accepts the submission.
+
+These forms submit directly to Netlify Forms and do not call the Netlify
+Functions or require `RESEND_API_KEY`. Netlify plan limits or usage charges may
+apply. The functions in `netlify/functions/` remain optional adapters for the
+separate Resend-based API endpoints. The CMS, chat, and review endpoints still
+need their documented Cloudflare Pages environment and bindings.
 
 The repository does not contain Cloudflare deployment configuration or
-credentials. The default public forms use `mailto:`; the optional automated
-email endpoints use the Pages Functions or Netlify adapters, not the legacy
-PHP handlers.
+credentials. The public forms use Netlify Forms when deployed on Netlify; the
+optional automated email endpoints use the Pages Functions or Netlify
+adapters, not the legacy PHP handlers.
 
 ## Public reviews and admin replies
 

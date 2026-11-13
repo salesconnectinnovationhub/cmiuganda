@@ -9,7 +9,7 @@
     function createEmailDraft(form) {
         const fields = Array.from(form.elements)
             .filter((field) => {
-                if (!field.name || field.name === "website" || field.disabled) return false;
+                if (!field.name || field.name === "bot-field" || field.name === "form-name" || field.disabled) return false;
                 if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
                 if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
                 return true;
@@ -24,30 +24,69 @@
                 form.elements.namedItem("lastName")?.value.trim(),
             ].filter(Boolean).join(" ");
         const subject = `Project quotation / enquiry${fullName ? ` from ${fullName}` : ""}`;
-        const body = [
-            "Website enquiry for CMI Group",
-            "",
-            ...fields,
-        ].join("\r\n");
+        const body = ["Website enquiry for CMI Group", "", ...fields].join("\r\n");
 
         return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
+    function showFailure(status, form, message) {
+        const emailLink = document.createElement("a");
+        emailLink.href = createEmailDraft(form);
+        emailLink.textContent = "Email CMI Group directly";
+        status.replaceChildren(
+            document.createTextNode(`${message} Your details are still on this page. You can also `),
+            emailLink,
+            document.createTextNode(".")
+        );
+    }
+
     window.cmiEmailForm = {
-        submit(form, status) {
+        async submit(form, status) {
             if (!(status instanceof HTMLElement)) {
                 throw new Error("The enquiry form is missing its submit status element.");
             }
 
-            const emailLink = document.createElement("a");
-            emailLink.href = createEmailDraft(form);
-            emailLink.textContent = "Open your email app and send your request";
-            status.replaceChildren(
-                document.createTextNode("Your email draft is ready. "),
-                emailLink,
-                document.createTextNode(". Review it and press Send in your email app; this website does not send email automatically.")
-            );
-            return true;
+            const button = form.querySelector('[type="submit"]');
+            if (!(button instanceof HTMLButtonElement || button instanceof HTMLInputElement)) {
+                throw new Error("The enquiry form is missing its submit button.");
+            }
+            if (form.dataset.submitting === "true") return false;
+
+            const formData = new FormData(form);
+            if (!formData.get("form-name")) {
+                throw new Error("The enquiry form is missing its Netlify form name.");
+            }
+
+            form.dataset.submitting = "true";
+            form.setAttribute("aria-busy", "true");
+            button.disabled = true;
+            status.textContent = "Submitting your enquiry…";
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData).toString(),
+                    credentials: "same-origin",
+                });
+
+                if (!response.ok) {
+                    showFailure(status, form, "We could not submit your enquiry just now.");
+                    return false;
+                }
+
+                status.textContent = "Your enquiry has been submitted. CMI Group will be in touch using the details you provided.";
+                form.reset();
+                return true;
+            } catch (error) {
+                console.error("Could not submit the CMI Group enquiry form to Netlify.", error);
+                showFailure(status, form, "We could not submit your enquiry just now.");
+                return false;
+            } finally {
+                delete form.dataset.submitting;
+                form.removeAttribute("aria-busy");
+                button.disabled = false;
+            }
         },
     };
 })();

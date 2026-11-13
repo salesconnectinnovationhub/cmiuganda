@@ -371,11 +371,12 @@
                         <a class="btn btn--outline" href="#service-enquiry-form">Book a site visit</a>
                     </div>
                 </div>
-                <form id="service-enquiry-form" class="conversion-form" data-lead-form action="mailto:cmi.groupuganda@gmail.com" method="post" enctype="text/plain">
+                <form id="service-enquiry-form" name="service-enquiry" class="conversion-form" data-lead-form action="/services.html" method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="service-enquiry">
                     <h2 class="h3">Discuss a service</h2>
                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                         <label for="service-website">Leave this field empty</label>
-                        <input id="service-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        <input id="service-website" name="bot-field" type="text" tabindex="-1" autocomplete="off">
                     </div>
                     <div class="row">
                         <div class="col-sm-6"><div class="form-grp"><label for="service-first-name">First name</label><input id="service-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required></div></div>

@@ -30,7 +30,23 @@ async function mockCmsApi(page, getRole) {
     });
 }
 
+async function mockNetlifyForm(page, path, formName) {
+    let submittedData;
+    await page.route((url) => url.pathname === path, async (route) => {
+        if (route.request().method() !== "POST") {
+            await route.continue();
+            return;
+        }
+
+        submittedData = new URLSearchParams(route.request().postData() || "");
+        expect(submittedData.get("form-name")).toBe(formName);
+        await route.fulfill({ status: 200, contentType: "text/plain", body: "OK" });
+    });
+    return () => submittedData;
+}
+
 test("estimate quote handoff prefills the contact message", async ({ page }) => {
+    const getSubmission = await mockNetlifyForm(page, "/contact.html", "contact-enquiry");
     await page.goto("/block-estimator.html", { waitUntil: "domcontentloaded" });
     await page.getByLabel("Wall length (m)").fill("5");
     await page.getByLabel("Wall height (m)").fill("3");
@@ -52,12 +68,9 @@ test("estimate quote handoff prefills the contact message", async ({ page }) => 
     await page.locator("#contact-email").fill("visitor@example.com");
     await page.locator("#contact-phone").fill("+256700000000");
     await page.getByRole("button", { name: "Send message" }).click();
-    const emailLink = page.locator("#contact-form .form-submit-status")
-        .getByRole("link", { name: "Open your email app and send your request" });
-    const draftUrl = await emailLink.getAttribute("href");
-    expect(draftUrl).toMatch(/^mailto:cmi\.groupuganda@gmail\.com\?/);
-    expect(decodeURIComponent(draftUrl)).toContain("Estimated quantity: 161 concrete blocks");
-    expect(decodeURIComponent(draftUrl)).toContain("Net wall area after openings: 13.2 m2");
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been submitted");
+    expect(getSubmission().get("message")).toContain("Estimated quantity: 161 concrete blocks");
+    expect(getSubmission().get("message")).toContain("Net wall area after openings: 13.2 m2");
 });
 
 test("CMS editor and approver controls match their assigned roles", async ({ page }) => {
@@ -139,7 +152,8 @@ test("homepage embeds the CMI Group project video feed without a click", async (
     await expect(page.getByRole("link", { name: "Learn About CMI Group" })).toBeVisible();
 });
 
-test("contact form prepares an email draft without calling an email API", async ({ page }) => {
+test("contact form submits directly to Netlify Forms", async ({ page }) => {
+    const getSubmission = await mockNetlifyForm(page, "/contact.html", "contact-enquiry");
     const apiRequests = [];
     page.on("request", (request) => {
         if (/\/api\/(contact|interest|analytics)$/.test(request.url())) apiRequests.push(request.url());
@@ -156,19 +170,24 @@ test("contact form prepares an email draft without calling an email API", async 
     await page.getByRole("button", { name: "Send message" }).click();
 
     const status = page.locator("#contact-form .form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    const emailLink = status.getByRole("link", { name: "Open your email app and send your request" });
-    const draftUrl = await emailLink.getAttribute("href");
-    expect(draftUrl).toMatch(/^mailto:cmi\.groupuganda@gmail\.com\?/);
-    expect(decodeURIComponent(draftUrl)).toContain("Test Visitor");
-    expect(decodeURIComponent(draftUrl)).toContain("visitor@example.com");
-    expect(decodeURIComponent(draftUrl)).toContain("I would like to discuss a building project.");
-    await expect(page.locator("#contact-message")).toHaveValue("I would like to discuss a building project.");
+    await expect(status).toContainText("Your enquiry has been submitted");
+    expect(getSubmission().get("firstName")).toBe("Test");
+    expect(getSubmission().get("lastName")).toBe("Visitor");
+    expect(getSubmission().get("email")).toBe("visitor@example.com");
+    expect(getSubmission().get("message")).toBe("I would like to discuss a building project.");
+    await expect(page.locator("#contact-message")).toHaveValue("");
     expect(page.url()).toContain("/contact.html");
     expect(apiRequests).toEqual([]);
 });
 
-test("contact form keeps details in the email draft", async ({ page }) => {
+test("contact form keeps details and offers an email fallback when Netlify rejects a submission", async ({ page }) => {
+    await page.route((url) => url.pathname === "/contact.html", async (route) => {
+        if (route.request().method() === "POST") {
+            await route.fulfill({ status: 503, contentType: "text/plain", body: "Unavailable" });
+        } else {
+            await route.continue();
+        }
+    });
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
     await page.locator("#contact-first-name").fill("Test");
     await page.locator("#contact-last-name").fill("Visitor");
@@ -179,19 +198,28 @@ test("contact form keeps details in the email draft", async ({ page }) => {
 
     const form = page.locator("#contact-form");
     const status = form.locator(".form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    expect(decodeURIComponent(await status.getByRole("link", { name: "Open your email app and send your request" }).getAttribute("href")))
-        .toContain("Please call me about a project.");
+    await expect(status).toContainText("We could not submit your enquiry");
+    const fallbackLink = status.getByRole("link", { name: "Email CMI Group directly" });
+    expect(decodeURIComponent(await fallbackLink.getAttribute("href"))).toContain("Please call me about a project.");
     await expect(page.locator("#contact-message")).toHaveValue("Please call me about a project.");
     await expect(form.getByRole("button", { name: "Send message" })).toBeEnabled();
     expect(page.url()).toContain("/contact.html");
 });
 
 test("project enquiry forms appear at key conversion points", async ({ page }) => {
-    for (const path of ["/", "/services.html", "/project.html", "/property-management.html"]) {
+    const forms = [
+        ["/", "#home-enquiry", "home-enquiry"],
+        ["/services.html", "#service-enquiry-form", "service-enquiry"],
+        ["/project.html", "#project-enquiry-form", "project-enquiry"],
+        ["/property-management.html", "#property-enquiry-form", "property-enquiry"],
+    ];
+    for (const [path, selector, name] of forms) {
         await page.goto(path, { waitUntil: "domcontentloaded" });
-        await expect(page.locator("[data-lead-form]")).toHaveCount(1);
-        await expect(page.locator("[data-lead-form]")).toBeVisible();
+        const form = page.locator(selector);
+        await expect(form).toBeVisible();
+        await expect(form).toHaveAttribute("data-netlify", "true");
+        await expect(form).toHaveAttribute("name", name);
+        await expect(form.locator('[name="form-name"]')).toHaveValue(name);
     }
 
     await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -200,7 +228,8 @@ test("project enquiry forms appear at key conversion points", async ({ page }) =
     await expect(page.getByRole("link", { name: "Book a site visit" })).toHaveAttribute("href", "#home-enquiry");
 });
 
-test("embedded project enquiry form prepares an email draft", async ({ page }) => {
+test("embedded project enquiry form submits to its Netlify form", async ({ page }) => {
+    const getSubmission = await mockNetlifyForm(page, "/services.html", "service-enquiry");
     await page.goto("/services.html", { waitUntil: "domcontentloaded" });
     await page.locator("#service-first-name").fill("Test");
     await page.locator("#service-last-name").fill("Visitor");
@@ -210,9 +239,8 @@ test("embedded project enquiry form prepares an email draft", async ({ page }) =
     await page.locator("#service-enquiry-form").getByRole("button", { name: "Request a project consultation" }).click();
 
     const status = page.locator("#service-enquiry-form .form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    expect(decodeURIComponent(await status.getByRole("link", { name: "Open your email app and send your request" }).getAttribute("href")))
-        .toContain("I would like to discuss a building project in Kampala.");
+    await expect(status).toContainText("Your enquiry has been submitted");
+    expect(getSubmission().get("message")).toContain("I would like to discuss a building project in Kampala.");
 });
 
 test("homepage CMS preview renders text as content rather than markup", async ({ page }) => {
@@ -252,8 +280,9 @@ test("mobile navigation supports keyboard open, escape, and focus return", async
     await expect(openButton).toBeFocused();
 });
 
-test("mobile contact flow switches forms and prepares an email draft", async ({ page }) => {
+test("mobile contact flow switches forms and submits the enquiry to Netlify", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    await mockNetlifyForm(page, "/contact.html", "contact-enquiry");
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
     await page.getByRole("button", { name: "Detailed project interest" }).click();
     await expect(page.locator("#interest-form-panel")).toBeVisible();
@@ -267,11 +296,12 @@ test("mobile contact flow switches forms and prepares an email draft", async ({ 
     await page.locator("#contact-phone").fill("+256700000000");
     await page.locator("#contact-message").fill("I would like to discuss a project.");
     await page.getByRole("button", { name: "Send message" }).click();
-    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your email draft is ready");
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been submitted");
     expect(page.url()).toContain("/contact.html");
 });
 
-test("detailed interest form prepares an email draft with selected services", async ({ page }) => {
+test("detailed interest form submits selected services to Netlify", async ({ page }) => {
+    const getSubmission = await mockNetlifyForm(page, "/contact.html", "project-interest");
     await page.goto("/contact.html#express", { waitUntil: "domcontentloaded" });
     await page.getByLabel("Full name").fill("Test Visitor");
     await page.getByLabel("Email address").nth(1).fill("visitor@example.com");
@@ -288,11 +318,9 @@ test("detailed interest form prepares an email draft with selected services", as
     await page.getByRole("button", { name: "Submit interest" }).click();
 
     const status = page.locator(".interestForm .form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    const draftUrl = await status.getByRole("link", { name: "Open your email app and send your request" }).getAttribute("href");
-    expect(draftUrl).toMatch(/^mailto:cmi\.groupuganda@gmail\.com\?/);
-    expect(decodeURIComponent(draftUrl)).toContain("Test Visitor");
-    expect(decodeURIComponent(draftUrl)).toContain("Build a residential house:");
+    await expect(status).toContainText("Your enquiry has been submitted");
+    expect(getSubmission().get("fullname")).toBe("Test Visitor");
+    expect(getSubmission().get("buildResidentialHouse")).toBe("on");
     expect(page.url()).toContain("/contact.html#express");
 });
 

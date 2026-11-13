@@ -173,11 +173,12 @@
                         <a class="btn btn-secondary" href="mailto:cmi.groupuganda@gmail.com?subject=Property%20management%20enquiry">Email our property team</a>
                     </div>
                 </div>
-                <form id="property-enquiry-form" class="conversion-form" data-lead-form action="mailto:cmi.groupuganda@gmail.com" method="post" enctype="text/plain">
+                <form id="property-enquiry-form" name="property-enquiry" class="conversion-form" data-lead-form action="/property-management.html" method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="property-enquiry">
                     <h2 class="h3">Discuss your property</h2>
                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                         <label for="property-website">Leave this field empty</label>
-                        <input id="property-website" name="website" type="text" tabindex="-1" autocomplete="off">
+                        <input id="property-website" name="bot-field" type="text" tabindex="-1" autocomplete="off">
                     </div>
                     <div class="row">
                         <div class="col-sm-6"><div class="form-grp"><label for="property-first-name">First name</label><input id="property-first-name" name="firstName" type="text" autocomplete="given-name" maxlength="100" required></div></div>

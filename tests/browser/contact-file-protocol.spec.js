@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-test("contact form from a local file prepares an email draft without an API", async ({ page }) => {
+test("contact form from a local file offers an email fallback when Netlify is unavailable", async ({ page }) => {
     let apiRequests = 0;
     page.on("request", (request) => {
         if (/\/api\/(contact|interest)$/.test(request.url())) apiRequests += 1;
@@ -17,8 +17,8 @@ test("contact form from a local file prepares an email draft without an API", as
     await page.getByRole("button", { name: "Send message" }).click();
 
     const status = page.locator("#contact-form .form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    const emailLink = status.getByRole("link", { name: "Open your email app and send your request" });
+    await expect(status).toContainText("We could not submit your enquiry");
+    const emailLink = status.getByRole("link", { name: "Email CMI Group directly" });
     await expect(emailLink).toHaveAttribute("href", /^mailto:cmi\.groupuganda@gmail\.com/);
     expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("I would like to discuss a project.");
     expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("visitor@example.com");
@@ -26,7 +26,7 @@ test("contact form from a local file prepares an email draft without an API", as
     expect(apiRequests).toBe(0);
 });
 
-test("homepage enquiry from a local file prepares an email draft without an API", async ({ page }) => {
+test("homepage enquiry from a local file offers an email fallback when Netlify is unavailable", async ({ page }) => {
     let apiRequests = 0;
     page.on("request", (request) => {
         if (/\/api\/contact$/.test(request.url())) apiRequests += 1;
@@ -41,8 +41,8 @@ test("homepage enquiry from a local file prepares an email draft without an API"
     await page.locator("#home-enquiry [type='submit']").click();
 
     const status = page.locator("#home-enquiry .form-submit-status");
-    await expect(status).toContainText("Your email draft is ready");
-    const emailLink = status.getByRole("link", { name: "Open your email app and send your request" });
+    await expect(status).toContainText("We could not submit your enquiry");
+    const emailLink = status.getByRole("link", { name: "Email CMI Group directly" });
     await expect(emailLink).toHaveAttribute("href", /^mailto:cmi\.groupuganda@gmail\.com/);
     expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("I would like to discuss a project.");
     expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("visitor@example.com");
