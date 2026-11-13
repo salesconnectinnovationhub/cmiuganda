@@ -57,15 +57,15 @@ separately selected featured video. Update the featured video's ID and title in
 as new channel videos are published.
 
 ### 2. Enquiry and contact forms
-Public enquiry forms submit to the same-origin `/api/contact` and
-`/api/interest` endpoints without opening the visitor's email app or leaving
-the page. On Netlify, the functions in `netlify/functions/` route to the shared
-email handlers; on Cloudflare Pages, `functions/api/` handles the same paths.
-Both require `RESEND_API_KEY` and a verified `CMI_FROM_EMAIL` sender in the
-hosting platform's environment. A successful response means the email provider
-accepted the message; verify delivery in Resend and the destination inbox.
-If sending fails, the form keeps the entered details and offers a direct email
-link.
+Public quotation, contact, and project-interest forms prepare an email addressed
+to `cmi.groupuganda@gmail.com` in the visitor's own email app. The draft includes
+the form details (including selected services and estimator text), and the
+visitor must review it and press Send. This client-side option adds no email API,
+provider account, or delivery fee, but it depends on an email app being
+configured and cannot confirm delivery. Visitors can also email the address
+directly. The old `/api/contact` and `/api/interest` handlers remain available
+for deployments that choose to configure automated delivery through an email
+provider; they are not used by the public forms.
 
 ### 3. Website chat
 Visitors use the same-site `chat.html` page to create persistent conversations

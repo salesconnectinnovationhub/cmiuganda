@@ -2,13 +2,7 @@ import { expect, test } from "@playwright/test";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-test("contact form from a local file offers a manual fallback without opening an email app", async ({ page }) => {
-    await page.addInitScript(() => {
-        window.open = (url) => {
-            window.__emailDraftUrl = url;
-            return null;
-        };
-    });
+test("contact form from a local file prepares an email draft without an API", async ({ page }) => {
     let apiRequests = 0;
     page.on("request", (request) => {
         if (/\/api\/(contact|interest)$/.test(request.url())) apiRequests += 1;
@@ -23,21 +17,16 @@ test("contact form from a local file offers a manual fallback without opening an
     await page.getByRole("button", { name: "Send message" }).click();
 
     const status = page.locator("#contact-form .form-submit-status");
-    await expect(status).toContainText("could not reach the email service");
-    await expect(status.getByRole("link", { name: "email CMI Group directly" }))
-        .toHaveAttribute("href", "mailto:cmi.groupuganda@gmail.com");
-    expect(await page.evaluate(() => window.__emailDraftUrl)).toBeUndefined();
+    await expect(status).toContainText("Your email draft is ready");
+    const emailLink = status.getByRole("link", { name: "Open your email app and send your request" });
+    await expect(emailLink).toHaveAttribute("href", /^mailto:cmi\.groupuganda@gmail\.com/);
+    expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("I would like to discuss a project.");
+    expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("visitor@example.com");
     await expect(page.locator("#contact-message")).toHaveValue("I would like to discuss a project.");
     expect(apiRequests).toBe(0);
 });
 
-test("homepage enquiry from a local file offers a manual fallback without opening an email app", async ({ page }) => {
-    await page.addInitScript(() => {
-        window.open = (url) => {
-            window.__emailDraftUrl = url;
-            return null;
-        };
-    });
+test("homepage enquiry from a local file prepares an email draft without an API", async ({ page }) => {
     let apiRequests = 0;
     page.on("request", (request) => {
         if (/\/api\/contact$/.test(request.url())) apiRequests += 1;
@@ -52,10 +41,11 @@ test("homepage enquiry from a local file offers a manual fallback without openin
     await page.locator("#home-enquiry [type='submit']").click();
 
     const status = page.locator("#home-enquiry .form-submit-status");
-    await expect(status).toContainText("could not reach the email service");
-    await expect(status.getByRole("link", { name: "email CMI Group directly" }))
-        .toHaveAttribute("href", "mailto:cmi.groupuganda@gmail.com");
-    expect(await page.evaluate(() => window.__emailDraftUrl)).toBeUndefined();
+    await expect(status).toContainText("Your email draft is ready");
+    const emailLink = status.getByRole("link", { name: "Open your email app and send your request" });
+    await expect(emailLink).toHaveAttribute("href", /^mailto:cmi\.groupuganda@gmail\.com/);
+    expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("I would like to discuss a project.");
+    expect(decodeURIComponent(await emailLink.getAttribute("href"))).toContain("visitor@example.com");
     await expect(page.locator("#home-enquiry [name='message']")).toHaveValue("I would like to discuss a project.");
     expect(apiRequests).toBe(0);
 });

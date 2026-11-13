@@ -32,32 +32,31 @@ no retention period or automated deletion policy is configured by this code.
 Do not treat email delivery as guaranteed chat availability. Check the inbox and
 Resend activity during launch verification.
 
-The public website enquiry and interest forms submit to same-origin
-`POST /api/contact` and `POST /api/interest` endpoints. They send in the
-background and show success or retry guidance on the page without opening the
-visitor's email app. On Netlify, `netlify/functions/` exposes these API paths
-and delegates to the shared email handlers in `functions/api/`. Cloudflare
-Pages continues to use those handlers directly.
+The public quotation, contact, and interest forms now prepare a `mailto:`
+message to `cmi.groupuganda@gmail.com` in the visitor's email app. The visitor
+must review and send the draft; this requires no email provider/API key and
+cannot confirm delivery. The form details are retained on the page.
 
-Both deployments require `RESEND_API_KEY` and a verified `CMI_FROM_EMAIL`
-sender configured as encrypted/environment variables. Messages go to
-`cmi.groupuganda@gmail.com`; replies go to the visitor's supplied email
-address. A successful API response means Resend accepted the message, not
-proof that it reached the inbox; check Resend activity and the destination
-inbox during launch. The legacy PHP contact handlers use the same recipient.
+The same-origin `POST /api/contact` and `POST /api/interest` handlers, including
+the Netlify adapters, remain available for deployments that specifically want
+automated sending. Those optional handlers require `RESEND_API_KEY` and a
+verified `CMI_FROM_EMAIL` sender. A successful response means Resend accepted
+the message, not proof it reached the inbox. The legacy PHP contact handlers
+also remain separate and require SMTP settings.
 
 If the legacy PHP handlers are deployed separately, configure
 `CMI_SMTP_HOST`, `CMI_SMTP_USERNAME`, `CMI_SMTP_PASSWORD`, and
 `CMI_SMTP_FROM_EMAIL` in that server's environment. They return HTTP 503 when
 these settings are missing. Rotate any SMTP credentials previously stored in
-source code; chat and public enquiry handlers use the Resend settings above.
+source code; chat and optional automated public enquiry handlers use the Resend
+settings above.
 
 ## Public submission abuse controls
 
-Review submissions and public enquiry/interest submissions require a
-same-origin header. Contact and interest submissions validate required fields,
-send only through the configured email service, and show an inline error and
-direct email option if delivery cannot be requested.
+Review API submissions and optional enquiry/interest API submissions require a
+same-origin header. The optional contact and interest API endpoints validate
+required fields and send only through the configured email service. The default
+public forms do not call these endpoints.
 
 Protect `POST /api/contact` and `POST /api/interest` with an edge rate limit,
 for example 5 requests per 60 seconds per source IP. On Cloudflare Pages, use
@@ -78,26 +77,28 @@ spam persists, consider adding Turnstile with server-side token verification.
 
 1. Deploy this site as a Cloudflare Pages project attached to
    `https://cmigroupuganda.com` for features that use Pages Functions.
-2. Set `RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL` as encrypted Pages
-   environment variables. Submit a test enquiry and interest form; confirm the
-   page stays open, the inline success message appears, and the message reaches
-   `cmi.groupuganda@gmail.com`.
+2. No email-provider variables are needed for the public enquiry forms. Test a
+   form and confirm its draft opens addressed to
+   `cmi.groupuganda@gmail.com`; then press Send in the email app and verify
+   receipt. Configure `RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL`
+   only if automated email delivery is separately enabled for chat or the
+   optional enquiry API handlers.
 3. If chat notifications are enabled, they use the same Resend configuration.
    Do not put the API key in site files.
 
 ## Netlify enquiry email setup
 
-The Netlify Functions in `netlify/functions/` expose `/api/contact` and
-`/api/interest` and reuse the validated handlers in `functions/api/`. Configure
-`RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL` in the Netlify site's
-environment variables, then deploy. Test both forms on the deployed site and
-verify Resend activity and delivery to `cmi.groupuganda@gmail.com`. Do not put
-the API key in source control. The CMS, chat, and review endpoints still need
-their documented Cloudflare Pages environment and bindings.
+The public forms do not require Netlify Functions or provider credentials:
+they prepare an email in the visitor's email app, and the visitor must press
+Send. The Netlify Functions in `netlify/functions/` remain optional adapters for
+automated delivery and require `RESEND_API_KEY` and a verified
+`CMI_FROM_EMAIL`. The CMS, chat, and review endpoints still need their
+documented Cloudflare Pages environment and bindings.
 
 The repository does not contain Cloudflare deployment configuration or
-credentials. The public forms use the Pages Functions or Netlify adapters, not
-the legacy PHP handlers.
+credentials. The default public forms use `mailto:`; the optional automated
+email endpoints use the Pages Functions or Netlify adapters, not the legacy
+PHP handlers.
 
 ## Public reviews and admin replies
 

@@ -1,60 +1,53 @@
 (function () {
     const recipient = "cmi.groupuganda@gmail.com";
 
-    function showFailure(status, message) {
-        const fallbackLink = document.createElement("a");
-        fallbackLink.href = `mailto:${recipient}`;
-        fallbackLink.textContent = "email CMI Group directly";
-        status.replaceChildren(
-            document.createTextNode(`${message} You can also `),
-            fallbackLink,
-            document.createTextNode(".")
-        );
+    function getFieldLabel(field) {
+        const label = field.labels && field.labels[0];
+        return label ? label.textContent.trim() : field.name;
+    }
+
+    function createEmailDraft(form) {
+        const fields = Array.from(form.elements)
+            .filter((field) => {
+                if (!field.name || field.name === "website" || field.disabled) return false;
+                if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
+                if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
+                return true;
+            })
+            .map((field) => `${getFieldLabel(field)}: ${field.value.trim()}`)
+            .filter((line) => !line.endsWith(": "));
+
+        const fullName = form.elements.namedItem("fullname")
+            ? form.elements.namedItem("fullname").value.trim()
+            : [
+                form.elements.namedItem("firstName")?.value.trim(),
+                form.elements.namedItem("lastName")?.value.trim(),
+            ].filter(Boolean).join(" ");
+        const subject = `Project quotation / enquiry${fullName ? ` from ${fullName}` : ""}`;
+        const body = [
+            "Website enquiry for CMI Group",
+            "",
+            ...fields,
+        ].join("\r\n");
+
+        return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
 
     window.cmiEmailForm = {
-        async submit(form, status) {
+        submit(form, status) {
             if (!(status instanceof HTMLElement)) {
                 throw new Error("The enquiry form is missing its submit status element.");
             }
 
-            const button = form.querySelector('[type="submit"]');
-            if (!(button instanceof HTMLButtonElement || button instanceof HTMLInputElement)) {
-                throw new Error("The enquiry form is missing its submit button.");
-            }
-            if (form.dataset.submitting === "true") return;
-
-            form.dataset.submitting = "true";
-            form.setAttribute("aria-busy", "true");
-            button.disabled = true;
-            status.textContent = "Sending your message…";
-
-            try {
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: new FormData(form),
-                    headers: { Accept: "text/plain" },
-                    credentials: "same-origin",
-                });
-                const message = (await response.text()).trim();
-
-                if (!response.ok) {
-                    showFailure(status, message || "We could not send your message just now. Please try again.");
-                    return false;
-                }
-
-                status.textContent = message || "Your message has been sent to CMI Group.";
-                form.reset();
-                return true;
-            } catch (error) {
-                console.error("Could not submit the CMI Group enquiry form.", error);
-                showFailure(status, "We could not reach the email service. Your details are still here; please try again.");
-                return false;
-            } finally {
-                delete form.dataset.submitting;
-                form.removeAttribute("aria-busy");
-                button.disabled = false;
-            }
+            const emailLink = document.createElement("a");
+            emailLink.href = createEmailDraft(form);
+            emailLink.textContent = "Open your email app and send your request";
+            status.replaceChildren(
+                document.createTextNode("Your email draft is ready. "),
+                emailLink,
+                document.createTextNode(". Review it and press Send in your email app; this website does not send email automatically.")
+            );
+            return true;
         },
     };
 })();
