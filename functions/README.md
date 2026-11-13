@@ -82,10 +82,8 @@ spam persists, consider adding Turnstile with server-side token verification.
    environment variables. Submit a test enquiry and interest form; confirm the
    page stays open, the inline success message appears, and the message reaches
    `cmi.groupuganda@gmail.com`.
-3. If chat notifications or the optional legacy contact endpoints are enabled,
-   verify a sender domain in Resend, configure the verified sender as
-   `CMI_FROM_EMAIL`, and add `RESEND_API_KEY` as an encrypted Pages secret.
-   Do not put this key in site files.
+3. If chat notifications are enabled, they use the same Resend configuration.
+   Do not put the API key in site files.
 
 ## Netlify enquiry email setup
 
@@ -98,8 +96,8 @@ the API key in source control. The CMS, chat, and review endpoints still need
 their documented Cloudflare Pages environment and bindings.
 
 The repository does not contain Cloudflare deployment configuration or
-credentials. The legacy PHP handlers have also been pointed at the same inbox,
-but the public HTML forms use the visitor's email app rather than those handlers.
+credentials. The public forms use the Pages Functions or Netlify adapters, not
+the legacy PHP handlers.
 
 ## Public reviews and admin replies
 
