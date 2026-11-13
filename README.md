@@ -22,6 +22,7 @@ The site is designed for Cloudflare Pages deployment, with Netlify Function adap
 - `ASSET-STRATEGY.md` for frontend structure and safe media cleanup guidance
 - `admin/` for the content management dashboard
 - `functions/` for Cloudflare Pages API endpoints and database schemas
+- `netlify/functions/` for Netlify contact-email API adapters
 - `images/`, `img/`, `galleryimages/`, `teamimages/`, `cmipics/` for website media
 - `submit/` containing legacy PHP handlers and PHPMailer files; not used by the active Cloudflare Pages forms
 
@@ -242,15 +243,14 @@ http://localhost:8000
 ```
 
 Opening pages with `file://` is not suitable for testing site features that
-call APIs. Enquiry forms can still prepare an email draft locally, but the
-public CMS and other Cloudflare Functions (such as chat) are unavailable when
-serving static files with Python.
+call APIs. Static serving with Python does not run the email functions, CMS, or
+other Cloudflare Functions; enquiry forms keep the entered details and offer a
+manual email link if the API is unavailable.
 
-2. For Cloudflare Functions, preview the site using Wrangler or deploy to Cloudflare Pages.
-   Chat email notifications and optional legacy form API delivery need
-   `RESEND_API_KEY` and `CMI_FROM_EMAIL` configured; the sender must be verified
-   in Resend. Website enquiry forms do not need these settings. Never commit
-   these values to the repository.
+2. Preview Netlify Functions with `netlify dev`, or use Wrangler for the
+   Cloudflare Pages APIs. Contact/interest email and chat notifications require
+   `RESEND_API_KEY` and a verified `CMI_FROM_EMAIL` sender in the hosting
+   environment. Never commit these values to the repository.
 
 Example:
 
@@ -296,3 +296,5 @@ production deployment.
 ## Summary
 
 This repository is the digital front door for CMI Group Uganda: it markets the company, captures enquiries and project interest, shows property information, supports public reviews, and gives the admin team a CMS-powered way to manage content. The combination of static HTML pages and Cloudflare serverless functions makes it a practical low-maintenance setup for a service business website.
+#   c m i u g a n d a  
+ 
