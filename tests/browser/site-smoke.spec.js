@@ -45,6 +45,14 @@ async function mockNetlifyForm(page, path, formName) {
     return () => submittedData;
 }
 
+async function dismissAnnouncement(page) {
+    await page.evaluate(() => {
+        localStorage.setItem("cmi-promotion-dismissed-default-advert-campaign", String(Date.now()));
+    });
+    const closeButton = page.getByRole("button", { name: "Close announcement" });
+    if (await closeButton.isVisible()) await closeButton.click();
+}
+
 test("estimate quote handoff prefills the contact message", async ({ page }) => {
     const getSubmission = await mockNetlifyForm(page, "/contact.html", "contact-enquiry");
     await page.goto("/block-estimator.html", { waitUntil: "domcontentloaded" });
@@ -59,6 +67,7 @@ test("estimate quote handoff prefills the contact message", async ({ page }) => 
     await expect(page.locator("#result-units")).toContainText("161");
     await page.locator("#quote-request-link").click();
     await expect(page).toHaveURL(/contact\.html#contact-form$/);
+    await dismissAnnouncement(page);
     await expect(page.locator("#estimate-prefill-status")).toContainText("estimate has been added");
     await expect(page.locator("#contact-message")).toHaveValue(/Estimated quantity: 161 concrete blocks/);
     await expect(page.locator("#contact-message")).toHaveValue(/Net wall area after openings: 13\.2 m2/);
@@ -159,6 +168,7 @@ test("contact form submits directly to Netlify Forms", async ({ page }) => {
         if (/\/api\/(contact|interest|analytics)$/.test(request.url())) apiRequests.push(request.url());
     });
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
+    await dismissAnnouncement(page);
     await expect(page.getByRole("heading", { name: "Office locations in Uganda" })).toBeVisible();
     await expect(page.locator(".office-location-card iframe")).toHaveCount(2);
     await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");
@@ -170,7 +180,12 @@ test("contact form submits directly to Netlify Forms", async ({ page }) => {
     await page.getByRole("button", { name: "Send message" }).click();
 
     const status = page.locator("#contact-form .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted");
+    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Your message: I would like to discuss a building project.");
+    await expect(status).toContainText("CMI Group will respond using the contact details you provided.");
+    const whatsappLink = status.getByRole("link", { name: "message CMI Group on WhatsApp" });
+    await expect(whatsappLink).toHaveAttribute("href", "https://wa.me/message/DYT6JQFKYJNLF1");
+    await expect(whatsappLink).toHaveAttribute("target", "_blank");
     expect(getSubmission().get("firstName")).toBe("Test");
     expect(getSubmission().get("lastName")).toBe("Visitor");
     expect(getSubmission().get("email")).toBe("visitor@example.com");
@@ -189,6 +204,7 @@ test("contact form keeps details and offers an email fallback when Netlify rejec
         }
     });
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
+    await dismissAnnouncement(page);
     await page.locator("#contact-first-name").fill("Test");
     await page.locator("#contact-last-name").fill("Visitor");
     await page.locator("#contact-email").fill("visitor@example.com");
@@ -231,6 +247,7 @@ test("project enquiry forms appear at key conversion points", async ({ page }) =
 test("embedded project enquiry form submits to its Netlify form", async ({ page }) => {
     const getSubmission = await mockNetlifyForm(page, "/services.html", "service-enquiry");
     await page.goto("/services.html", { waitUntil: "domcontentloaded" });
+    await dismissAnnouncement(page);
     await page.locator("#service-first-name").fill("Test");
     await page.locator("#service-last-name").fill("Visitor");
     await page.locator("#service-email").fill("visitor@example.com");
@@ -239,7 +256,8 @@ test("embedded project enquiry form submits to its Netlify form", async ({ page 
     await page.locator("#service-enquiry-form").getByRole("button", { name: "Request a project consultation" }).click();
 
     const status = page.locator("#service-enquiry-form .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted");
+    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Your message: I would like to discuss a building project in Kampala.");
     expect(getSubmission().get("message")).toContain("I would like to discuss a building project in Kampala.");
 });
 
@@ -284,6 +302,7 @@ test("mobile contact flow switches forms and submits the enquiry to Netlify", as
     await page.setViewportSize({ width: 390, height: 844 });
     await mockNetlifyForm(page, "/contact.html", "contact-enquiry");
     await page.goto("/contact.html", { waitUntil: "domcontentloaded" });
+    await dismissAnnouncement(page);
     await page.getByRole("button", { name: "Detailed project interest" }).click();
     await expect(page.locator("#interest-form-panel")).toBeVisible();
     await page.getByRole("button", { name: "General enquiry" }).click();
@@ -303,6 +322,7 @@ test("mobile contact flow switches forms and submits the enquiry to Netlify", as
 test("detailed interest form submits selected services to Netlify", async ({ page }) => {
     const getSubmission = await mockNetlifyForm(page, "/contact.html", "project-interest");
     await page.goto("/contact.html#express", { waitUntil: "domcontentloaded" });
+    await dismissAnnouncement(page);
     await page.getByLabel("Full name").fill("Test Visitor");
     await page.getByLabel("Email address").nth(1).fill("visitor@example.com");
     await page.getByLabel("Phone number").nth(1).fill("+256700000000");
@@ -318,7 +338,10 @@ test("detailed interest form submits selected services to Netlify", async ({ pag
     await page.getByRole("button", { name: "Submit interest" }).click();
 
     const status = page.locator(".interestForm .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted");
+    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Selected services: Build a residential house");
+    await expect(status.getByRole("link", { name: "message CMI Group on WhatsApp" }))
+        .toHaveAttribute("href", "https://wa.me/message/DYT6JQFKYJNLF1");
     expect(getSubmission().get("fullname")).toBe("Test Visitor");
     expect(getSubmission().get("buildResidentialHouse")).toBe("on");
     expect(page.url()).toContain("/contact.html#express");

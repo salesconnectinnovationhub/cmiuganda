@@ -1,9 +1,50 @@
 (function () {
     const recipient = "cmi.groupuganda@gmail.com";
+    const defaultWhatsAppUrl = "https://wa.me/message/DYT6JQFKYJNLF1";
 
     function getFieldLabel(field) {
         const label = field.labels && field.labels[0];
         return label ? label.textContent.trim() : field.name;
+    }
+
+    function getSubmissionSummary(form) {
+        const message = form.querySelector('[name="message"]');
+        if (message && message.value.trim()) {
+            const text = message.value.trim();
+            return `Your message: ${text.length > 240 ? `${text.slice(0, 237).trimEnd()}...` : text}`;
+        }
+
+        const selectedServices = Array.from(form.querySelectorAll('input[type="checkbox"]:checked'))
+            .map(getFieldLabel)
+            .filter(Boolean);
+        if (selectedServices.length) return `Selected services: ${selectedServices.join(", ")}`;
+
+        return "Your project enquiry details were received.";
+    }
+
+    function getWhatsAppUrl() {
+        const whatsappLink = Array.from(document.querySelectorAll("a[href]")).find((link) => {
+            const url = new URL(link.href);
+            return url.protocol === "https:"
+                && (url.hostname === "wa.me" || url.hostname === "api.whatsapp.com");
+        });
+        return whatsappLink ? whatsappLink.href : defaultWhatsAppUrl;
+    }
+
+    function showSuccess(status, form) {
+        const whatsappLink = document.createElement("a");
+        whatsappLink.href = getWhatsAppUrl();
+        whatsappLink.target = "_blank";
+        whatsappLink.rel = "noopener noreferrer";
+        whatsappLink.textContent = "message CMI Group on WhatsApp";
+
+        status.replaceChildren(
+            document.createTextNode("Your enquiry has been submitted to CMI Group. "),
+            document.createTextNode(getSubmissionSummary(form)),
+            document.createTextNode(" CMI Group will respond using the contact details you provided. For a quicker response, "),
+            whatsappLink,
+            document.createTextNode(".")
+        );
     }
 
     function createEmailDraft(form) {
@@ -75,7 +116,7 @@
                     return false;
                 }
 
-                status.textContent = "Your enquiry has been submitted. CMI Group will be in touch using the details you provided.";
+                showSuccess(status, form);
                 form.reset();
                 return true;
             } catch (error) {
