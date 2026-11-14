@@ -77,7 +77,7 @@ test("estimate quote handoff prefills the contact message", async ({ page }) => 
     await page.locator("#contact-email").fill("visitor@example.com");
     await page.locator("#contact-phone").fill("+256700000000");
     await page.getByRole("button", { name: "Send message" }).click();
-    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been submitted");
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been received by our website.");
     expect(getSubmission().get("message")).toContain("Estimated quantity: 161 concrete blocks");
     expect(getSubmission().get("message")).toContain("Net wall area after openings: 13.2 m2");
 });
@@ -172,6 +172,7 @@ test("contact form submits directly to Netlify Forms", async ({ page }) => {
     await expect(page.getByRole("heading", { name: "Office locations in Uganda" })).toBeVisible();
     await expect(page.locator(".office-location-card iframe")).toHaveCount(2);
     await expect(page.getByRole("link", { name: "Policies" })).toHaveAttribute("href", "policies.html");
+    await expect(page.locator(".contact-direct-options a i")).toHaveClass(/fa-whatsapp/);
     await page.locator("#contact-first-name").fill("Test");
     await page.locator("#contact-last-name").fill("Visitor");
     await page.locator("#contact-email").fill("visitor@example.com");
@@ -180,12 +181,12 @@ test("contact form submits directly to Netlify Forms", async ({ page }) => {
     await page.getByRole("button", { name: "Send message" }).click();
 
     const status = page.locator("#contact-form .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Your enquiry has been received by our website.");
     await expect(status).toContainText("Your message: I would like to discuss a building project.");
-    await expect(status).toContainText("CMI Group will respond using the contact details you provided.");
     const whatsappLink = status.getByRole("link", { name: "message CMI Group on WhatsApp" });
     await expect(whatsappLink).toHaveAttribute("href", "https://wa.me/message/DYT6JQFKYJNLF1");
     await expect(whatsappLink).toHaveAttribute("target", "_blank");
+    await expect(whatsappLink.locator("i")).toHaveClass(/fa-whatsapp/);
     expect(getSubmission().get("firstName")).toBe("Test");
     expect(getSubmission().get("lastName")).toBe("Visitor");
     expect(getSubmission().get("email")).toBe("visitor@example.com");
@@ -264,7 +265,7 @@ test("home, project, and property consultation forms submit to Netlify", async (
         await form.locator('[name="message"]').fill("I would like to discuss a project.");
         await form.locator('[type="submit"]').click();
 
-        await expect(form.locator(".form-submit-status")).toContainText("Your enquiry has been submitted to CMI Group.");
+        await expect(form.locator(".form-submit-status")).toContainText("Your enquiry has been received by our website.");
         expect(getSubmission().get("form-name")).toBe(name);
         expect(getSubmission().get("message")).toBe("I would like to discuss a project.");
     }
@@ -282,7 +283,7 @@ test("embedded project enquiry form submits to its Netlify form", async ({ page 
     await page.locator("#service-enquiry-form").getByRole("button", { name: "Request a project consultation" }).click();
 
     const status = page.locator("#service-enquiry-form .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Your enquiry has been received by our website.");
     await expect(status).toContainText("Your message: I would like to discuss a building project in Kampala.");
     expect(getSubmission().get("message")).toContain("I would like to discuss a building project in Kampala.");
 });
@@ -341,7 +342,7 @@ test("mobile contact flow switches forms and submits the enquiry to Netlify", as
     await page.locator("#contact-phone").fill("+256700000000");
     await page.locator("#contact-message").fill("I would like to discuss a project.");
     await page.getByRole("button", { name: "Send message" }).click();
-    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been submitted");
+    await expect(page.locator("#contact-form .form-submit-status")).toContainText("Your enquiry has been received by our website.");
     expect(page.url()).toContain("/contact.html");
 });
 
@@ -364,7 +365,7 @@ test("detailed interest form submits selected services to Netlify", async ({ pag
     await page.getByRole("button", { name: "Submit interest" }).click();
 
     const status = page.locator(".interestForm .form-submit-status");
-    await expect(status).toContainText("Your enquiry has been submitted to CMI Group.");
+    await expect(status).toContainText("Your enquiry has been received by our website.");
     await expect(status).toContainText("Selected services: Build a residential house");
     await expect(status.getByRole("link", { name: "message CMI Group on WhatsApp" }))
         .toHaveAttribute("href", "https://wa.me/message/DYT6JQFKYJNLF1");

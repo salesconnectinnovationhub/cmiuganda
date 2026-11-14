@@ -37,11 +37,15 @@
         whatsappLink.target = "_blank";
         whatsappLink.rel = "noopener noreferrer";
         whatsappLink.textContent = "message CMI Group on WhatsApp";
+        const whatsappIcon = document.createElement("i");
+        whatsappIcon.className = "fab fa-whatsapp";
+        whatsappIcon.setAttribute("aria-hidden", "true");
+        whatsappLink.prepend(whatsappIcon, document.createTextNode(" "));
 
         status.replaceChildren(
-            document.createTextNode("Your enquiry has been submitted to CMI Group. "),
+            document.createTextNode("Your enquiry has been received by our website. "),
             document.createTextNode(getSubmissionSummary(form)),
-            document.createTextNode(" CMI Group will respond using the contact details you provided. For a quicker response, "),
+            document.createTextNode(" For a quick reply, "),
             whatsappLink,
             document.createTextNode(".")
         );

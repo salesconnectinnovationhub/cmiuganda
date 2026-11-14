@@ -92,12 +92,14 @@ spam persists, consider adding Turnstile with server-side token verification.
 
 1. In Netlify, open the site's **Forms** settings and enable form detection.
 2. Deploy the site so Netlify can scan the static HTML and register its named
-   forms.
-3. Open **Forms** in the site dashboard. For each enquiry form, add an email
-   notification addressed to `cmi.groupuganda@gmail.com`.
-4. Submit a test enquiry and a test quotation. Confirm the submission appears
-   in Netlify Forms and the notification reaches the CMI inbox (including its
-   spam folder). The visitor sees success when Netlify accepts the submission.
+   forms: `home-enquiry`, `contact-enquiry`, `project-interest`,
+   `service-enquiry`, `property-enquiry`, and `project-enquiry`.
+3. Open **Forms** in the site dashboard. Add an email notification addressed to
+   `cmi.groupuganda@gmail.com` for every form that should send email.
+4. Submit a test enquiry. Confirm the submission appears in Netlify Forms and
+   the notification reaches the CMI inbox (including its spam folder). The
+   website's success message confirms only that Netlify accepted the submission;
+   it does not confirm that an email notification was configured or delivered.
 
 These forms submit directly to Netlify Forms and do not call the Netlify
 Functions or require `RESEND_API_KEY`. Netlify plan limits or usage charges may
