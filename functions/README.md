@@ -32,41 +32,45 @@ no retention period or automated deletion policy is configured by this code.
 Do not treat email delivery as guaranteed chat availability. Check the inbox and
 Resend activity during launch verification.
 
-The public quotation, contact, and interest forms are configured as Netlify
-Forms and submit their fields in the background. On Netlify, enable form
-detection, deploy the site, and configure an email notification for each form
-to `cmi.groupuganda@gmail.com`. Netlify receives the submission; no Resend API
-key is needed for these forms. Netlify plan limits or usage charges may apply,
-so check the Forms usage in the site's dashboard. On Cloudflare Pages, Netlify
-Forms are not processed; use the optional provider-backed handlers below or
-deploy these forms on Netlify.
+The homepage, general contact, detailed project-interest, service, project,
+and property enquiry forms submit directly to Web3Forms through the shared
+`assets/js/email-form.js` handler. Their Web3Forms access key is included in
+the public HTML/JavaScript, as required for browser submissions; it is not a
+server secret. Web3Forms routes messages to the inbox configured for that key.
+The frontend reports success only when Web3Forms returns `success: true`.
 
-The same-origin `POST /api/contact` and `POST /api/interest` handlers, including
-the Netlify adapters, remain available for deployments that specifically want
-automated sending. Those optional handlers require `RESEND_API_KEY` and a
-verified `CMI_FROM_EMAIL` sender. A successful response means Resend accepted
-the message, not proof it reached the inbox. The legacy PHP contact handlers
-also remain separate and require SMTP settings.
+Before deploying, confirm the access key is configured to deliver to
+`cmi.groupuganda@gmail.com` and the production domain is permitted by the
+Web3Forms account. No Resend environment variables are required for these
+active lead forms. Test each form and confirm delivery in the CMI inbox,
+including spam.
+
+The same-origin `/api/contact` and `/api/interest` handlers remain as legacy
+endpoints and are not used by the active public forms. They still require the
+Resend configuration below if those endpoints are intentionally retained or
+used directly.
+
+The legacy PHP contact handlers remain separate and require SMTP settings.
 
 If the legacy PHP handlers are deployed separately, configure
 `CMI_SMTP_HOST`, `CMI_SMTP_USERNAME`, `CMI_SMTP_PASSWORD`, and
 `CMI_SMTP_FROM_EMAIL` in that server's environment. They return HTTP 503 when
 these settings are missing. Rotate any SMTP credentials previously stored in
-source code; chat and optional automated public enquiry handlers use the Resend
-settings above.
+source code. Chat notifications and the legacy public enquiry endpoints use
+the Resend settings above.
 
 ## Public submission abuse controls
 
-Review API submissions and optional enquiry/interest API submissions require a
-same-origin header. The optional contact and interest API endpoints validate
-required fields and send only through the configured email service. The default
-public forms do not call these endpoints.
+Review API submissions and the legacy enquiry/interest API endpoints require
+a same-origin header. The active public lead forms post to Web3Forms, so the
+Web3Forms allowed-domain and spam-protection settings should be reviewed in
+that account.
 
-Protect `POST /api/contact` and `POST /api/interest` with an edge rate limit,
-for example 5 requests per 60 seconds per source IP. On Cloudflare Pages, use
-a Cloudflare zone rule; on Netlify, configure an equivalent edge/WAF rule if
-available. Rate limits are platform configuration and are not deployed by
-application code.
+If the legacy `/api/contact` and `/api/interest` endpoints are kept enabled,
+protect them with an edge rate limit, for example 5 requests per 60 seconds
+per source IP. These paths are not used by the active browser forms. On
+Cloudflare Pages, use a Cloudflare zone rule; on Netlify, configure an
+equivalent edge/WAF rule if available.
 
 If the Cloudflare plan supports method matching and a second rule, separately
 protect review writes with
@@ -81,38 +85,30 @@ spam persists, consider adding Turnstile with server-side token verification.
 
 1. Deploy this site as a Cloudflare Pages project attached to
    `https://cmigroupuganda.com` for features that use Pages Functions.
-2. Netlify Forms are not processed on Cloudflare Pages. Configure the optional
-   `/api/contact` and `/api/interest` handlers with `RESEND_API_KEY` and a
-   verified `CMI_FROM_EMAIL` sender if automated form delivery is required
-   there.
-3. If chat notifications are enabled, they use the same Resend configuration.
-   Do not put the API key in site files.
+2. Confirm Web3Forms is configured for `cmi.groupuganda@gmail.com` and allows
+   the production domain. The public access key is already in the lead forms.
+3. If chat notifications or the legacy enquiry APIs are enabled, configure
+   their Resend sender settings as encrypted Pages environment values.
 
-## Netlify enquiry email setup
+## Legacy API email setup
 
-1. In Netlify, open the site's **Forms** settings and enable form detection.
-2. Deploy the site so Netlify can scan the static HTML and register its named
-   forms: `home-enquiry`, `contact-enquiry`, `project-interest`,
-   `service-enquiry`, `property-enquiry`, and `project-enquiry`.
-3. Open **Forms** in the site dashboard. Add an email notification addressed to
-   `cmi.groupuganda@gmail.com` for every form that should send email.
-4. Submit a test enquiry. Confirm the submission appears in Netlify Forms and
-   the notification reaches the CMI inbox (including its spam folder). The
-   website's success message confirms only that Netlify accepted the submission;
-   it does not confirm that an email notification was configured or delivered.
+1. In the Netlify site settings, add `RESEND_API_KEY` and `CMI_FROM_EMAIL` as
+   environment variables available to Functions.
+2. Verify the sender address/domain with Resend and confirm the API key has
+   permission to send from it.
+3. Redeploy the site so the Netlify Functions receive the configuration.
+4. These settings apply to chat notifications and the legacy email API
+   endpoints, not the active Web3Forms lead forms.
 
-These forms submit directly to Netlify Forms and do not call the Netlify
-Functions or require `RESEND_API_KEY`. Netlify plan limits or usage charges may
-apply. The functions in `netlify/functions/` remain optional adapters for the
-separate Resend-based API endpoints. On Netlify, `/api/cms` returns an empty
-public record list so pages keep their static content and default announcements
-without 404 errors. Editing or persisting CMS content, chat, and review features
-still requires their documented Cloudflare Pages environment and bindings.
+Netlify Forms detection and form email notifications are not used. Netlify's
+`/api/contact` and `/api/interest` Function adapters call the legacy handlers.
+On Netlify, `/api/cms` returns an empty public record list so
+pages keep their static content and default announcements without 404 errors.
+Editing or persisting CMS content, chat, and review features still requires
+their documented Cloudflare Pages environment and bindings.
 
-The repository does not contain Cloudflare deployment configuration or
-credentials. The public forms use Netlify Forms when deployed on Netlify; the
-optional automated email endpoints use the Pages Functions or Netlify
-adapters, not the legacy PHP handlers.
+The repository does not contain deployment credentials. The legacy PHP
+handlers remain separate and are not used by the active public forms.
 
 ## Public reviews and admin replies
 

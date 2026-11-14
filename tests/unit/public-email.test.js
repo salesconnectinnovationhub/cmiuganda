@@ -29,10 +29,11 @@ function formRequest(path, fields) {
   });
 }
 
-test("contact form notifications go to the public CMI contact email", async (t) => {
+test("homepage enquiry notifications go to the public CMI contact email", async (t) => {
   const getMessage = mockEmailDelivery(t);
   const response = await submitContact({
     request: formRequest("contact", {
+      "form-name": "home-enquiry",
       firstName: "Test",
       lastName: "Visitor",
       email: "visitor@example.com",
@@ -44,9 +45,43 @@ test("contact form notifications go to the public CMI contact email", async (t) 
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /^text\/plain/);
-  assert.match(await response.clone().text(), /sent to CMI Group/);
+  assert.match(await response.clone().text(), /accepted for delivery to CMI Group/);
   assert.deepEqual(getMessage().to, [CMI_CONTACT_EMAIL]);
   assert.equal(getMessage().reply_to, "visitor@example.com");
+  assert.match(getMessage().subject, /Homepage consultation enquiry/);
+});
+
+test("public form honeypots do not send email", async (t) => {
+  const getMessage = mockEmailDelivery(t);
+  const contactResponse = await submitContact({
+    request: formRequest("contact", { "bot-field": "spam" }),
+    env: EMAIL_ENV,
+  });
+  const interestResponse = await submitInterest({
+    request: formRequest("interest", { "bot-field": "spam" }),
+    env: EMAIL_ENV,
+  });
+
+  assert.equal(contactResponse.status, 200);
+  assert.equal(interestResponse.status, 200);
+  assert.equal(getMessage(), undefined);
+});
+
+test("missing Resend configuration is reported as a delivery failure", async (t) => {
+  t.mock.method(console, "error", () => {});
+  const response = await submitContact({
+    request: formRequest("contact", {
+      firstName: "Test",
+      lastName: "Visitor",
+      email: "visitor@example.com",
+      phone: "+256700000000",
+      message: "Please contact me about a project.",
+    }),
+    env: {},
+  });
+
+  assert.equal(response.status, 503);
+  assert.match(await response.text(), /could not send your message/i);
 });
 
 test("Netlify contact route delegates to the shared email handler", async (t) => {

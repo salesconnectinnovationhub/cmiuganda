@@ -15,7 +15,7 @@ export async function onRequestPost({ request, env }) {
   if (parsed.error) return parsed.error;
   const { formData } = parsed;
 
-  if (sanitize(formData.get("website"))) {
+  if (sanitize(formData.get("bot-field")) || sanitize(formData.get("website"))) {
     return respond("Your message has been received.", 200);
   }
 
@@ -36,10 +36,19 @@ export async function onRequestPost({ request, env }) {
     return respond("Enter a valid email address so CMI Group can respond to your message.", 400);
   }
 
+  const enquiryTypes = {
+    "home-enquiry": "Homepage consultation enquiry",
+    "contact-enquiry": "Contact page enquiry",
+    "service-enquiry": "Service consultation enquiry",
+    "project-enquiry": "Project consultation enquiry",
+    "property-enquiry": "Property consultation enquiry",
+  };
+  const enquiryType = enquiryTypes[sanitize(formData.get("form-name"))] || "Website enquiry";
   const delivery = await sendEmail(env, {
     replyTo: values.email,
-    subject: `New contact message from ${values.firstName} ${values.lastName}`,
+    subject: `${enquiryType} from ${values.firstName} ${values.lastName}`,
     text: [
+      `Enquiry type: ${enquiryType}`,
       `Name: ${values.firstName} ${values.lastName}`,
       `Email: ${values.email}`,
       `Phone: ${values.phone}`,
@@ -53,5 +62,5 @@ export async function onRequestPost({ request, env }) {
     return respond("We could not send your message just now. Please try again or contact CMI Group directly.", delivery.status);
   }
 
-  return respond("Your message has been sent to CMI Group. We will be in touch using the contact details you provided.", 200);
+  return respond("Your enquiry was accepted for delivery to CMI Group.", 200);
 }

@@ -131,7 +131,8 @@
                             </div>
 
                             <div id="contact-form-panel" class="contact-form-panel">
-                                <form id="contact-form" name="contact-enquiry" action="/contact.html" class="contact-form" method="post" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+                                <form id="contact-form" name="contact-enquiry" action="https://api.web3forms.com/submit" class="contact-form" method="post" novalidate>
+                                    <input type="hidden" name="access_key" value="59457e34-e78d-40c5-87eb-0b5e008db3ac">
                                     <input type="hidden" name="form-name" value="contact-enquiry">
                                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                                         <label for="contact-website">Leave this field empty</label>
@@ -180,7 +181,9 @@
                             </div>
 
                             <div id="interest-form-panel" class="contact-form-panel is-hidden">
-                                <form name="project-interest" action="/contact.html" class="interestForm" method="post" data-netlify="true" data-netlify-honeypot="bot-field" novalidate>
+                                <form name="project-interest" action="https://api.web3forms.com/submit" class="interestForm" method="post" novalidate>
+                                    <input type="hidden" name="access_key" value="59457e34-e78d-40c5-87eb-0b5e008db3ac">
+                                    <input type="hidden" name="message" value="Detailed project interest submission. See the submitted details and selected services.">
                                     <input type="hidden" name="form-name" value="project-interest">
                                     <div aria-hidden="true" style="position:absolute;left:-10000px">
                                         <label for="interest-website">Leave this field empty</label>

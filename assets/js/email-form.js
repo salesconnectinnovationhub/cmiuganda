@@ -1,6 +1,17 @@
 (function () {
     const recipient = "cmi.groupuganda@gmail.com";
+    const endpoint = "https://api.web3forms.com/submit";
+    const accessKey = "59457e34-e78d-40c5-87eb-0b5e008db3ac";
     const defaultWhatsAppUrl = "https://wa.me/message/DYT6JQFKYJNLF1";
+    const acceptedMessage = "Your enquiry was sent to CMI Group.";
+    const formSubjects = {
+        "home-enquiry": "Homepage consultation enquiry",
+        "contact-enquiry": "Contact page enquiry",
+        "project-interest": "Detailed project interest",
+        "service-enquiry": "Service consultation enquiry",
+        "project-enquiry": "Project consultation enquiry",
+        "property-enquiry": "Property consultation enquiry",
+    };
 
     function getFieldLabel(field) {
         const label = field.labels && field.labels[0];
@@ -31,7 +42,7 @@
         return whatsappLink ? whatsappLink.href : defaultWhatsAppUrl;
     }
 
-    function showSuccess(status, form) {
+    function showSuccess(status, form, deliveryMessage) {
         const whatsappLink = document.createElement("a");
         whatsappLink.href = getWhatsAppUrl();
         whatsappLink.target = "_blank";
@@ -43,7 +54,7 @@
         whatsappLink.prepend(whatsappIcon, document.createTextNode(" "));
 
         status.replaceChildren(
-            document.createTextNode("Your enquiry has been received by our website. "),
+            document.createTextNode(`${deliveryMessage} `),
             document.createTextNode(getSubmissionSummary(form)),
             document.createTextNode(" For a quick reply, "),
             whatsappLink,
@@ -54,7 +65,7 @@
     function createEmailDraft(form) {
         const fields = Array.from(form.elements)
             .filter((field) => {
-                if (!field.name || field.name === "bot-field" || field.name === "form-name" || field.disabled) return false;
+                if (!field.name || ["access_key", "bot-field", "form-name", "message"].includes(field.name) || field.disabled) return false;
                 if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
                 if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
                 return true;
@@ -72,6 +83,19 @@
         const body = ["Website enquiry for CMI Group", "", ...fields].join("\r\n");
 
         return `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
+    function getDetailedMessage(form) {
+        return Array.from(form.elements)
+            .filter((field) => {
+                if (!field.name || ["access_key", "bot-field", "form-name", "message"].includes(field.name) || field.disabled) return false;
+                if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
+                if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
+                return true;
+            })
+            .map((field) => `${getFieldLabel(field)}: ${field.value.trim()}`)
+            .filter((line) => !line.endsWith(": "))
+            .join("\n");
     }
 
     function showFailure(status, form, message) {
@@ -98,34 +122,52 @@
             if (form.dataset.submitting === "true") return false;
 
             const formData = new FormData(form);
-            if (!formData.get("form-name")) {
-                throw new Error("The enquiry form is missing its Netlify form name.");
+            const formName = formData.get("form-name");
+            if (typeof formName !== "string" || !formSubjects[formName]) {
+                console.error("The CMI Group enquiry form has a missing or unrecognized form name.");
+                showFailure(status, form, "We could not send your enquiry just now.");
+                return false;
+            }
+
+            if (new URL(form.action, window.location.href).href !== endpoint) {
+                console.error("The CMI Group enquiry form has an invalid email endpoint.");
+                showFailure(status, form, "We could not send your enquiry just now.");
+                return false;
+            }
+
+            const fullName = formData.get("fullname")
+                || [formData.get("firstName"), formData.get("lastName")].filter(Boolean).join(" ");
+            formData.set("access_key", accessKey);
+            if (fullName) formData.set("name", String(fullName));
+            const email = formData.get("email");
+            if (email) formData.set("replyto", String(email));
+            formData.set("subject", formSubjects[formName]);
+            if (formName === "project-interest" || !formData.get("message")) {
+                formData.set("message", getDetailedMessage(form));
             }
 
             form.dataset.submitting = "true";
             form.setAttribute("aria-busy", "true");
             button.disabled = true;
-            status.textContent = "Submitting your enquiry…";
+            status.textContent = "Sending your enquiry…";
 
             try {
-                const response = await fetch(form.action, {
+                const response = await fetch(endpoint, {
                     method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString(),
-                    credentials: "same-origin",
+                    body: formData,
                 });
-
-                if (!response.ok) {
-                    showFailure(status, form, "We could not submit your enquiry just now.");
+                const data = await response.json();
+                if (!response.ok || data.success !== true) {
+                    showFailure(status, form, data.message || "We could not send your enquiry just now.");
                     return false;
                 }
 
-                showSuccess(status, form);
+                showSuccess(status, form, acceptedMessage);
                 form.reset();
                 return true;
             } catch (error) {
-                console.error("Could not submit the CMI Group enquiry form to Netlify.", error);
-                showFailure(status, form, "We could not submit your enquiry just now.");
+                console.error("Could not submit the CMI Group enquiry to its email service.", error);
+                showFailure(status, form, "We could not send your enquiry just now.");
                 return false;
             } finally {
                 delete form.dataset.submitting;

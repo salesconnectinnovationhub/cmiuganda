@@ -57,15 +57,19 @@ separately selected featured video. Update the featured video's ID and title in
 as new channel videos are published.
 
 ### 2. Enquiry and contact forms
-On Netlify, the public quotation, contact, and project-interest forms submit
-directly to Netlify Forms. Configure an email notification to
-`cmi.groupuganda@gmail.com` in the Netlify site dashboard; this does not require
-an email API key. The quote estimator's details and selected services are
-included in each submission. Netlify plan limits or usage charges may apply;
-check the site's Forms usage in Netlify. Other hosts do not process Netlify
-Forms, so submissions there need a configured email provider or the direct
-email fallback. The old `/api/contact` and `/api/interest` handlers remain
-available for provider-backed automated delivery.
+Public lead forms on the homepage, contact page, services, projects, and
+property-management pages send through `POST /api/contact`; the detailed
+project-interest form uses `POST /api/interest`. Both endpoints send email to
+`cmi.groupuganda@gmail.com` through Resend, and the page reports success only
+after Resend accepts the email. Configure `RESEND_API_KEY` and a verified
+`CMI_FROM_EMAIL` in the hosting environment. The quote estimator's details and
+selected services are included in the delivered message. Check Resend activity
+and the destination inbox during launch testing; provider acceptance alone
+cannot guarantee final inbox delivery.
+
+The payment form starts a PesaPal checkout rather than sending an enquiry
+email, and the public review form stores reviews through the review API rather
+than emailing each review.
 
 ### 3. Website chat
 Visitors use the same-site `chat.html` page to create persistent conversations

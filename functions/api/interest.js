@@ -67,7 +67,7 @@ export async function onRequestPost({ request, env }) {
   if (parsed.error) return parsed.error;
   const { formData } = parsed;
 
-  if (sanitize(formData.get("website"))) {
+  if (sanitize(formData.get("bot-field")) || sanitize(formData.get("website"))) {
     return respond("Your interest has been received.", 200, "CMI Group expression of interest");
   }
 
@@ -106,5 +106,5 @@ export async function onRequestPost({ request, env }) {
     return respond("We could not send your interest just now. Please try again or contact CMI Group directly.", delivery.status, "CMI Group expression of interest");
   }
 
-  return respond("Your interest has been sent to CMI Group. We will be in touch using the contact details you provided.", 200, "CMI Group expression of interest");
+  return respond("Your enquiry was accepted for delivery to CMI Group.", 200, "CMI Group expression of interest");
 }

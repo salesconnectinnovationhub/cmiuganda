@@ -7,8 +7,9 @@
   project-case-study, and office-location components. Load it after
   `style.css` on pages that use those components.
 - `assets/js/lead-form.js` owns the shared submission behavior for marked
-  project enquiry forms. Form field names intentionally match
-  `POST /api/contact`.
+  project enquiry forms. `assets/js/email-form.js` sends all customer enquiry
+  and project-interest forms directly to Web3Forms; the access key is public
+  client-side configuration, not a server secret.
 - Keep page-specific behavior in its existing page script; do not load scripts
   that have no matching page component.
 

@@ -21,9 +21,10 @@ or CI logs.
 - [ ] Configure staging-only `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_CMS_AUD`,
       and, when reviews are enabled, `CF_ACCESS_AUD`. Configure explicit
       `CMS_EDITOR_EMAILS` and `CMS_APPROVER_EMAILS` allowlists.
-- [ ] If chat email notifications or optional legacy contact endpoints are
-      enabled, configure staging `CMI_FROM_EMAIL` and `RESEND_API_KEY` using
-      encrypted Cloudflare secrets and confirm the sender domain is verified.
+- [ ] Configure staging `CMI_FROM_EMAIL` and `RESEND_API_KEY` using encrypted
+      Cloudflare secrets and confirm the sender domain is verified for chat
+      notifications and any retained legacy email APIs. Public lead forms use
+      Web3Forms.
 - [ ] Confirm the Cloudflare Access application protects `/admin/*`, including
       `/admin/chat.html`, and the chat API allowlists only authorized CMS staff.
 - [ ] Back up the staging D1 database before applying SQL.
@@ -61,11 +62,11 @@ or CI logs.
       `POST /api/reviews` when method matching is available. Verify a
       threshold-crossing staging request
       receives HTTP 429 without blocking normal review reads.
-- [ ] Configure `RESEND_API_KEY` and verified sender `CMI_FROM_EMAIL` in the
-      hosting environment. Submit a staging contact form and an expression of
-      interest; confirm the page stays open, inline status is shown, and email
-      reaches `cmi.groupuganda@gmail.com`. Verify Resend activity and the
-      destination inbox.
+- [ ] Confirm the Web3Forms access key is configured to deliver to
+      `cmi.groupuganda@gmail.com` and the production domain is allowed in
+      Web3Forms. Submit the homepage, contact, detailed project-interest,
+      service, project, and property forms; confirm each shows inline status
+      and reaches the CMI inbox (including spam).
 - [ ] Open a public chat, send messages from the visitor page, reply from the
       staff inbox, and confirm email notifications, persistence, close/reopen,
       same-origin validation, and unauthorized staff rejection.
