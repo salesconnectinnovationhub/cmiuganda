@@ -5946,6 +5946,30 @@ section[aria-labelledby="property-fieldwork-title"] .card-body {
 .footer-social .list-wrap li a:hover {
 	color: var(--tg-secondary-color);
 }
+.fa-whatsapp {
+	color: #25d366;
+	font-size: 1.4em;
+	vertical-align: middle;
+}
+.footer-social .list-wrap li a[href*="wa.me"],
+.footer-social .list-wrap li a[href*="api.whatsapp.com"] {
+	width: 48px;
+	height: 48px;
+	background: #25d366;
+	color: #fff;
+	font-size: 24px;
+	box-shadow: 0 0 0 3px rgba(37, 211, 102, .2);
+}
+.footer-social .list-wrap li a[href*="wa.me"] .fa-whatsapp,
+.footer-social .list-wrap li a[href*="api.whatsapp.com"] .fa-whatsapp {
+	color: #fff;
+	font-size: 1em;
+}
+.footer-social .list-wrap li a[href*="wa.me"]:hover,
+.footer-social .list-wrap li a[href*="api.whatsapp.com"]:hover {
+	background: #128c4a;
+	color: #fff;
+}
 .footer-bottom {
 	background: var(--tg-secondary-color);
 	padding: 22px 0;

@@ -65,7 +65,7 @@
     function createEmailDraft(form) {
         const fields = Array.from(form.elements)
             .filter((field) => {
-                if (!field.name || ["access_key", "bot-field", "form-name", "message"].includes(field.name) || field.disabled) return false;
+                if (!field.name || ["access_key", "bot-field", "botcheck", "form-name", "message"].includes(field.name) || field.disabled) return false;
                 if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
                 if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
                 return true;
@@ -88,7 +88,7 @@
     function getDetailedMessage(form) {
         return Array.from(form.elements)
             .filter((field) => {
-                if (!field.name || ["access_key", "bot-field", "form-name", "message"].includes(field.name) || field.disabled) return false;
+                if (!field.name || ["access_key", "bot-field", "botcheck", "form-name", "message"].includes(field.name) || field.disabled) return false;
                 if (field.type === "submit" || field.type === "button" || field.type === "reset") return false;
                 if ((field.type === "checkbox" || field.type === "radio") && !field.checked) return false;
                 return true;

@@ -38,6 +38,9 @@ and property enquiry forms submit directly to Web3Forms through the shared
 the public HTML/JavaScript, as required for browser submissions; it is not a
 server secret. Web3Forms routes messages to the inbox configured for that key.
 The frontend reports success only when Web3Forms returns `success: true`.
+The forms include Web3Forms' `botcheck` honeypot in addition to the legacy
+`bot-field`; the active recipient is still configured in the Web3Forms account,
+not selected by a browser-submitted field.
 
 Before deploying, confirm the access key is configured to deliver to
 `cmi.groupuganda@gmail.com` and the production domain is permitted by the

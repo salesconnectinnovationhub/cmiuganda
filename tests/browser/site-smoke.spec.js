@@ -276,6 +276,9 @@ test("public enquiry forms point to the matching email endpoints", async ({ page
         await expect(form).toHaveAttribute("name", name);
         await expect(form.locator('[name="form-name"]')).toHaveValue(name);
         await expect(form.locator('[name="access_key"]')).toHaveValue(web3FormsAccessKey);
+        const honeypot = form.locator('input[type="checkbox"][name="botcheck"]');
+        await expect(honeypot).toHaveCount(1);
+        await expect(honeypot).not.toBeChecked();
     }
 
     await page.goto("/", { waitUntil: "domcontentloaded" });
